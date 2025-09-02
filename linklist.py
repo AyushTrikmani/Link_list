@@ -70,6 +70,22 @@ st.markdown("""
         padding: 15px;
         margin: 10px 0;
     }
+    .code-block {
+        background: #2d2d2d;
+        color: #f8f8f2;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+        overflow-x: auto;
+    }
+    .detail-box {
+        background: #e8f4f8;
+        border-left: 5px solid #1f77b4;
+        padding: 15px;
+        margin: 15px 0;
+        border-radius: 0 8px 8px 0;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -78,7 +94,9 @@ st.sidebar.title("🔗 Navigation")
 sections = {
     "🏠 Home": "home",
     "📚 Basic Concepts": "basic",
-    "🔄 Types of Linked Lists": "types"
+    "🔄 Types of Linked Lists": "types",
+    "⚡ Operations & Algorithms": "operations",
+    "🎯 Real-world Applications": "applications"
 }
 
 selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
@@ -86,6 +104,16 @@ current_section = sections[selected_section]
 
 # Main title
 st.markdown('<h1 class="main-header">🔗 Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
+
+# Define Node class for code examples
+node_class_code = """
+class Node:
+    def __init__(self, data):
+        self.data = data    # Store data
+        self.next = None    # Pointer to next node
+        # For doubly linked list:
+        # self.prev = None  # Pointer to previous node
+"""
 
 def draw_linked_list_diagram():
     """Create a visual representation of a basic linked list"""
@@ -500,6 +528,96 @@ def draw_circular_linked_list():
     plt.title('Circular Linked List Visualization', fontsize=16, fontweight='bold', pad=20)
     return fig
 
+def draw_linked_list_operations():
+    """Draw common linked list operations"""
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    fig.suptitle('Common Linked List Operations', fontsize=16, fontweight='bold')
+    
+    # Insertion at head
+    ax1 = axes[0, 0]
+    ax1.set_xlim(0, 8)
+    ax1.set_ylim(0, 3)
+    ax1.axis('off')
+    ax1.set_title('Insertion at Head', fontsize=12, fontweight='bold')
+    
+    # Original list
+    ax1.text(2, 2.5, 'HEAD → A → B → NULL', fontsize=10)
+    
+    # New node
+    ax1.text(1, 1.8, 'New Node: X', fontsize=10, color='blue')
+    
+    # Process
+    ax1.text(2, 1.5, '1. X.next = A', fontsize=10)
+    ax1.text(2, 1.2, '2. HEAD = X', fontsize=10)
+    
+    # Result
+    ax1.text(2, 0.5, 'Result: HEAD → X → A → B → NULL', fontsize=10, color='green')
+    
+    # Insertion at tail
+    ax2 = axes[0, 1]
+    ax2.set_xlim(0, 8)
+    ax2.set_ylim(0, 3)
+    ax2.axis('off')
+    ax2.set_title('Insertion at Tail', fontsize=12, fontweight='bold')
+    
+    # Original list
+    ax2.text(2, 2.5, 'HEAD → A → B → NULL', fontsize=10)
+    
+    # New node
+    ax2.text(1, 1.8, 'New Node: X', fontsize=10, color='blue')
+    
+    # Process
+    ax2.text(2, 1.5, '1. Traverse to B (last node)', fontsize=10)
+    ax2.text(2, 1.2, '2. B.next = X', fontsize=10)
+    ax2.text(2, 0.9, '3. X.next = NULL', fontsize=10)
+    
+    # Result
+    ax2.text(2, 0.5, 'Result: HEAD → A → B → X → NULL', fontsize=10, color='green')
+    
+    # Deletion
+    ax3 = axes[1, 0]
+    ax3.set_xlim(0, 8)
+    ax3.set_ylim(0, 3)
+    ax3.axis('off')
+    ax3.set_title('Deletion of a Node', fontsize=12, fontweight='bold')
+    
+    # Original list
+    ax3.text(2, 2.5, 'HEAD → A → B → C → NULL', fontsize=10)
+    
+    # Node to delete
+    ax3.text(1, 1.8, 'Delete Node: B', fontsize=10, color='red')
+    
+    # Process
+    ax3.text(2, 1.5, '1. Find A (node before B)', fontsize=10)
+    ax3.text(2, 1.2, '2. A.next = B.next (point to C)', fontsize=10)
+    ax3.text(2, 0.9, '3. Remove B from memory', fontsize=10)
+    
+    # Result
+    ax3.text(2, 0.5, 'Result: HEAD → A → C → NULL', fontsize=10, color='green')
+    
+    # Traversal
+    ax4 = axes[1, 1]
+    ax4.set_xlim(0, 8)
+    ax4.set_ylim(0, 3)
+    ax4.axis('off')
+    ax4.set_title('Traversal', fontsize=12, fontweight='bold')
+    
+    # List
+    ax4.text(2, 2.5, 'HEAD → A → B → C → NULL', fontsize=10)
+    
+    # Process
+    ax4.text(2, 1.8, '1. Start from HEAD', fontsize=10)
+    ax4.text(2, 1.5, '2. current = HEAD', fontsize=10)
+    ax4.text(2, 1.2, '3. While current != NULL:', fontsize=10)
+    ax4.text(3, 0.9, '   print(current.data)', fontsize=10)
+    ax4.text(3, 0.6, '   current = current.next', fontsize=10)
+    
+    # Result
+    ax4.text(2, 0.2, 'Output: A, B, C', fontsize=10, color='green')
+    
+    plt.tight_layout()
+    return fig
+
 # Main content based on selected section
 if current_section == "home":
     st.markdown("""
@@ -511,11 +629,26 @@ if current_section == "home":
         <ul>
             <li>📚 Basic concepts and differences from arrays</li>
             <li>🔄 Different types of linked lists with visualizations</li>
-            <li>⚡ Interactive demos and examples</li>
+            <li>⚡ Common operations and algorithms</li>
             <li>🎯 Practical applications and use cases</li>
+            <li>💻 Implementation examples in Python</li>
         </ul>
         
         <p><strong>Use the navigation sidebar to explore different sections!</strong></p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="detail-box">
+        <h3>Why Learn About Linked Lists?</h3>
+        <p>Linked lists are fundamental data structures in computer science that form the basis for more complex 
+        structures like trees, graphs, and hash tables. Understanding linked lists helps you:</p>
+        <ul>
+            <li>Grasp how dynamic memory allocation works</li>
+            <li>Learn about pointers and references</li>
+            <li>Understand time and space complexity trade-offs</li>
+            <li>Prepare for technical interviews (a common topic!)</li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
 
@@ -533,6 +666,19 @@ elif current_section == "basic":
             <li><strong>Next:</strong> A pointer/reference to the next node in the sequence</li>
         </ul>
         <p>Unlike arrays, linked list elements are not stored in contiguous memory locations.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="detail-box">
+        <h3>Key Characteristics of Linked Lists:</h3>
+        <ul>
+            <li><strong>Dynamic Size:</strong> Unlike arrays, linked lists can grow and shrink during runtime</li>
+            <li><strong>Memory Efficiency:</strong> Memory is allocated as needed, reducing wasted space</li>
+            <li><strong>Insertion/Deletion:</strong> Adding or removing elements is efficient compared to arrays</li>
+            <li><strong>Sequential Access:</strong> Elements must be accessed sequentially, starting from the head</li>
+            <li><strong>Memory Overhead:</strong> Each node requires extra memory for the pointer/reference</li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
     
@@ -560,17 +706,9 @@ elif current_section == "basic":
         </div>
         """, unsafe_allow_html=True)
         
-        st.code("""
-class Node:
-    def __init__(self, data):
-        self.data = data    # Store data
-        self.next = None    # Pointer to next node
-
-# Creating a node
-node1 = Node(42)
-node2 = Node(17)
-node1.next = node2  # Link nodes
-        """, language="python")
+        st.markdown('<div class="code-block">', unsafe_allow_html=True)
+        st.code(node_class_code, language="python")
+        st.markdown('</div>', unsafe_allow_html=True)
     
     with col2:
         fig_node = draw_node_structure()
@@ -623,6 +761,27 @@ node1.next = node2  # Link nodes
             <td>Dynamic size</td>
         </tr>
     </table>
+    """, unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="detail-box">
+        <h3>When to Use Linked Lists vs Arrays:</h3>
+        <p><strong>Use Linked Lists when:</strong></p>
+        <ul>
+            <li>You need constant-time insertions/deletions from the list</li>
+            <li>You don't know how many items will be in the list</li>
+            <li>You don't need random access to any elements</li>
+            <li>You want to be able to insert items in the middle of the list</li>
+        </ul>
+        
+        <p><strong>Use Arrays when:</strong></p>
+        <ul>
+            <li>You need index-based/random access to elements</li>
+            <li>You know the number of elements in advance</li>
+            <li>You need better cache performance for iteration</li>
+            <li>Memory is a concern (arrays have less overhead)</li>
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
     
     # Key Advantages and Disadvantages
@@ -678,6 +837,22 @@ elif current_section == "types":
         </div>
         """, unsafe_allow_html=True)
         
+        st.markdown("""
+        <div class="detail-box">
+            <h3>Detailed Explanation:</h3>
+            <p>In a singly linked list, each node contains data and a pointer to the next node in the sequence. 
+            The list is traversed starting from the head node, following the next pointers until reaching NULL.</p>
+            
+            <p><strong>Key Operations:</strong></p>
+            <ul>
+                <li><strong>Insertion:</strong> Can be done at the beginning, end, or middle of the list</li>
+                <li><strong>Deletion:</strong> Removing nodes requires updating the previous node's next pointer</li>
+                <li><strong>Traversal:</strong> Visiting each node sequentially from head to tail</li>
+                <li><strong>Search:</strong> Finding a node requires traversing the list until found</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
         fig_singly = draw_singly_linked_list()
         st.pyplot(fig_singly)
         plt.close(fig_singly)
@@ -719,6 +894,11 @@ elif current_section == "types":
         # Code example
         st.subheader("💻 Implementation Example")
         st.code("""
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
 class SinglyLinkedList:
     def __init__(self):
         self.head = None
@@ -775,6 +955,27 @@ class SinglyLinkedList:
                 <li>First node's previous pointer is NULL</li>
                 <li>Last node's next pointer is NULL</li>
                 <li>More memory overhead due to extra pointer</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="detail-box">
+            <h3>Detailed Explanation:</h3>
+            <p>In a doubly linked list, each node contains data, a pointer to the next node, and a pointer to the previous node. 
+            This allows traversal in both directions, making some operations more efficient.</p>
+            
+            <p><strong>Advantages over Singly Linked List:</strong></p>
+            <ul>
+                <li>Can be traversed in both directions</li>
+                <li>Easier deletion of nodes (don't need to track previous node)</li>
+                <li>Better for certain algorithms that require backward traversal</li>
+            </ul>
+            
+            <p><strong>Disadvantages:</strong></p>
+            <ul>
+                <li>Requires more memory for the extra pointer</li>
+                <li>Operations are slightly more complex to implement</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -904,6 +1105,28 @@ class DoublyLinkedList:
                 <li>Useful for round-robin scheduling</li>
                 <li>Can be singly or doubly circular</li>
                 <li>Need to be careful to avoid infinite loops</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="detail-box">
+            <h3>Detailed Explanation:</h3>
+            <p>In a circular linked list, the last node points back to the first node instead of to NULL. 
+            This creates a circular structure that can be traversed indefinitely.</p>
+            
+            <p><strong>Types of Circular Linked Lists:</strong></p>
+            <ul>
+                <li><strong>Singly Circular:</strong> Each node has a next pointer, and the last node points to the first</li>
+                <li><strong>Doubly Circular:</strong> Each node has next and previous pointers, forming a bidirectional circle</li>
+            </ul>
+            
+            <p><strong>Common Use Cases:</strong></p>
+            <ul>
+                <li>Round-robin scheduling in operating systems</li>
+                <li>Implementing circular buffers</li>
+                <li>Multiplayer games where players take turns</li>
+                <li>Applications that require repeated cycling through elements</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -1073,3 +1296,335 @@ class CircularLinkedList:
         </ul>
     </div>
     """, unsafe_allow_html=True)
+
+elif current_section == "operations":
+    st.markdown('<h2 class="section-header">⚡ Operations & Algorithms</h2>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="concept-box">
+        <p>Linked lists support various operations that allow manipulation of the data structure. 
+        Understanding these operations is crucial for effective use of linked lists.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Visual representation of operations
+    st.subheader("📊 Common Operations Visualization")
+    fig_ops = draw_linked_list_operations()
+    st.pyplot(fig_ops)
+    plt.close(fig_ops)
+    
+    # Detailed explanations of operations
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🔍 Search Operation</h4>
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p>To find a node with specific data:</p>
+            <ol>
+                <li>Start from the head node</li>
+                <li>Traverse through each node</li>
+                <li>Compare each node's data with target value</li>
+                <li>Return node if found, else NULL</li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🗑️ Deletion Operation</h4>
+            <p><strong>Time Complexity:</strong> O(1) for head, O(n) for arbitrary node</p>
+            <p>To delete a node:</p>
+            <ol>
+                <li>Find the node to delete</li>
+                <li>Update the previous node's next pointer</li>
+                <li>Free the memory of the deleted node</li>
+                <li>Special case: deleting head node</li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>📝 Insertion Operation</h4>
+            <p><strong>Time Complexity:</strong> O(1) for head, O(n) for arbitrary position</p>
+            <p>Three types of insertion:</p>
+            <ol>
+                <li><strong>At beginning:</strong> Update head pointer</li>
+                <li><strong>At end:</strong> Traverse to last node, update its next pointer</li>
+                <li><strong>At middle:</strong> Find position, update surrounding pointers</li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🔄 Traversal Operation</h4>
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p>To visit all nodes:</p>
+            <ol>
+                <li>Start from the head node</li>
+                <li>Follow next pointers until NULL</li>
+                <li>Perform operation on each node</li>
+                <li>Stop when NULL is reached</li>
+            </ol>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Common algorithms
+    st.subheader("🧠 Common Algorithms")
+    
+    tab1, tab2, tab3 = st.tabs(["Reverse List", "Detect Cycle", "Find Middle"])
+    
+    with tab1:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Reversing a Linked List</h4>
+            <p>This algorithm reverses the direction of pointers in the list.</p>
+            
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Initialize three pointers: prev = NULL, current = head, next = NULL</li>
+                <li>Traverse the list and for each node:
+                    <ul>
+                        <li>Store the next node</li>
+                        <li>Change next of current to prev</li>
+                        <li>Move prev and current one step forward</li>
+                    </ul>
+                </li>
+                <li>Finally, set head = prev</li>
+            </ol>
+            
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p><strong>Space Complexity:</strong> O(1)</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.code("""
+def reverse_list(head):
+    prev = None
+    current = head
+    while current:
+        next_node = current.next  # Store next node
+        current.next = prev       # Reverse pointer
+        prev = current           # Move prev forward
+        current = next_node      # Move current forward
+    return prev
+        """, language="python")
+    
+    with tab2:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Cycle Detection (Floyd's Algorithm)</h4>
+            <p>This algorithm detects if a linked list has a cycle using two pointers moving at different speeds.</p>
+            
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Initialize two pointers: slow = head, fast = head</li>
+                <li>Traverse the list:
+                    <ul>
+                        <li>Move slow pointer by one node</li>
+                        <li>Move fast pointer by two nodes</li>
+                        <li>If they meet, cycle exists</li>
+                        <li>If fast reaches NULL, no cycle</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p><strong>Space Complexity:</strong> O(1)</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.code("""
+def has_cycle(head):
+    if not head:
+        return False
+    slow = head
+    fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+        """, language="python")
+    
+    with tab3:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Finding the Middle Node</h4>
+            <p>This algorithm finds the middle node of a linked list using two pointers.</p>
+            
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Initialize two pointers: slow = head, fast = head</li>
+                <li>Traverse the list:
+                    <ul>
+                        <li>Move slow pointer by one node</li>
+                        <li>Move fast pointer by two nodes</li>
+                        <li>When fast reaches end, slow is at middle</li>
+                    </ul>
+                </li>
+            </ol>
+            
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p><strong>Space Complexity:</strong> O(1)</p>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.code("""
+def find_middle(head):
+    if not head:
+        return None
+    slow = head
+    fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
+        """, language="python")
+
+elif current_section == "applications":
+    st.markdown('<h2 class="section-header">🎯 Real-world Applications</h2>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="concept-box">
+        <p>Linked lists are used in various real-world applications due to their dynamic nature and efficient insertion/deletion capabilities.</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Applications
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>💾 Memory Management</h4>
+            <p>Linked lists are used in memory allocators to maintain free memory blocks. 
+            Each node represents a free memory block with its size and location.</p>
+            
+            <p><strong>Benefits:</strong></p>
+            <ul>
+                <li>Efficient allocation and deallocation</li>
+                <li>Easy to merge adjacent free blocks</li>
+                <li>Dynamic memory management</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🌐 Web Browsers</h4>
+            <p>Doubly linked lists are used to implement browser history and back/forward navigation.</p>
+            
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Each page visit adds a new node</li>
+                <li>Back button moves to previous node</li>
+                <li>Forward button moves to next node</li>
+                <li>Efficient navigation in both directions</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🎵 Music/Video Players</h4>
+            <p>Circular linked lists are used to implement playlists that loop continuously.</p>
+            
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Each song is a node in the list</li>
+                <li>Last song points to first song</li>
+                <li>Seamless continuous playback</li>
+                <li>Easy to add/remove songs</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>📝 Text Editors</h4>
+            <p>Linked lists are used to represent text in editors where each character is a node.</p>
+            
+            <p><strong>Benefits:</strong></p>
+            <ul>
+                <li>Efficient insertion and deletion of text</li>
+                <li>No need to shift entire text after edits</li>
+                <li>Better performance for large documents</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>🗃️ Hash Tables</h4>
+            <p>Linked lists are used to handle collisions in hash table implementations.</p>
+            
+            <p><strong>How it works:</strong></p>
+            <ul>
+                <li>Each bucket in hash table is a linked list</li>
+                <li>Items with same hash are stored in same list</li>
+                <li>Efficient handling of collisions</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.markdown("""
+        <div class="highlight-box">
+            <h4>⚙️ Operating Systems</h4>
+            <p>Linked lists are used in various OS components like process scheduling and file systems.</p>
+            
+            <p><strong>Applications:</strong></p>
+            <ul>
+                <li>Process control blocks management</li>
+                <li>File directory structures</li>
+                <li>Memory page management</li>
+                <li>I/O buffer management</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Interview questions section
+    st.markdown("---")
+    st.subheader("💼 Common Interview Questions")
+    
+    st.markdown("""
+    <div class="node-structure">
+        <p>Linked lists are a common topic in technical interviews. Here are some frequently asked questions:</p>
+        
+        <ol>
+            <li>Reverse a linked list</li>
+            <li>Detect cycle in a linked list</li>
+            <li>Find the middle element of a linked list</li>
+            <li>Merge two sorted linked lists</li>
+            <li>Remove nth node from end of list</li>
+            <li>Add two numbers represented as linked lists</li>
+            <li>Intersection point of two linked lists</li>
+            <li>Palindrome linked list</li>
+            <li>LRU Cache implementation</li>
+            <li>Flatten a multilevel doubly linked list</li>
+        </ol>
+        
+        <p><strong>Tips for linked list interviews:</strong></p>
+        <ul>
+            <li>Always handle edge cases (empty list, single node list)</li>
+            <li>Use two-pointer technique for many problems</li>
+            <li>Draw diagrams to visualize pointer changes</li>
+            <li>Consider recursive solutions for some problems</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Add footer
+st.markdown("---")
+st.markdown("""
+<div style="text-align: center; color: gray;">
+    <p>🔗 Interactive Linked Lists Tutorial | Made with Streamlit and Matplotlib</p>
+    <p>For educational purposes only</p>
+</div>
+""", unsafe_allow_html=True)
