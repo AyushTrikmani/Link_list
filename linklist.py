@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.patches import FancyBboxPatch, Circle, Arrow
 import numpy as np
+import time
 
 # Set page config
 st.set_page_config(
@@ -89,31 +90,327 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Sidebar navigation
-st.sidebar.title("🔗 Navigation")
-sections = {
-    "🏠 Home": "home",
-    "📚 Basic Concepts": "basic",
-    "🔄 Types of Linked Lists": "types",
-    "⚡ Operations & Algorithms": "operations",
-    "🎯 Real-world Applications": "applications"
-}
-
-selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
-current_section = sections[selected_section]
-
-# Main title
-st.markdown('<h1 class="main-header">🔗 Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
-
-# Define Node class for code examples
-node_class_code = """
+# Node and LinkedList classes for implementation
 class Node:
     def __init__(self, data):
-        self.data = data    # Store data
-        self.next = None    # Pointer to next node
-        # For doubly linked list:
-        # self.prev = None  # Pointer to previous node
-"""
+        self.data = data
+        self.next = None
+        self.prev = None  # For doubly linked list
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
+    
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        if self.head:
+            self.head.prev = new_node
+        self.head = new_node
+        self.size += 1
+        return new_node
+    
+    def insert_at_end(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+            new_node.prev = current
+        self.size += 1
+        return new_node
+    
+    def insert_at_position(self, data, position):
+        if position < 0 or position > self.size:
+            return None
+        
+        if position == 0:
+            return self.insert_at_beginning(data)
+        
+        if position == self.size:
+            return self.insert_at_end(data)
+        
+        new_node = Node(data)
+        current = self.head
+        for _ in range(position - 1):
+            current = current.next
+        
+        new_node.next = current.next
+        new_node.prev = current
+        if current.next:
+            current.next.prev = new_node
+        current.next = new_node
+        self.size += 1
+        return new_node
+    
+    def insert_after_node(self, data, target_data):
+        current = self.head
+        while current:
+            if current.data == target_data:
+                new_node = Node(data)
+                new_node.next = current.next
+                new_node.prev = current
+                if current.next:
+                    current.next.prev = new_node
+                current.next = new_node
+                self.size += 1
+                return new_node
+            current = current.next
+        return None
+    
+    def delete_from_beginning(self):
+        if not self.head:
+            return None
+        
+        deleted_node = self.head
+        self.head = self.head.next
+        if self.head:
+            self.head.prev = None
+        self.size -= 1
+        return deleted_node
+    
+    def delete_from_end(self):
+        if not self.head:
+            return None
+        
+        if not self.head.next:
+            deleted_node = self.head
+            self.head = None
+            self.size -= 1
+            return deleted_node
+        
+        current = self.head
+        while current.next:
+            current = current.next
+        
+        deleted_node = current
+        if current.prev:
+            current.prev.next = None
+        self.size -= 1
+        return deleted_node
+    
+    def delete_from_position(self, position):
+        if position < 0 or position >= self.size:
+            return None
+        
+        if position == 0:
+            return self.delete_from_beginning()
+        
+        if position == self.size - 1:
+            return self.delete_from_end()
+        
+        current = self.head
+        for _ in range(position):
+            current = current.next
+        
+        deleted_node = current
+        if current.prev:
+            current.prev.next = current.next
+        if current.next:
+            current.next.prev = current.prev
+        self.size -= 1
+        return deleted_node
+    
+    def delete_by_value(self, value):
+        current = self.head
+        while current:
+            if current.data == value:
+                if current.prev:
+                    current.prev.next = current.next
+                else:
+                    self.head = current.next
+                
+                if current.next:
+                    current.next.prev = current.prev
+                
+                self.size -= 1
+                return current
+            current = current.next
+        return None
+    
+    def update_at_index(self, index, new_value):
+        if index < 0 or index >= self.size:
+            return False
+        
+        current = self.head
+        for _ in range(index):
+            current = current.next
+        
+        current.data = new_value
+        return True
+    
+    def update_by_value(self, old_value, new_value):
+        current = self.head
+        while current:
+            if current.data == old_value:
+                current.data = new_value
+                return True
+            current = current.next
+        return False
+    
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+    
+    def count_nodes(self):
+        return self.size
+    
+    def search(self, value):
+        current = self.head
+        position = 0
+        while current:
+            if current.data == value:
+                return position, current
+            current = current.next
+            position += 1
+        return -1, None
+    
+    def reverse(self):
+        prev = None
+        current = self.head
+        while current:
+            next_node = current.next
+            current.next = prev
+            current.prev = next_node  # For doubly linked list
+            prev = current
+            current = next_node
+        self.head = prev
+        return self.head
+    
+    def detect_cycle(self):
+        if not self.head or not self.head.next:
+            return False
+        
+        slow = self.head
+        fast = self.head.next
+        
+        while fast and fast.next:
+            if slow == fast:
+                return True
+            slow = slow.next
+            fast = fast.next.next
+        
+        return False
+    
+    def find_middle(self):
+        if not self.head:
+            return None
+        
+        slow = self.head
+        fast = self.head
+        
+        while fast and fast.next:
+            slow = slow.next
+            fast = fast.next.next
+        
+        return slow
+    
+    def find_nth_from_end(self, n):
+        if n <= 0 or not self.head:
+            return None
+        
+        first = self.head
+        second = self.head
+        
+        # Move first pointer n nodes ahead
+        for _ in range(n):
+            if not first:
+                return None
+            first = first.next
+        
+        # Move both pointers until first reaches the end
+        while first:
+            first = first.next
+            second = second.next
+        
+        return second
+
+# Visualization functions
+def visualize_linked_list_simple(elements, highlight_index=None, title="Linked List Visualization"):
+    """Simple visualization using matplotlib"""
+    if not elements:
+        fig, ax = plt.subplots(1, 1, figsize=(8, 2))
+        ax.text(0.5, 0.5, 'Empty List', ha='center', va='center', fontsize=16)
+        ax.set_xlim(0, 1)
+        ax.set_ylim(0, 1)
+        ax.axis('off')
+        plt.title(title, fontsize=14, fontweight='bold')
+        return fig
+    
+    fig, ax = plt.subplots(1, 1, figsize=(max(8, len(elements) * 2), 3))
+    ax.set_xlim(0, len(elements) * 2 + 1)
+    ax.set_ylim(0, 2)
+    ax.axis('off')
+    
+    for i, element in enumerate(elements):
+        x = 1 + i * 2
+        y = 1
+        
+        # Determine color
+        color = 'lightgreen' if highlight_index == i else 'lightblue'
+        
+        # Draw node
+        rect = FancyBboxPatch((x-0.4, y-0.3), 0.8, 0.6, 
+                             boxstyle="round,pad=0.02",
+                             facecolor=color, 
+                             edgecolor='blue', 
+                             linewidth=2)
+        ax.add_patch(rect)
+        
+        # Add data value
+        ax.text(x, y, str(element), ha='center', va='center', 
+                fontweight='bold', fontsize=12)
+        
+        # Draw arrow to next node
+        if i < len(elements) - 1:
+            arrow = patches.FancyArrowPatch((x+0.4, y), (x+1.6, y),
+                                          arrowstyle='->', 
+                                          mutation_scale=20,
+                                          color='red', 
+                                          linewidth=2)
+            ax.add_patch(arrow)
+    
+    # Draw NULL box
+    null_x = 1 + len(elements) * 2
+    rect = FancyBboxPatch((null_x-0.3, y-0.2), 0.6, 0.4, 
+                         boxstyle="round,pad=0.02",
+                         facecolor='lightcoral', 
+                         edgecolor='red', 
+                         linewidth=2)
+    ax.add_patch(rect)
+    ax.text(null_x, y, 'NULL', ha='center', va='center', 
+            fontweight='bold', fontsize=10)
+    
+    # Add arrow to NULL
+    if elements:
+        arrow = patches.FancyArrowPatch((1 + (len(elements)-1) * 2 + 0.4, y), 
+                                      (null_x-0.3, y),
+                                      arrowstyle='->', 
+                                      mutation_scale=20,
+                                      color='red', 
+                                      linewidth=2)
+        ax.add_patch(arrow)
+    
+    # Add HEAD pointer
+    ax.text(0.3, 1.5, 'HEAD', fontweight='bold', fontsize=14, color='green')
+    if elements:
+        arrow_head = patches.FancyArrowPatch((0.5, 1.3), (0.6, 1.1),
+                                           arrowstyle='->', 
+                                           mutation_scale=15,
+                                           color='green', 
+                                           linewidth=2)
+        ax.add_patch(arrow_head)
+    
+    plt.title(title, fontsize=16, fontweight='bold', pad=20)
+    return fig
 
 def draw_linked_list_diagram():
     """Create a visual representation of a basic linked list"""
@@ -276,7 +573,7 @@ def draw_node_structure():
                                 edgecolor='blue', 
                                 linewidth=2)
     ax.add_patch(data_rect)
-    ax.text(2.75, 2.5, 'DATA\n42', ha='center', va='center', 
+    ax.text(2.75, 2.5, 'DATA\\n42', ha='center', va='center', 
             fontweight='bold', fontsize=12)
     
     # Next pointer field
@@ -285,7 +582,7 @@ def draw_node_structure():
                                 edgecolor='orange', 
                                 linewidth=2)
     ax.add_patch(next_rect)
-    ax.text(4.25, 2.5, 'NEXT\n→', ha='center', va='center', 
+    ax.text(4.25, 2.5, 'NEXT\\n→', ha='center', va='center', 
             fontweight='bold', fontsize=12)
     
     # Node boundary
@@ -310,313 +607,32 @@ def draw_node_structure():
     
     return fig
 
-def draw_singly_linked_list():
-    """Draw interactive singly linked list"""
-    fig, ax = plt.subplots(1, 1, figsize=(14, 4))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 3)
-    ax.axis('off')
-    
-    nodes_data = ['A', 'B', 'C', 'D']
-    x_positions = [2, 4.5, 7, 9.5]
-    
-    for i, (data, x) in enumerate(zip(nodes_data, x_positions)):
-        # Draw node
-        node_rect = FancyBboxPatch((x-0.6, 1.2), 1.2, 0.8, 
-                                  boxstyle="round,pad=0.05",
-                                  facecolor='lightcyan', 
-                                  edgecolor='teal', 
-                                  linewidth=2)
-        ax.add_patch(node_rect)
-        
-        # Data section
-        ax.text(x-0.2, 1.6, data, ha='center', va='center', 
-                fontweight='bold', fontsize=14)
-        
-        # Next pointer
-        ax.text(x+0.2, 1.6, '→', ha='center', va='center', 
-                fontsize=16, color='red')
-        
-        # Divider line
-        ax.plot([x, x], [1.2, 2.0], color='gray', linewidth=1)
-        
-        # Draw arrow to next node
-        if i < len(nodes_data) - 1:
-            next_x = x_positions[i + 1]
-            arrow = patches.FancyArrowPatch((x+0.6, 1.6), (next_x-0.6, 1.6),
-                                          arrowstyle='->', 
-                                          mutation_scale=20,
-                                          color='red', 
-                                          linewidth=2)
-            ax.add_patch(arrow)
-    
-    # NULL pointer at the end
-    null_rect = FancyBboxPatch((10.5, 1.4), 0.8, 0.4, 
-                              boxstyle="round,pad=0.02",
-                              facecolor='lightcoral', 
-                              edgecolor='red', 
-                              linewidth=2)
-    ax.add_patch(null_rect)
-    ax.text(10.9, 1.6, 'NULL', ha='center', va='center', 
-            fontweight='bold', fontsize=10)
-    
-    # Arrow to NULL
-    arrow = patches.FancyArrowPatch((x_positions[-1]+0.6, 1.6), (10.5, 1.6),
-                                  arrowstyle='->', 
-                                  mutation_scale=20,
-                                  color='red', 
-                                  linewidth=2)
-    ax.add_patch(arrow)
-    
-    # HEAD pointer
-    ax.text(1, 2.5, 'HEAD', fontweight='bold', fontsize=14, color='green')
-    arrow_head = patches.FancyArrowPatch((1.3, 2.3), (1.4, 1.8),
-                                       arrowstyle='->', 
-                                       mutation_scale=15,
-                                       color='green', 
-                                       linewidth=2)
-    ax.add_patch(arrow_head)
-    
-    plt.title('Singly Linked List Visualization', fontsize=16, fontweight='bold', pad=20)
-    return fig
+# Initialize session state for linked list
+if 'linked_list' not in st.session_state:
+    st.session_state.linked_list = LinkedList()
+if 'operation_history' not in st.session_state:
+    st.session_state.operation_history = []
+if 'step_by_step' not in st.session_state:
+    st.session_state.step_by_step = False
+if 'current_step' not in st.session_state:
+    st.session_state.current_step = 0
 
-def draw_doubly_linked_list():
-    """Draw interactive doubly linked list"""
-    fig, ax = plt.subplots(1, 1, figsize=(14, 5))
-    ax.set_xlim(0, 12)
-    ax.set_ylim(0, 4)
-    ax.axis('off')
-    
-    nodes_data = ['X', 'Y', 'Z']
-    x_positions = [2.5, 5.5, 8.5]
-    
-    for i, (data, x) in enumerate(zip(nodes_data, x_positions)):
-        # Draw node with three sections
-        # Previous pointer
-        prev_rect = patches.Rectangle((x-0.8, 1.8), 0.5, 0.8, 
-                                    facecolor='lightpink', 
-                                    edgecolor='purple', 
-                                    linewidth=2)
-        ax.add_patch(prev_rect)
-        ax.text(x-0.55, 2.2, '←', ha='center', va='center', 
-                fontsize=14, color='purple')
-        
-        # Data section
-        data_rect = patches.Rectangle((x-0.3, 1.8), 0.6, 0.8, 
-                                    facecolor='lightblue', 
-                                    edgecolor='blue', 
-                                    linewidth=2)
-        ax.add_patch(data_rect)
-        ax.text(x, 2.2, data, ha='center', va='center', 
-                fontweight='bold', fontsize=14)
-        
-        # Next pointer
-        next_rect = patches.Rectangle((x+0.3, 1.8), 0.5, 0.8, 
-                                    facecolor='lightgreen', 
-                                    edgecolor='green', 
-                                    linewidth=2)
-        ax.add_patch(next_rect)
-        ax.text(x+0.55, 2.2, '→', ha='center', va='center', 
-                fontsize=14, color='green')
-        
-        # Forward arrows
-        if i < len(nodes_data) - 1:
-            next_x = x_positions[i + 1]
-            arrow = patches.FancyArrowPatch((x+0.8, 2.4), (next_x-0.8, 2.4),
-                                          arrowstyle='->', 
-                                          mutation_scale=18,
-                                          color='green', 
-                                          linewidth=2)
-            ax.add_patch(arrow)
-        
-        # Backward arrows
-        if i > 0:
-            prev_x = x_positions[i - 1]
-            arrow = patches.FancyArrowPatch((x-0.8, 1.4), (prev_x+0.8, 1.4),
-                                          arrowstyle='->', 
-                                          mutation_scale=18,
-                                          color='purple', 
-                                          linewidth=2)
-            ax.add_patch(arrow)
-    
-    # NULL pointers
-    # First node prev = NULL
-    null_rect1 = patches.Rectangle((0.5, 1.0), 0.6, 0.3, 
-                                 facecolor='lightcoral', 
-                                 edgecolor='red', 
-                                 linewidth=1)
-    ax.add_patch(null_rect1)
-    ax.text(0.8, 1.15, 'NULL', ha='center', va='center', 
-            fontweight='bold', fontsize=8)
-    
-    arrow1 = patches.FancyArrowPatch((1.1, 1.2), (1.7, 1.6),
-                                   arrowstyle='->', 
-                                   mutation_scale=12,
-                                   color='purple', 
-                                   linewidth=1.5)
-    ax.add_patch(arrow1)
-    
-    # Last node next = NULL
-    null_rect2 = patches.Rectangle((10.5, 2.8), 0.6, 0.3, 
-                                 facecolor='lightcoral', 
-                                 edgecolor='red', 
-                                 linewidth=1)
-    ax.add_patch(null_rect2)
-    ax.text(10.8, 2.95, 'NULL', ha='center', va='center', 
-            fontweight='bold', fontsize=8)
-    
-    arrow2 = patches.FancyArrowPatch((9.3, 2.6), (10.5, 2.9),
-                                   arrowstyle='->', 
-                                   mutation_scale=12,
-                                   color='green', 
-                                   linewidth=1.5)
-    ax.add_patch(arrow2)
-    
-    # HEAD pointer
-    ax.text(1.5, 3.2, 'HEAD', fontweight='bold', fontsize=14, color='blue')
-    arrow_head = patches.FancyArrowPatch((1.8, 3.0), (2.0, 2.8),
-                                       arrowstyle='->', 
-                                       mutation_scale=15,
-                                       color='blue', 
-                                       linewidth=2)
-    ax.add_patch(arrow_head)
-    
-    plt.title('Doubly Linked List Visualization', fontsize=16, fontweight='bold', pad=20)
-    return fig
+# Sidebar navigation
+st.sidebar.title("🔗 Navigation")
+sections = {
+    "🏠 Home": "home",
+    "📚 Basic Concepts": "basic",
+    "🔄 Types of Linked Lists": "types",
+    "⚡ Operations & Algorithms": "operations",
+    "🛠️ Interactive Operations": "interactive",
+    "🎯 Real-world Applications": "applications"
+}
 
-def draw_circular_linked_list():
-    """Draw circular linked list"""
-    fig, ax = plt.subplots(1, 1, figsize=(10, 8))
-    ax.set_xlim(-4, 4)
-    ax.set_ylim(-4, 4)
-    ax.axis('off')
-    
-    # Position nodes in a circle
-    angles = [0, np.pi/2, np.pi, 3*np.pi/2]
-    radius = 2.5
-    nodes_data = ['1', '2', '3', '4']
-    
-    positions = [(radius * np.cos(angle), radius * np.sin(angle)) for angle in angles]
-    
-    for i, ((x, y), data) in enumerate(zip(positions, nodes_data)):
-        # Draw node
-        circle = Circle((x, y), 0.4, facecolor='lightgreen', 
-                       edgecolor='darkgreen', linewidth=2)
-        ax.add_patch(circle)
-        ax.text(x, y, data, ha='center', va='center', 
-                fontweight='bold', fontsize=14)
-        
-        # Draw arrow to next node
-        next_i = (i + 1) % len(positions)
-        next_x, next_y = positions[next_i]
-        
-        # Calculate arrow start and end points
-        angle_to_next = np.arctan2(next_y - y, next_x - x)
-        start_x = x + 0.4 * np.cos(angle_to_next)
-        start_y = y + 0.4 * np.sin(angle_to_next)
-        end_x = next_x - 0.4 * np.cos(angle_to_next)
-        end_y = next_y - 0.4 * np.sin(angle_to_next)
-        
-        arrow = patches.FancyArrowPatch((start_x, start_y), (end_x, end_y),
-                                      arrowstyle='->', 
-                                      mutation_scale=20,
-                                      color='red', 
-                                      linewidth=2,
-                                      connectionstyle="arc3,rad=0.1")
-        ax.add_patch(arrow)
-    
-    plt.title('Circular Linked List Visualization', fontsize=16, fontweight='bold', pad=20)
-    return fig
+selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
+current_section = sections[selected_section]
 
-def draw_linked_list_operations():
-    """Draw common linked list operations"""
-    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-    fig.suptitle('Common Linked List Operations', fontsize=16, fontweight='bold')
-    
-    # Insertion at head
-    ax1 = axes[0, 0]
-    ax1.set_xlim(0, 8)
-    ax1.set_ylim(0, 3)
-    ax1.axis('off')
-    ax1.set_title('Insertion at Head', fontsize=12, fontweight='bold')
-    
-    # Original list
-    ax1.text(2, 2.5, 'HEAD → A → B → NULL', fontsize=10)
-    
-    # New node
-    ax1.text(1, 1.8, 'New Node: X', fontsize=10, color='blue')
-    
-    # Process
-    ax1.text(2, 1.5, '1. X.next = A', fontsize=10)
-    ax1.text(2, 1.2, '2. HEAD = X', fontsize=10)
-    
-    # Result
-    ax1.text(2, 0.5, 'Result: HEAD → X → A → B → NULL', fontsize=10, color='green')
-    
-    # Insertion at tail
-    ax2 = axes[0, 1]
-    ax2.set_xlim(0, 8)
-    ax2.set_ylim(0, 3)
-    ax2.axis('off')
-    ax2.set_title('Insertion at Tail', fontsize=12, fontweight='bold')
-    
-    # Original list
-    ax2.text(2, 2.5, 'HEAD → A → B → NULL', fontsize=10)
-    
-    # New node
-    ax2.text(1, 1.8, 'New Node: X', fontsize=10, color='blue')
-    
-    # Process
-    ax2.text(2, 1.5, '1. Traverse to B (last node)', fontsize=10)
-    ax2.text(2, 1.2, '2. B.next = X', fontsize=10)
-    ax2.text(2, 0.9, '3. X.next = NULL', fontsize=10)
-    
-    # Result
-    ax2.text(2, 0.5, 'Result: HEAD → A → B → X → NULL', fontsize=10, color='green')
-    
-    # Deletion
-    ax3 = axes[1, 0]
-    ax3.set_xlim(0, 8)
-    ax3.set_ylim(0, 3)
-    ax3.axis('off')
-    ax3.set_title('Deletion of a Node', fontsize=12, fontweight='bold')
-    
-    # Original list
-    ax3.text(2, 2.5, 'HEAD → A → B → C → NULL', fontsize=10)
-    
-    # Node to delete
-    ax3.text(1, 1.8, 'Delete Node: B', fontsize=10, color='red')
-    
-    # Process
-    ax3.text(2, 1.5, '1. Find A (node before B)', fontsize=10)
-    ax3.text(2, 1.2, '2. A.next = B.next (point to C)', fontsize=10)
-    ax3.text(2, 0.9, '3. Remove B from memory', fontsize=10)
-    
-    # Result
-    ax3.text(2, 0.5, 'Result: HEAD → A → C → NULL', fontsize=10, color='green')
-    
-    # Traversal
-    ax4 = axes[1, 1]
-    ax4.set_xlim(0, 8)
-    ax4.set_ylim(0, 3)
-    ax4.axis('off')
-    ax4.set_title('Traversal', fontsize=12, fontweight='bold')
-    
-    # List
-    ax4.text(2, 2.5, 'HEAD → A → B → C → NULL', fontsize=10)
-    
-    # Process
-    ax4.text(2, 1.8, '1. Start from HEAD', fontsize=10)
-    ax4.text(2, 1.5, '2. current = HEAD', fontsize=10)
-    ax4.text(2, 1.2, '3. While current != NULL:', fontsize=10)
-    ax4.text(3, 0.9, '   print(current.data)', fontsize=10)
-    ax4.text(3, 0.6, '   current = current.next', fontsize=10)
-    
-    # Result
-    ax4.text(2, 0.2, 'Output: A, B, C', fontsize=10, color='green')
-    
-    plt.tight_layout()
-    return fig
+# Main title
+st.markdown('<h1 class="main-header">🔗 Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
 
 # Main content based on selected section
 if current_section == "home":
@@ -630,6 +646,7 @@ if current_section == "home":
             <li>📚 Basic concepts and differences from arrays</li>
             <li>🔄 Different types of linked lists with visualizations</li>
             <li>⚡ Common operations and algorithms</li>
+            <li>🛠️ Interactive operations with real-time visualization</li>
             <li>🎯 Practical applications and use cases</li>
             <li>💻 Implementation examples in Python</li>
         </ul>
@@ -669,19 +686,6 @@ elif current_section == "basic":
     </div>
     """, unsafe_allow_html=True)
     
-    st.markdown("""
-    <div class="detail-box">
-        <h3>Key Characteristics of Linked Lists:</h3>
-        <ul>
-            <li><strong>Dynamic Size:</strong> Unlike arrays, linked lists can grow and shrink during runtime</li>
-            <li><strong>Memory Efficiency:</strong> Memory is allocated as needed, reducing wasted space</li>
-            <li><strong>Insertion/Deletion:</strong> Adding or removing elements is efficient compared to arrays</li>
-            <li><strong>Sequential Access:</strong> Elements must be accessed sequentially, starting from the head</li>
-            <li><strong>Memory Overhead:</strong> Each node requires extra memory for the pointer/reference</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
-    
     # Visual representation
     st.subheader("📊 Visual Representation")
     fig1 = draw_linked_list_diagram()
@@ -706,9 +710,14 @@ elif current_section == "basic":
         </div>
         """, unsafe_allow_html=True)
         
-        st.markdown('<div class="code-block">', unsafe_allow_html=True)
-        st.code(node_class_code, language="python")
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.code("""
+class Node:
+    def __init__(self, data):
+        self.data = data    # Store data
+        self.next = None    # Pointer to next node
+        # For doubly linked list:
+        # self.prev = None  # Pointer to previous node
+        """, language="python")
     
     with col2:
         fig_node = draw_node_structure()
@@ -762,540 +771,268 @@ elif current_section == "basic":
         </tr>
     </table>
     """, unsafe_allow_html=True)
+
+elif current_section == "interactive":
+    st.markdown('<h2 class="section-header">🛠️ Interactive Operations</h2>', unsafe_allow_html=True)
     
-    st.markdown("""
-    <div class="detail-box">
-        <h3>When to Use Linked Lists vs Arrays:</h3>
-        <p><strong>Use Linked Lists when:</strong></p>
-        <ul>
-            <li>You need constant-time insertions/deletions from the list</li>
-            <li>You don't know how many items will be in the list</li>
-            <li>You don't need random access to any elements</li>
-            <li>You want to be able to insert items in the middle of the list</li>
-        </ul>
+    # Operation selection
+    operation_type = st.selectbox(
+        "Select Operation Type:",
+        ["Insertion", "Deletion", "Update", "Traversal", "Searching", "Advanced Operations"]
+    )
+    
+    # Initialize variables
+    operation_result = None
+    highlight_index = None
+    
+    # Insertion operations
+    if operation_type == "Insertion":
+        insertion_type = st.selectbox(
+            "Select Insertion Type:",
+            ["At the beginning", "At the end", "At a specific position", "After a given node"]
+        )
         
-        <p><strong>Use Arrays when:</strong></p>
-        <ul>
-            <li>You need index-based/random access to elements</li>
-            <li>You know the number of elements in advance</li>
-            <li>You need better cache performance for iteration</li>
-            <li>Memory is a concern (arrays have less overhead)</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+        data = st.text_input("Enter data to insert:")
+        
+        if insertion_type == "At a specific position":
+            position = st.number_input("Position (0-based):", min_value=0, max_value=st.session_state.linked_list.size, value=0)
+        elif insertion_type == "After a given node":
+            target_data = st.text_input("Enter node data to insert after:")
+        
+        if st.button("Perform Insertion"):
+            if data:
+                if insertion_type == "At the beginning":
+                    operation_result = st.session_state.linked_list.insert_at_beginning(data)
+                    st.session_state.operation_history.append(f"Inserted '{data}' at beginning")
+                    highlight_index = 0
+                
+                elif insertion_type == "At the end":
+                    operation_result = st.session_state.linked_list.insert_at_end(data)
+                    st.session_state.operation_history.append(f"Inserted '{data}' at end")
+                    highlight_index = st.session_state.linked_list.size - 1
+                
+                elif insertion_type == "At a specific position":
+                    operation_result = st.session_state.linked_list.insert_at_position(data, position)
+                    if operation_result:
+                        st.session_state.operation_history.append(f"Inserted '{data}' at position {position}")
+                        highlight_index = position
+                    else:
+                        st.error("Invalid position!")
+                
+                elif insertion_type == "After a given node":
+                    if target_data:
+                        operation_result = st.session_state.linked_list.insert_after_node(data, target_data)
+                        if operation_result:
+                            st.session_state.operation_history.append(f"Inserted '{data}' after node '{target_data}'")
+                            # Find the index for highlighting
+                            elements = st.session_state.linked_list.traverse()
+                            try:
+                                target_index = elements.index(target_data)
+                                highlight_index = target_index + 1
+                            except ValueError:
+                                pass
+                        else:
+                            st.error(f"Node with data '{target_data}' not found!")
+                    else:
+                        st.error("Please enter target node data!")
+            else:
+                st.error("Please enter data to insert!")
     
-    # Key Advantages and Disadvantages
-    col1, col2 = st.columns(2)
+    # Deletion operations
+    elif operation_type == "Deletion":
+        deletion_type = st.selectbox(
+            "Select Deletion Type:",
+            ["From beginning", "From end", "From specific position", "By value"]
+        )
+        
+        if deletion_type == "From specific position":
+            position = st.number_input("Position (0-based):", min_value=0, max_value=max(0, st.session_state.linked_list.size-1), value=0)
+        elif deletion_type == "By value":
+            value = st.text_input("Enter value to delete:")
+        
+        if st.button("Perform Deletion"):
+            if deletion_type == "From beginning":
+                operation_result = st.session_state.linked_list.delete_from_beginning()
+                if operation_result:
+                    st.session_state.operation_history.append(f"Deleted from beginning: '{operation_result.data}'")
+                else:
+                    st.error("List is empty!")
+            
+            elif deletion_type == "From end":
+                operation_result = st.session_state.linked_list.delete_from_end()
+                if operation_result:
+                    st.session_state.operation_history.append(f"Deleted from end: '{operation_result.data}'")
+                else:
+                    st.error("List is empty!")
+            
+            elif deletion_type == "From specific position":
+                operation_result = st.session_state.linked_list.delete_from_position(position)
+                if operation_result:
+                    st.session_state.operation_history.append(f"Deleted from position {position}: '{operation_result.data}'")
+                else:
+                    st.error("Invalid position!")
+            
+            elif deletion_type == "By value":
+                if value:
+                    operation_result = st.session_state.linked_list.delete_by_value(value)
+                    if operation_result:
+                        st.session_state.operation_history.append(f"Deleted by value: '{value}'")
+                    else:
+                        st.error(f"Value '{value}' not found in list!")
+                else:
+                    st.error("Please enter a value to delete!")
+    
+    # Update operations
+    elif operation_type == "Update":
+        update_type = st.selectbox(
+            "Select Update Type:",
+            ["Change node value at given index", "Replace node by searching value"]
+        )
+        
+        if update_type == "Change node value at given index":
+            position = st.number_input("Position (0-based):", min_value=0, max_value=max(0, st.session_state.linked_list.size-1), value=0)
+            new_value = st.text_input("New value:")
+        else:
+            old_value = st.text_input("Value to replace:")
+            new_value = st.text_input("New value:")
+        
+        if st.button("Perform Update"):
+            if update_type == "Change node value at given index":
+                if new_value:
+                    success = st.session_state.linked_list.update_at_index(position, new_value)
+                    if success:
+                        st.session_state.operation_history.append(f"Updated position {position} to '{new_value}'")
+                        highlight_index = position
+                    else:
+                        st.error("Invalid position!")
+                else:
+                    st.error("Please enter a new value!")
+            
+            else:
+                if old_value and new_value:
+                    success = st.session_state.linked_list.update_by_value(old_value, new_value)
+                    if success:
+                        st.session_state.operation_history.append(f"Updated '{old_value}' to '{new_value}'")
+                        # Find the index for highlighting
+                        elements = st.session_state.linked_list.traverse()
+                        try:
+                            highlight_index = elements.index(new_value)
+                        except ValueError:
+                            pass
+                    else:
+                        st.error(f"Value '{old_value}' not found!")
+                else:
+                    st.error("Please enter both old and new values!")
+    
+    # Traversal operations
+    elif operation_type == "Traversal":
+        if st.button("Display All Elements"):
+            elements = st.session_state.linked_list.traverse()
+            st.write("List elements:", " → ".join(map(str, elements)) if elements else "Empty list")
+            st.session_state.operation_history.append("Displayed all elements")
+        
+        if st.button("Count Nodes"):
+            count = st.session_state.linked_list.count_nodes()
+            st.write(f"Number of nodes: {count}")
+            st.session_state.operation_history.append(f"Counted nodes: {count}")
+    
+    # Searching operations
+    elif operation_type == "Searching":
+        search_value = st.text_input("Enter value to search:")
+        
+        if st.button("Search"):
+            if search_value:
+                position, node = st.session_state.linked_list.search(search_value)
+                if position != -1:
+                    st.success(f"Value '{search_value}' found at position {position}")
+                    highlight_index = position
+                    st.session_state.operation_history.append(f"Searched for '{search_value}': found at position {position}")
+                else:
+                    st.error(f"Value '{search_value}' not found!")
+                    st.session_state.operation_history.append(f"Searched for '{search_value}': not found")
+            else:
+                st.error("Please enter a value to search!")
+    
+    # Advanced operations
+    elif operation_type == "Advanced Operations":
+        advanced_op = st.selectbox(
+            "Select Advanced Operation:",
+            ["Reverse the list", "Detect cycle", "Find middle node", "Find Nth node from end"]
+        )
+        
+        if advanced_op == "Find Nth node from end":
+            n = st.number_input("Enter N:", min_value=1, max_value=max(1, st.session_state.linked_list.size), value=1)
+        
+        if st.button("Perform Operation"):
+            if advanced_op == "Reverse the list":
+                st.session_state.linked_list.reverse()
+                st.session_state.operation_history.append("Reversed the list")
+                st.success("List reversed successfully!")
+            
+            elif advanced_op == "Detect cycle":
+                has_cycle = st.session_state.linked_list.detect_cycle()
+                if has_cycle:
+                    st.warning("Cycle detected in the list!")
+                else:
+                    st.success("No cycle detected in the list.")
+                st.session_state.operation_history.append(f"Cycle detection: {'Cycle found' if has_cycle else 'No cycle'}")
+            
+            elif advanced_op == "Find middle node":
+                middle_node = st.session_state.linked_list.find_middle()
+                if middle_node:
+                    st.success(f"Middle node: {middle_node.data}")
+                    # Find the index for highlighting
+                    elements = st.session_state.linked_list.traverse()
+                    highlight_index = len(elements) // 2
+                    st.session_state.operation_history.append(f"Found middle node: {middle_node.data}")
+                else:
+                    st.error("List is empty!")
+            
+            elif advanced_op == "Find Nth node from end":
+                nth_node = st.session_state.linked_list.find_nth_from_end(n)
+                if nth_node:
+                    st.success(f"{n}th node from end: {nth_node.data}")
+                    # Find the index for highlighting
+                    elements = st.session_state.linked_list.traverse()
+                    highlight_index = len(elements) - n
+                    st.session_state.operation_history.append(f"Found {n}th node from end: {nth_node.data}")
+                else:
+                    st.error("Invalid position or empty list!")
+    
+    # Visualization
+    st.subheader("📊 Linked List Visualization")
+    
+    elements = st.session_state.linked_list.traverse()
+    if elements:
+        fig = visualize_linked_list_simple(elements, highlight_index)
+        st.pyplot(fig)
+        plt.close(fig)
+    else:
+        st.info("The linked list is empty. Add some nodes to see the visualization.")
+    
+    # List information
+    st.subheader("📋 List Information")
+    col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>✅ Linked List Advantages:</h4>
-            <ul>
-                <li>Dynamic size allocation</li>
-                <li>Efficient insertion/deletion</li>
-                <li>Memory efficient (no wasted space)</li>
-                <li>Easy to implement stacks and queues</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+        st.write("**Size:**", st.session_state.linked_list.size)
     
     with col2:
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>❌ Linked List Disadvantages:</h4>
-            <ul>
-                <li>No random access to elements</li>
-                <li>Extra memory for storing pointers</li>
-                <li>Poor cache locality</li>
-                <li>Not suitable for binary search</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-
-elif current_section == "types":
-    st.markdown('<h2 class="section-header">🔄 Types of Linked Lists</h2>', unsafe_allow_html=True)
+        elements = st.session_state.linked_list.traverse()
+        st.write("**Elements:**", " → ".join(map(str, elements)) if elements else "Empty")
     
-    # Tabs for different types
-    tab1, tab2, tab3 = st.tabs(["🔗 Singly Linked List", "↔️ Doubly Linked List", "🔄 Circular Linked List"])
+    with col3:
+        if st.button("Clear List"):
+            st.session_state.linked_list = LinkedList()
+            st.session_state.operation_history = []
+            st.session_state.current_step = 0
+            st.success("List cleared!")
     
-    with tab1:
-        st.subheader("Singly Linked List")
-        
-        st.markdown("""
-        <div class="concept-box">
-            <p><strong>Singly Linked List</strong> is the simplest form where each node points to the next node, 
-            and the last node points to NULL.</p>
-            
-            <h4>Characteristics:</h4>
-            <ul>
-                <li>Each node has one pointer to the next node</li>
-                <li>Traversal is possible in only one direction (forward)</li>
-                <li>Last node points to NULL</li>
-                <li>Memory efficient compared to doubly linked lists</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="detail-box">
-            <h3>Detailed Explanation:</h3>
-            <p>In a singly linked list, each node contains data and a pointer to the next node in the sequence. 
-            The list is traversed starting from the head node, following the next pointers until reaching NULL.</p>
-            
-            <p><strong>Key Operations:</strong></p>
-            <ul>
-                <li><strong>Insertion:</strong> Can be done at the beginning, end, or middle of the list</li>
-                <li><strong>Deletion:</strong> Removing nodes requires updating the previous node's next pointer</li>
-                <li><strong>Traversal:</strong> Visiting each node sequentially from head to tail</li>
-                <li><strong>Search:</strong> Finding a node requires traversing the list until found</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        fig_singly = draw_singly_linked_list()
-        st.pyplot(fig_singly)
-        plt.close(fig_singly)
-        
-        # Interactive demo
-        st.subheader("🎮 Interactive Demo")
-        
-        # Initialize session state for singly linked list
-        if 'singly_list' not in st.session_state:
-            st.session_state.singly_list = ['A', 'B', 'C']
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            new_element = st.text_input("Add element:", key="singly_add")
-            if st.button("Add to End", key="singly_add_btn"):
-                if new_element:
-                    st.session_state.singly_list.append(new_element)
-                    st.success(f"Added '{new_element}' to the list!")
-        
-        with col2:
-            if st.button("Remove Last", key="singly_remove_btn"):
-                if st.session_state.singly_list:
-                    removed = st.session_state.singly_list.pop()
-                    st.success(f"Removed '{removed}' from the list!")
-                else:
-                    st.warning("List is empty!")
-        
-        with col3:
-            if st.button("Clear List", key="singly_clear_btn"):
-                st.session_state.singly_list = []
-                st.success("List cleared!")
-        
-        if st.session_state.singly_list:
-            st.write("**Current List:**", " → ".join(st.session_state.singly_list) + " → NULL")
-        else:
-            st.write("**Current List:** Empty")
-        
-        # Code example
-        st.subheader("💻 Implementation Example")
-        st.code("""
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class SinglyLinkedList:
-    def __init__(self):
-        self.head = None
-    
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            return
-        current = self.head
-        while current.next:
-            current = current.next
-        current.next = new_node
-    
-    def prepend(self, data):
-        new_node = Node(data)
-        new_node.next = self.head
-        self.head = new_node
-    
-    def delete(self, data):
-        if not self.head:
-            return
-        if self.head.data == data:
-            self.head = self.head.next
-            return
-        current = self.head
-        while current.next:
-            if current.next.data == data:
-                current.next = current.next.next
-                return
-            current = current.next
-    
-    def display(self):
-        elements = []
-        current = self.head
-        while current:
-            elements.append(current.data)
-            current = current.next
-        return elements
-        """, language="python")
-    
-    with tab2:
-        st.subheader("Doubly Linked List")
-        
-        st.markdown("""
-        <div class="concept-box">
-            <p><strong>Doubly Linked List</strong> is a more complex structure where each node has two pointers: 
-            one pointing to the next node and another pointing to the previous node.</p>
-            
-            <h4>Characteristics:</h4>
-            <ul>
-                <li>Each node has two pointers: next and previous</li>
-                <li>Bidirectional traversal (forward and backward)</li>
-                <li>First node's previous pointer is NULL</li>
-                <li>Last node's next pointer is NULL</li>
-                <li>More memory overhead due to extra pointer</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="detail-box">
-            <h3>Detailed Explanation:</h3>
-            <p>In a doubly linked list, each node contains data, a pointer to the next node, and a pointer to the previous node. 
-            This allows traversal in both directions, making some operations more efficient.</p>
-            
-            <p><strong>Advantages over Singly Linked List:</strong></p>
-            <ul>
-                <li>Can be traversed in both directions</li>
-                <li>Easier deletion of nodes (don't need to track previous node)</li>
-                <li>Better for certain algorithms that require backward traversal</li>
-            </ul>
-            
-            <p><strong>Disadvantages:</strong></p>
-            <ul>
-                <li>Requires more memory for the extra pointer</li>
-                <li>Operations are slightly more complex to implement</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        fig_doubly = draw_doubly_linked_list()
-        st.pyplot(fig_doubly)
-        plt.close(fig_doubly)
-        
-        # Interactive demo for doubly linked list
-        st.subheader("🎮 Interactive Demo")
-        
-        if 'doubly_list' not in st.session_state:
-            st.session_state.doubly_list = ['X', 'Y', 'Z']
-        
-        col1, col2, col3, col4 = st.columns(4)
-        
-        with col1:
-            new_element_d = st.text_input("Add element:", key="doubly_add")
-            if st.button("Add to End", key="doubly_add_btn"):
-                if new_element_d:
-                    st.session_state.doubly_list.append(new_element_d)
-                    st.success(f"Added '{new_element_d}' to the list!")
-        
-        with col2:
-            if st.button("Add to Start", key="doubly_prepend_btn"):
-                if new_element_d:
-                    st.session_state.doubly_list.insert(0, new_element_d)
-                    st.success(f"Added '{new_element_d}' to the start!")
-        
-        with col3:
-            if st.button("Remove Last", key="doubly_remove_btn"):
-                if st.session_state.doubly_list:
-                    removed = st.session_state.doubly_list.pop()
-                    st.success(f"Removed '{removed}' from the list!")
-                else:
-                    st.warning("List is empty!")
-        
-        with col4:
-            if st.button("Clear List", key="doubly_clear_btn"):
-                st.session_state.doubly_list = []
-                st.success("List cleared!")
-        
-        if st.session_state.doubly_list:
-            forward = " ⇄ ".join(st.session_state.doubly_list)
-            st.write(f"**Forward:** NULL ← {forward} → NULL")
-            st.write(f"**Backward:** NULL → {' ← '.join(reversed(st.session_state.doubly_list))} ← NULL")
-        else:
-            st.write("**Current List:** Empty")
-        
-        # Code example
-        st.subheader("💻 Implementation Example")
-        st.code("""
-class DoublyNode:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-        self.prev = None
-
-class DoublyLinkedList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-    
-    def append(self, data):
-        new_node = DoublyNode(data)
-        if not self.head:
-            self.head = self.tail = new_node
-        else:
-            new_node.prev = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
-    
-    def prepend(self, data):
-        new_node = DoublyNode(data)
-        if not self.head:
-            self.head = self.tail = new_node
-        else:
-            new_node.next = self.head
-            self.head.prev = new_node
-            self.head = new_node
-    
-    def delete(self, data):
-        current = self.head
-        while current:
-            if current.data == data:
-                if current.prev:
-                    current.prev.next = current.next
-                else:
-                    self.head = current.next
-                
-                if current.next:
-                    current.next.prev = current.prev
-                else:
-                    self.tail = current.prev
-                return
-            current = current.next
-    
-    def display_forward(self):
-        elements = []
-        current = self.head
-        while current:
-            elements.append(current.data)
-            current = current.next
-        return elements
-    
-    def display_backward(self):
-        elements = []
-        current = self.tail
-        while current:
-            elements.append(current.data)
-            current = current.prev
-        return elements
-        """, language="python")
-    
-    with tab3:
-        st.subheader("Circular Linked List")
-        
-        st.markdown("""
-        <div class="concept-box">
-            <p><strong>Circular Linked List</strong> is a variation where the last node points back to the first node, 
-            forming a circle. This can be implemented with both singly and doubly linked structures.</p>
-            
-            <h4>Characteristics:</h4>
-            <ul>
-                <li>Last node points to the first node (no NULL at the end)</li>
-                <li>Can traverse the entire list from any starting point</li>
-                <li>Useful for round-robin scheduling</li>
-                <li>Can be singly or doubly circular</li>
-                <li>Need to be careful to avoid infinite loops</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="detail-box">
-            <h3>Detailed Explanation:</h3>
-            <p>In a circular linked list, the last node points back to the first node instead of to NULL. 
-            This creates a circular structure that can be traversed indefinitely.</p>
-            
-            <p><strong>Types of Circular Linked Lists:</strong></p>
-            <ul>
-                <li><strong>Singly Circular:</strong> Each node has a next pointer, and the last node points to the first</li>
-                <li><strong>Doubly Circular:</strong> Each node has next and previous pointers, forming a bidirectional circle</li>
-            </ul>
-            
-            <p><strong>Common Use Cases:</strong></p>
-            <ul>
-                <li>Round-robin scheduling in operating systems</li>
-                <li>Implementing circular buffers</li>
-                <li>Multiplayer games where players take turns</li>
-                <li>Applications that require repeated cycling through elements</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        fig_circular = draw_circular_linked_list()
-        st.pyplot(fig_circular)
-        plt.close(fig_circular)
-        
-        # Interactive demo for circular linked list
-        st.subheader("🎮 Interactive Demo")
-        
-        if 'circular_list' not in st.session_state:
-            st.session_state.circular_list = ['1', '2', '3', '4']
-        
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            new_element_c = st.text_input("Add element:", key="circular_add")
-            if st.button("Add to Circle", key="circular_add_btn"):
-                if new_element_c:
-                    st.session_state.circular_list.append(new_element_c)
-                    st.success(f"Added '{new_element_c}' to the circle!")
-        
-        with col2:
-            if st.button("Remove Last", key="circular_remove_btn"):
-                if st.session_state.circular_list:
-                    removed = st.session_state.circular_list.pop()
-                    st.success(f"Removed '{removed}' from the circle!")
-                else:
-                    st.warning("Circle is empty!")
-        
-        with col3:
-            if st.button("Reset Circle", key="circular_reset_btn"):
-                st.session_state.circular_list = ['1', '2', '3', '4']
-                st.success("Circle reset to default!")
-        
-        if st.session_state.circular_list:
-            circular_display = " → ".join(st.session_state.circular_list)
-            st.write(f"**Circular Path:** {circular_display} → {st.session_state.circular_list[0]} → ...")
-            st.info(f"💡 The list continues infinitely: {circular_display} → {circular_display} → ...")
-        else:
-            st.write("**Current Circle:** Empty")
-        
-        # Traversal demonstration
-        if st.session_state.circular_list:
-            st.subheader("🔄 Traversal Demo")
-            start_from = st.selectbox("Start traversal from:", st.session_state.circular_list)
-            steps = st.slider("Number of steps:", 1, 15, 8)
-            
-            if st.button("Show Traversal Path"):
-                start_idx = st.session_state.circular_list.index(start_from)
-                path = []
-                for i in range(steps):
-                    current_idx = (start_idx + i) % len(st.session_state.circular_list)
-                    path.append(st.session_state.circular_list[current_idx])
-                
-                st.write("**Traversal Path:**", " → ".join(path))
-        
-        # Code example
-        st.subheader("💻 Implementation Example")
-        st.code("""
-class CircularLinkedList:
-    def __init__(self):
-        self.head = None
-    
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            new_node.next = new_node  # Point to itself
-        else:
-            # Find the last node (the one pointing to head)
-            current = self.head
-            while current.next != self.head:
-                current = current.next
-            
-            # Insert new node
-            current.next = new_node
-            new_node.next = self.head
-    
-    def prepend(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            new_node.next = new_node
-        else:
-            # Find the last node
-            current = self.head
-            while current.next != self.head:
-                current = current.next
-            
-            # Update connections
-            new_node.next = self.head
-            current.next = new_node
-            self.head = new_node
-    
-    def delete(self, data):
-        if not self.head:
-            return
-        
-        # If only one node
-        if self.head.next == self.head and self.head.data == data:
-            self.head = None
-            return
-        
-        # If head needs to be deleted
-        if self.head.data == data:
-            # Find the last node
-            current = self.head
-            while current.next != self.head:
-                current = current.next
-            current.next = self.head.next
-            self.head = self.head.next
-            return
-        
-        # Delete from middle or end
-        current = self.head
-        while current.next != self.head:
-            if current.next.data == data:
-                current.next = current.next.next
-                return
-            current = current.next
-    
-    def display(self, limit=10):
-        if not self.head:
-            return []
-        
-        elements = []
-        current = self.head
-        count = 0
-        while count < limit:
-            elements.append(current.data)
-            current = current.next
-            count += 1
-            if current == self.head and count > 1:
-                elements.append("...")
-                break
-        return elements
-        """, language="python")
-    
-    # Summary section
-    st.markdown("---")
-    st.subheader("📊 Types Comparison Summary")
-    
-    comparison_data = {
-        "Type": ["Singly Linked", "Doubly Linked", "Circular Singly", "Circular Doubly"],
-        "Traversal": ["One direction", "Both directions", "One direction (circular)", "Both directions (circular)"],
-        "Memory per Node": ["Data + 1 pointer", "Data + 2 pointers", "Data + 1 pointer", "Data + 2 pointers"],
-        "Last Node Points To": ["NULL", "NULL", "First node", "First node"],
-        "Use Cases": [
-            "Simple lists, stacks",
-            "Navigation, undo/redo",
-            "Round-robin, games",
-            "Advanced navigation"
-        ]
-    }
-    
-    st.table(comparison_data)
-    
-    st.markdown("""
-    <div class="highlight-box">
-        <h4>🎯 When to Use Each Type:</h4>
-        <ul>
-            <li><strong>Singly Linked:</strong> When you only need forward traversal and want to minimize memory usage</li>
-            <li><strong>Doubly Linked:</strong> When you need efficient backward traversal (browsers, text editors)</li>
-            <li><strong>Circular:</strong> When you need to cycle through elements continuously (task scheduling, games)</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    # Operation history
+    if st.session_state.operation_history:
+        st.subheader("📜 Operation History")
+        for i, op in enumerate(st.session_state.operation_history):
+            st.write(f"{i+1}. {op}")
 
 elif current_section == "operations":
     st.markdown('<h2 class="section-header">⚡ Operations & Algorithms</h2>', unsafe_allow_html=True)
@@ -1306,72 +1043,6 @@ elif current_section == "operations":
         Understanding these operations is crucial for effective use of linked lists.</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Visual representation of operations
-    st.subheader("📊 Common Operations Visualization")
-    fig_ops = draw_linked_list_operations()
-    st.pyplot(fig_ops)
-    plt.close(fig_ops)
-    
-    # Detailed explanations of operations
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>🔍 Search Operation</h4>
-            <p><strong>Time Complexity:</strong> O(n)</p>
-            <p>To find a node with specific data:</p>
-            <ol>
-                <li>Start from the head node</li>
-                <li>Traverse through each node</li>
-                <li>Compare each node's data with target value</li>
-                <li>Return node if found, else NULL</li>
-            </ol>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>🗑️ Deletion Operation</h4>
-            <p><strong>Time Complexity:</strong> O(1) for head, O(n) for arbitrary node</p>
-            <p>To delete a node:</p>
-            <ol>
-                <li>Find the node to delete</li>
-                <li>Update the previous node's next pointer</li>
-                <li>Free the memory of the deleted node</li>
-                <li>Special case: deleting head node</li>
-            </ol>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>📝 Insertion Operation</h4>
-            <p><strong>Time Complexity:</strong> O(1) for head, O(n) for arbitrary position</p>
-            <p>Three types of insertion:</p>
-            <ol>
-                <li><strong>At beginning:</strong> Update head pointer</li>
-                <li><strong>At end:</strong> Traverse to last node, update its next pointer</li>
-                <li><strong>At middle:</strong> Find position, update surrounding pointers</li>
-            </ol>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>🔄 Traversal Operation</h4>
-            <p><strong>Time Complexity:</strong> O(n)</p>
-            <p>To visit all nodes:</p>
-            <ol>
-                <li>Start from the head node</li>
-                <li>Follow next pointers until NULL</li>
-                <li>Perform operation on each node</li>
-                <li>Stop when NULL is reached</li>
-            </ol>
-        </div>
-        """, unsafe_allow_html=True)
     
     # Common algorithms
     st.subheader("🧠 Common Algorithms")
@@ -1487,6 +1158,78 @@ def find_middle(head):
     return slow
         """, language="python")
 
+elif current_section == "types":
+    st.markdown('<h2 class="section-header">🔄 Types of Linked Lists</h2>', unsafe_allow_html=True)
+    
+    st.markdown("""
+    <div class="concept-box">
+        <p>There are several types of linked lists, each with its own characteristics and use cases:</p>
+        <ul>
+            <li><strong>Singly Linked List:</strong> Each node points to the next node</li>
+            <li><strong>Doubly Linked List:</strong> Each node has pointers to both next and previous nodes</li>
+            <li><strong>Circular Linked List:</strong> The last node points back to the first node</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Code examples for different types
+    st.subheader("💻 Implementation Examples")
+    
+    tab1, tab2, tab3 = st.tabs(["Singly Linked", "Doubly Linked", "Circular Linked"])
+    
+    with tab1:
+        st.code("""
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+    
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            return
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+        """, language="python")
+    
+    with tab2:
+        st.code("""
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+    
+    def append(self, data):
+        new_node = DoublyNode(data)
+        if not self.head:
+            self.head = self.tail = new_node
+        else:
+            new_node.prev = self.tail
+            self.tail.next = new_node
+            self.tail = new_node
+        """, language="python")
+    
+    with tab3:
+        st.code("""
+class CircularLinkedList:
+    def __init__(self):
+        self.head = None
+    
+    def append(self, data):
+        new_node = Node(data)
+        if not self.head:
+            self.head = new_node
+            new_node.next = new_node
+        else:
+            current = self.head
+            while current.next != self.head:
+                current = current.next
+            current.next = new_node
+            new_node.next = self.head
+        """, language="python")
+
 elif current_section == "applications":
     st.markdown('<h2 class="section-header">🎯 Real-world Applications</h2>', unsafe_allow_html=True)
     
@@ -1529,21 +1272,6 @@ elif current_section == "applications":
             </ul>
         </div>
         """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>🎵 Music/Video Players</h4>
-            <p>Circular linked lists are used to implement playlists that loop continuously.</p>
-            
-            <p><strong>How it works:</strong></p>
-            <ul>
-                <li>Each song is a node in the list</li>
-                <li>Last song points to first song</li>
-                <li>Seamless continuous playback</li>
-                <li>Easy to add/remove songs</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
     
     with col2:
         st.markdown("""
@@ -1562,63 +1290,18 @@ elif current_section == "applications":
         
         st.markdown("""
         <div class="highlight-box">
-            <h4>🗃️ Hash Tables</h4>
-            <p>Linked lists are used to handle collisions in hash table implementations.</p>
+            <h4>🎵 Music Players</h4>
+            <p>Circular linked lists are used to implement playlists that loop continuously.</p>
             
             <p><strong>How it works:</strong></p>
             <ul>
-                <li>Each bucket in hash table is a linked list</li>
-                <li>Items with same hash are stored in same list</li>
-                <li>Efficient handling of collisions</li>
+                <li>Each song is a node in the list</li>
+                <li>Last song points to first song</li>
+                <li>Seamless continuous playback</li>
+                <li>Easy to add/remove songs</li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
-        
-        st.markdown("""
-        <div class="highlight-box">
-            <h4>⚙️ Operating Systems</h4>
-            <p>Linked lists are used in various OS components like process scheduling and file systems.</p>
-            
-            <p><strong>Applications:</strong></p>
-            <ul>
-                <li>Process control blocks management</li>
-                <li>File directory structures</li>
-                <li>Memory page management</li>
-                <li>I/O buffer management</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Interview questions section
-    st.markdown("---")
-    st.subheader("💼 Common Interview Questions")
-    
-    st.markdown("""
-    <div class="node-structure">
-        <p>Linked lists are a common topic in technical interviews. Here are some frequently asked questions:</p>
-        
-        <ol>
-            <li>Reverse a linked list</li>
-            <li>Detect cycle in a linked list</li>
-            <li>Find the middle element of a linked list</li>
-            <li>Merge two sorted linked lists</li>
-            <li>Remove nth node from end of list</li>
-            <li>Add two numbers represented as linked lists</li>
-            <li>Intersection point of two linked lists</li>
-            <li>Palindrome linked list</li>
-            <li>LRU Cache implementation</li>
-            <li>Flatten a multilevel doubly linked list</li>
-        </ol>
-        
-        <p><strong>Tips for linked list interviews:</strong></p>
-        <ul>
-            <li>Always handle edge cases (empty list, single node list)</li>
-            <li>Use two-pointer technique for many problems</li>
-            <li>Draw diagrams to visualize pointer changes</li>
-            <li>Consider recursive solutions for some problems</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
 
 # Add footer
 st.markdown("---")
