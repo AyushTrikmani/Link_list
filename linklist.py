@@ -691,7 +691,7 @@ elif current_section == "basic":
             <li><strong>Next Field:</strong> Contains address/reference of next node in the sequence</li>
         </ul>
         <p>Unlike arrays, linked list elements are not stored in contiguous memory locations. Each node can be scattered anywhere in memory, connected through pointers.</p>
-
+<div>
         <h4>Key Characteristics:</h4>
         <ul>
             <li><strong>Dynamic Size:</strong> Can grow or shrink during runtime</li>
@@ -700,7 +700,8 @@ elif current_section == "basic":
             <li><strong>Efficient Insertions/Deletions:</strong> Especially at beginning or known positions</li>
             <li><strong>Memory Overhead:</strong> Extra space for storing pointers</li>
         </ul>
-    </div>
+</div>
+</div>
     """, unsafe_allow_html=True)
     
     # Visual representation
@@ -722,8 +723,9 @@ elif current_section == "basic":
                 <li><strong>Data Field:</strong> Stores the actual information</li>
                 <li><strong>Next Field:</strong> Contains address of next node</li>
             </ul>
-            
+            <div>
             <h4>Code Representation:</h4>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         
@@ -753,7 +755,7 @@ class Node:
     <div class="detail-box">
         <h4>Understanding Arrays in Detail</h4>
         <p><strong>Arrays</strong> are fixed-size, homogeneous data structures that store elements in contiguous memory locations.</p>
-
+<div>
         <h5>Array Characteristics:</h5>
         <ul>
             <li><strong>Fixed Size:</strong> Size determined at compile-time or initialization</li>
@@ -762,7 +764,7 @@ class Node:
             <li><strong>Random Access:</strong> Direct access to any element using index</li>
             <li><strong>Memory Efficient:</strong> No extra space for pointers or metadata</li>
         </ul>
-
+</div>
         <h5>Array Operations:</h5>
         <ul>
             <li><strong>Access:</strong> arr[i] - O(1) time complexity</li>
@@ -1227,7 +1229,7 @@ def reverse_list(head):
         <div class="node-structure">
             <h4>Cycle Detection (Floyd's Algorithm)</h4>
             <p>This algorithm detects if a linked list has a cycle using two pointers moving at different speeds.</p>
-            
+            <div>
             <p><strong>Steps:</strong></p>
             <ol>
                 <li>Initialize two pointers: slow = head, fast = head</li>
@@ -1240,7 +1242,7 @@ def reverse_list(head):
                     </ul>
                 </li>
             </ol>
-            
+            </div>
             <p><strong>Time Complexity:</strong> O(n)</p>
             <p><strong>Space Complexity:</strong> O(1)</p>
         </div>
@@ -1385,13 +1387,14 @@ elif current_section == "applications":
             <h4>💾 Memory Management</h4>
             <p>Linked lists are used in memory allocators to maintain free memory blocks. 
             Each node represents a free memory block with its size and location.</p>
-            
+            <div>
             <p><strong>Benefits:</strong></p>
             <ul>
                 <li>Efficient allocation and deallocation</li>
                 <li>Easy to merge adjacent free blocks</li>
                 <li>Dynamic memory management</li>
             </ul>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         
@@ -1415,13 +1418,14 @@ elif current_section == "applications":
         <div class="highlight-box">
             <h4>📝 Text Editors</h4>
             <p>Linked lists are used to represent text in editors where each character is a node.</p>
-            
+            <div>
             <p><strong>Benefits:</strong></p>
             <ul>
                 <li>Efficient insertion and deletion of text</li>
                 <li>No need to shift entire text after edits</li>
                 <li>Better performance for large documents</li>
             </ul>
+            </div>
         </div>
         """, unsafe_allow_html=True)
         
