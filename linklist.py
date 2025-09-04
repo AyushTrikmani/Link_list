@@ -2377,7 +2377,7 @@ elif current_section == "applications":
     with col2:
         st.markdown("""
         <div class="highlight-box">
-            <h4>📝 Text Editors</h4>
+            <h4> Text Editors</h4>
             <p>Linked lists are used to represent text in editors where each character is a node.</p>
             <div>
             <p><strong>Benefits:</strong></p>
@@ -2392,7 +2392,7 @@ elif current_section == "applications":
         
         st.markdown("""
         <div class="highlight-box">
-            <h4>🎵 Music Players</h4>
+            <h4> Music Players</h4>
             <p>Circular linked lists are used to implement playlists that loop continuously.</p>
             
             <p><strong>How it works:</strong></p>
