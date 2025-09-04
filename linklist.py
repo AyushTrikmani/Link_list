@@ -19,20 +19,6 @@ st.set_page_config(
 
 # Modern CSS with proper light/dark mode support
 st.markdown("""
-<div class="detail-box">
-    <h4>🔗 Singly Linked List</h4>
-    <p><strong>Definition:</strong> A singly linked list is a linear data structure where each node contains data and a reference (pointer) to the next node in the sequence.</p>
-
-    <h5>📋 Characteristics:</h5>
-    <ul>
-        <li><strong>Unidirectional:</strong> Can only traverse in one direction (forward)</li>
-        <li><strong>Simple Structure:</strong> Each node has data and next pointer</li>
-        <li><strong>Memory Efficient:</strong> Minimal overhead per node</li>
-        <li><strong>Dynamic Size:</strong> Can grow and shrink as needed</li>
-        <li><strong>No Random Access:</strong> Must traverse from head to access elements</li>
-    </ul>
-</div>
-""", unsafe_allow_html=True)
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -286,6 +272,159 @@ st.markdown("""
     .comparison-table tr:hover td {
         background: var(--elevated-bg);
         transform: translateX(4px);
+    }
+
+    .comparison-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .comparison-table td:first-child {
+        font-weight: 600;
+        color: var(--text-primary);
+    }
+
+    .detail-box {
+        background: var(--card-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border-left: 6px solid var(--accent-primary);
+        border-radius: 0 20px 20px 0;
+        padding: 2rem;
+        margin: 1.5rem 0;
+        box-shadow: var(--shadow-md);
+        position: relative;
+        animation: slideInLeft 0.6s ease-out;
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        border-left: 6px solid var(--accent-primary);
+    }
+
+    .detail-box:hover {
+        border-left-color: var(--accent-secondary);
+        transform: translateX(8px);
+        box-shadow: var(--shadow-lg);
+    }
+
+    .detail-box h4, .detail-box h5 {
+        color: var(--text-primary);
+        margin-bottom: 1rem;
+    }
+
+    .detail-box p, .detail-box li {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            width: 0;
+        }
+        to {
+            width: 120px;
+        }
+    }
+
+    @keyframes expandHeight {
+        from {
+            height: 0;
+        }
+        to {
+            height: 60%;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Node and LinkedList classes
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
+    
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        self.size += 1
+        return new_node
+    
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Initialize session state
+if 'linked_list' not in st.session_state:
+    st.session_state.linked_list = LinkedList()
+
+# Main title
+st.markdown('<h1 class="main-header">Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
+
+# Main content
+st.markdown("""
+<div class="concept-box">
+    <h2>Welcome to the Interactive Linked Lists Tutorial!</h2>
+    <p>This comprehensive tutorial will help you understand linked lists through interactive visualizations and clear explanations.</p>
+    <h3>What you'll learn:</h3>
+    <ul>
+        <li>Basic concepts and differences from arrays</li>
+        <li>Different types of linked lists with visualizations</li>
+        <li>Common operations and algorithms</li>
+        <li>Interactive operations with real-time visualization</li>
+        <li>Practical applications and use cases</li>
+        <li>Implementation examples in Python</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="detail-box">
+    <h4>Singly Linked List</h4>
+    <p><strong>Definition:</strong> A singly linked list is a linear data structure where each node contains data and a reference (pointer) to the next node in the sequence.</p>
+    <h5>Characteristics:</h5>
+    <ul>
+        <li><strong>Unidirectional:</strong> Can only traverse in one direction (forward)</li>
+        <li><strong>Simple Structure:</strong> Each node has data and next pointer</li>
+        <li><strong>Memory Efficient:</strong> Minimal overhead per node</li>
+        <li><strong>Dynamic Size:</strong> Can grow and shrink as needed</li>
+        <li><strong>No Random Access:</strong> Must traverse from head to access elements</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
     }
 
     .comparison-table tr:last-child td {
