@@ -687,10 +687,19 @@ elif current_section == "basic":
     <div class="concept-box">
         <p><strong>A Linked List</strong> is a linear data structure where elements are stored in nodes, and each node contains:</p>
         <ul>
-            <li><strong>Data:</strong> The actual value stored in the node</li>
-            <li><strong>Next:</strong> A pointer/reference to the next node in the sequence</li>
+            <li><strong>Data Field:</strong> Stores the actual value stored in the node</li>
+            <li><strong>Next Field:</strong> Contains address/reference of next node in the sequence</li>
         </ul>
-        <p>Unlike arrays, linked list elements are not stored in contiguous memory locations.</p>
+        <p>Unlike arrays, linked list elements are not stored in contiguous memory locations. Each node can be scattered anywhere in memory, connected through pointers.</p>
+
+        <h4>Key Characteristics:</h4>
+        <ul>
+            <li><strong>Dynamic Size:</strong> Can grow or shrink during runtime</li>
+            <li><strong>No Fixed Size:</strong> Unlike arrays, no need to pre-allocate memory</li>
+            <li><strong>Sequential Access:</strong> Elements accessed by traversing from head</li>
+            <li><strong>Efficient Insertions/Deletions:</strong> Especially at beginning or known positions</li>
+            <li><strong>Memory Overhead:</strong> Extra space for storing pointers</li>
+        </ul>
     </div>
     """, unsafe_allow_html=True)
     
