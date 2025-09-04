@@ -17,265 +17,667 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better UI with light/dark mode support
+# Enhanced CSS with animations, glassmorphism, and modern UI
 st.markdown("""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+    
     :root {
-        --primary-bg: #ffffff;
-        --secondary-bg: #f8f9fa;
-        --tertiary-bg: #e9ecef;
-        --text-primary: #212529;
-        --text-secondary: #6c757d;
-        --accent-primary: #007bff;
-        --accent-secondary: #28a745;
-        --accent-warning: #ffc107;
-        --accent-danger: #dc3545;
-        --border-color: #dee2e6;
-        --shadow: rgba(0, 0, 0, 0.1);
-        --gradient-start: #667eea;
-        --gradient-end: #764ba2;
+        --primary-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --secondary-bg: rgba(255, 255, 255, 0.1);
+        --tertiary-bg: rgba(255, 255, 255, 0.05);
+        --glass-bg: rgba(255, 255, 255, 0.15);
+        --text-primary: #2d3748;
+        --text-secondary: #4a5568;
+        --accent-primary: #667eea;
+        --accent-secondary: #764ba2;
+        --accent-success: #48bb78;
+        --accent-warning: #ed8936;
+        --accent-danger: #f56565;
+        --accent-info: #4299e1;
+        --border-color: rgba(255, 255, 255, 0.2);
+        --shadow-light: 0 8px 32px rgba(31, 38, 135, 0.37);
+        --shadow-heavy: 0 15px 35px rgba(31, 38, 135, 0.5);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        --gradient-warning: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        --backdrop-blur: blur(20px);
     }
 
     @media (prefers-color-scheme: dark) {
         :root {
-            --primary-bg: #1a1a1a;
-            --secondary-bg: #2d2d2d;
-            --tertiary-bg: #404040;
-            --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --accent-primary: #4dabf7;
-            --accent-secondary: #51cf66;
-            --accent-warning: #ffd43b;
-            --accent-danger: #ff6b6b;
-            --border-color: #555555;
-            --shadow: rgba(0, 0, 0, 0.3);
-            --gradient-start: #4c63d2;
-            --gradient-end: #6b46c1;
+            --secondary-bg: rgba(0, 0, 0, 0.2);
+            --tertiary-bg: rgba(0, 0, 0, 0.1);
+            --glass-bg: rgba(0, 0, 0, 0.25);
+            --text-primary: #f7fafc;
+            --text-secondary: #e2e8f0;
+            --border-color: rgba(255, 255, 255, 0.1);
         }
     }
 
-    body {
-        background-color: var(--primary-bg);
-        color: var(--text-primary);
-        transition: background-color 0.3s ease, color 0.3s ease;
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stApp {
+        background: var(--primary-bg);
+        background-attachment: fixed;
     }
 
     .main-header {
-        font-size: 3rem;
-        color: var(--accent-primary);
+        font-size: 3.5rem;
+        font-weight: 800;
         text-align: center;
-        margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px var(--shadow);
-        font-weight: 700;
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        margin: 2rem 0;
+        background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-    }
-
-    .section-header {
-        font-size: 2rem;
-        color: var(--accent-secondary);
-        border-bottom: 3px solid var(--accent-secondary);
-        padding-bottom: 10px;
-        margin-bottom: 20px;
-        font-weight: 600;
-    }
-
-    .concept-box {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        color: white;
-        padding: 25px;
-        border-radius: 15px;
-        margin: 15px 0;
-        box-shadow: 0 8px 25px var(--shadow);
-        border: none;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .concept-box:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 12px 35px var(--shadow);
-    }
-
-    .comparison-table {
-        border-collapse: collapse;
-        width: 100%;
-        margin: 20px 0;
-        box-shadow: 0 4px 15px var(--shadow);
-        border-radius: 10px;
-        overflow: hidden;
-    }
-
-    .comparison-table th, .comparison-table td {
-        border: 1px solid var(--border-color);
-        padding: 15px;
-        text-align: left;
-        transition: background-color 0.3s ease;
-    }
-
-    .comparison-table th {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        color: white;
-        font-weight: bold;
-        font-size: 1.1em;
-    }
-
-    .comparison-table tr:nth-child(even) {
-        background-color: var(--secondary-bg);
-    }
-
-    .comparison-table tr:hover {
-        background-color: var(--tertiary-bg);
-    }
-
-    .node-structure {
-        background: var(--secondary-bg);
-        border: 2px solid var(--accent-primary);
-        border-radius: 12px;
-        padding: 20px;
-        margin: 15px 0;
-        box-shadow: 0 4px 12px var(--shadow);
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    .node-structure:hover {
-        border-color: var(--accent-secondary);
-        box-shadow: 0 6px 20px var(--shadow);
-    }
-
-    .highlight-box {
-        background: var(--tertiary-bg);
-        border: 2px solid var(--accent-warning);
-        border-radius: 12px;
-        padding: 20px;
-        margin: 15px 0;
-        box-shadow: 0 4px 12px var(--shadow);
-        transition: background-color 0.3s ease;
-    }
-
-    .code-block {
-        background: var(--secondary-bg);
-        color: var(--text-primary);
-        padding: 20px;
-        border-radius: 12px;
-        margin: 15px 0;
-        font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-        overflow-x: auto;
-        border: 1px solid var(--border-color);
-        box-shadow: 0 4px 12px var(--shadow);
+        text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        animation: fadeInUp 1s ease-out;
         position: relative;
     }
 
-    .code-block::before {
-        content: "💻";
+    .main-header::before {
+        content: '';
         position: absolute;
-        top: 10px;
-        right: 15px;
-        font-size: 1.2em;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 4px;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+        animation: slideIn 1.5s ease-out;
+    }
+
+    .section-header {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 2rem 0 1.5rem 0;
+        position: relative;
+        padding-left: 20px;
+        animation: slideInLeft 0.8s ease-out;
+    }
+
+    .section-header::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 6px;
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+        animation: expandHeight 1s ease-out 0.3s both;
+    }
+
+    .concept-box {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        -webkit-backdrop-filter: var(--backdrop-blur);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 20px 0;
+        box-shadow: var(--shadow-light);
+        position: relative;
+        overflow: hidden;
+        animation: fadeInUp 0.6s ease-out;
+    }
+
+    .concept-box::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .concept-box:hover::before {
+        left: 100%;
+    }
+
+    .concept-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: var(--shadow-heavy);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .comparison-table {
+        border-collapse: separate;
+        border-spacing: 0;
+        width: 100%;
+        margin: 25px 0;
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: var(--shadow-light);
+        animation: fadeIn 0.8s ease-out;
+    }
+
+    .comparison-table th {
+        background: var(--gradient-primary);
+        color: white;
+        padding: 20px 15px;
+        font-weight: 600;
+        font-size: 1.1em;
+        text-align: left;
+        position: relative;
+    }
+
+    .comparison-table td {
+        padding: 18px 15px;
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(255, 255, 255, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .comparison-table tr:hover td {
+        background: rgba(255, 255, 255, 0.1);
+        transform: scale(1.01);
+    }
+
+    .node-structure {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: var(--shadow-light);
+        position: relative;
+        overflow: hidden;
+        animation: slideInRight 0.7s ease-out;
+    }
+
+    .node-structure::after {
+        content: '🔗';
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 1.5em;
+        opacity: 0.3;
+        animation: pulse 2s infinite;
+    }
+
+    .node-structure:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        transform: translateY(-5px);
+    }
+
+    .highlight-box {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border: 2px solid var(--accent-warning);
+        border-radius: 16px;
+        padding: 25px;
+        margin: 20px 0;
+        box-shadow: var(--shadow-light);
+        position: relative;
+        animation: bounceIn 0.8s ease-out;
+    }
+
+    .highlight-box::before {
+        content: '💡';
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: var(--accent-warning);
+        color: white;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9em;
+        animation: bounce 2s infinite;
     }
 
     .detail-box {
-        background: var(--secondary-bg);
-        border-left: 5px solid var(--accent-primary);
-        padding: 20px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border-left: 6px solid var(--accent-primary);
+        border-radius: 0 16px 16px 0;
+        padding: 25px;
         margin: 20px 0;
-        border-radius: 0 12px 12px 0;
-        box-shadow: 0 4px 12px var(--shadow);
-        transition: border-left-color 0.3s ease;
+        box-shadow: var(--shadow-light);
+        position: relative;
+        animation: slideInLeft 0.6s ease-out;
     }
 
     .detail-box:hover {
         border-left-color: var(--accent-secondary);
+        transform: translateX(10px);
+        box-shadow: var(--shadow-heavy);
     }
 
-    /* Enhanced button styles */
+    .code-block {
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: var(--backdrop-blur);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 25px;
+        margin: 20px 0;
+        font-family: 'JetBrains Mono', 'Fira Code', monospace;
+        position: relative;
+        overflow: hidden;
+        animation: fadeIn 0.7s ease-out;
+    }
+
+    .code-block::before {
+        content: '{ }';
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        color: var(--accent-primary);
+        font-size: 1.2em;
+        font-weight: bold;
+        opacity: 0.6;
+    }
+
+    /* Enhanced Streamlit Components */
     .stButton > button {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: var(--gradient-primary);
         color: white;
         border: none;
-        border-radius: 8px;
-        padding: 12px 24px;
+        border-radius: 12px;
+        padding: 12px 28px;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px var(--shadow);
+        font-size: 1rem;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .stButton > button:hover::before {
+        left: 100%;
     }
 
     .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px var(--shadow);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
     }
 
-    /* Enhanced input styles */
+    .stButton > button:active {
+        transform: translateY(-1px) scale(1.02);
+    }
+
     .stTextInput > div > div > input {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
         border: 2px solid var(--border-color);
-        border-radius: 8px;
-        padding: 12px;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 12px;
+        padding: 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
     }
 
     .stTextInput > div > div > input:focus {
         border-color: var(--accent-primary);
-        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        transform: scale(1.02);
     }
 
-    /* Enhanced selectbox styles */
     .stSelectbox > div > div {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
         border: 2px solid var(--border-color);
-        border-radius: 8px;
-        transition: border-color 0.3s ease;
+        border-radius: 12px;
+        transition: all 0.3s ease;
     }
 
     .stSelectbox > div > div:hover {
         border-color: var(--accent-primary);
+        transform: scale(1.01);
     }
 
-    /* Enhanced sidebar */
-    .css-1d391kg {
-        background-color: var(--secondary-bg);
-        border-right: 1px solid var(--border-color);
-    }
-
-    /* Enhanced tabs */
     .stTabs [data-baseweb="tab-list"] {
-        background-color: var(--secondary-bg);
-        border-radius: 8px;
-        padding: 5px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border-radius: 12px;
+        padding: 8px;
+        gap: 5px;
     }
 
     .stTabs [data-baseweb="tab"] {
-        background-color: transparent;
-        border-radius: 6px;
-        transition: background-color 0.3s ease;
+        background: transparent;
+        border-radius: 8px;
+        padding: 12px 20px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
 
     .stTabs [data-baseweb="tab"]:hover {
-        background-color: var(--tertiary-bg);
+        background: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
     }
 
     .stTabs [data-baseweb="tab"][aria-selected="true"] {
-        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        background: var(--gradient-primary);
         color: white;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
 
-    /* Enhanced radio buttons */
     .stRadio > div {
-        background-color: var(--secondary-bg);
-        border-radius: 8px;
-        padding: 15px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
         border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 20px;
+        transition: all 0.3s ease;
     }
 
-    /* Enhanced success/warning/error messages */
-    .stSuccess, .stWarning, .stError {
-        border-radius: 8px;
+    .stRadio > div:hover {
+        border-color: var(--accent-primary);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+    }
+
+    /* Enhanced Messages */
+    .stSuccess {
+        background: var(--gradient-success);
+        color: white;
         border: none;
-        box-shadow: 0 4px 12px var(--shadow);
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+        animation: slideInDown 0.5s ease-out;
     }
 
-    /* Smooth transitions for all elements */
-    * {
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    .stWarning {
+        background: var(--gradient-warning);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+        animation: slideInDown 0.5s ease-out;
+    }
+
+    .stError {
+        background: var(--gradient-secondary);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(245, 87, 108, 0.4);
+        animation: shake 0.5s ease-out;
+    }
+
+    /* Sidebar Enhancement */
+    .css-1d391kg {
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        border-right: 1px solid var(--border-color);
+    }
+
+    /* Progress Indicators */
+    .progress-bar {
+        width: 100%;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+        margin: 10px 0;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: var(--gradient-primary);
+        border-radius: 3px;
+        transition: width 0.3s ease;
+        animation: shimmer 2s infinite;
+    }
+
+    /* Floating Action Button */
+    .fab {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: var(--gradient-primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5em;
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .fab:hover {
+        transform: scale(1.1);
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.7);
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInRight {
+        from {
+            opacity: 0;
+            transform: translateX(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        70% {
+            transform: scale(0.9);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.8;
+            transform: scale(1.1);
+        }
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {
+            transform: translateY(0);
+        }
+        40% {
+            transform: translateY(-10px);
+        }
+        60% {
+            transform: translateY(-5px);
+        }
+    }
+
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -200px 0;
+        }
+        100% {
+            background-position: calc(200px + 100%) 0;
+        }
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0px);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @keyframes slideIn {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100px;
+        }
+    }
+
+    @keyframes expandHeight {
+        from {
+            height: 0;
+        }
+        to {
+            height: 100%;
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2.5rem;
+        }
+        
+        .section-header {
+            font-size: 1.8rem;
+        }
+        
+        .concept-box, .node-structure, .highlight-box, .detail-box {
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .fab {
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2em;
+        }
+    }
+
+    /* Loading Spinner */
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(102, 126, 234, 0.3);
+        border-top: 4px solid var(--accent-primary);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Tooltip */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background: var(--glass-bg);
+        backdrop-filter: var(--backdrop-blur);
+        color: var(--text-primary);
+        text-align: center;
+        border-radius: 8px;
+        padding: 10px;
+        position: absolute;
+        z-index: 1;
+        bottom: 125%;
+        left: 50%;
+        margin-left: -100px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        box-shadow: var(--shadow-light);
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -825,8 +1227,15 @@ sections = {
 selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
 current_section = sections[selected_section]
 
-# Main title
-st.markdown('<h1 class="main-header">Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
+# Enhanced main title with floating action button
+st.markdown('<h1 class="main-header">🔗 Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
+
+# Add floating action button for quick navigation
+st.markdown("""
+<div class="fab" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" title="Back to Top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+""", unsafe_allow_html=True)
 
 # Main content based on selected section
 if current_section == "home":
