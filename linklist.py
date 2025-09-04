@@ -648,7 +648,7 @@ if current_section == "home":
     <div class="concept-box">
         <h2>Welcome to the Interactive Linked Lists Tutorial! 🎓</h2>
         <p>This comprehensive tutorial will help you understand linked lists through interactive visualizations and clear explanations.</p>
-        
+        <div>
         <h3>What you'll learn:</h3>
         <ul>
             <li>📚 Basic concepts and differences from arrays</li>
@@ -658,7 +658,7 @@ if current_section == "home":
             <li>🎯 Practical applications and use cases</li>
             <li>💻 Implementation examples in Python</li>
         </ul>
-        
+        </div>
         <p><strong>Use the navigation sidebar to explore different sections!</strong></p>
     </div>
     """, unsafe_allow_html=True)
