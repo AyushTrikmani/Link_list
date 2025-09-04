@@ -2345,8 +2345,8 @@ elif current_section == "applications":
     with col1:
         st.markdown("""
         <div class="highlight-box">
-            <h4>💾 Memory Management</h4>
-            <p>Linked lists are used in memory allocators to maintain free memory blocks. 
+            <h4>Memory Management</h4>
+            <p>Linked lists are used in memory allocators to maintain free memory blocks.
             Each node represents a free memory block with its size and location.</p>
             <div>
             <p><strong>Benefits:</strong></p>
@@ -2721,7 +2721,7 @@ elif current_section == "performance":
     """, unsafe_allow_html=True)
 
     # Space Complexity
-    st.subheader("💾 Space Complexity")
+    st.subheader("Space Complexity")
 
     col1, col2 = st.columns(2)
 
