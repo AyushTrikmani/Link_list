@@ -882,13 +882,15 @@ class Node:
     <div class="detail-box">
         <h4>Circular Linked List: Endless Traversal</h4>
         <p><strong>Circular Linked Lists</strong> connect the last node back to the first node, creating a circular structure.</p>
-
+    </div>
+    <div>
         <h5>Types of Circular Linked Lists:</h5>
         <ul>
             <li><strong>Circular Singly Linked:</strong> Last node points to head</li>
             <li><strong>Circular Doubly Linked:</strong> Last node points to head, head's prev points to last</li>
         </ul>
-
+    </div>
+    <div>
         <h5>Use Cases:</h5>
         <ul>
             <li><strong>Round-robin Scheduling:</strong> CPU scheduling algorithms</li>
@@ -896,7 +898,8 @@ class Node:
             <li><strong>Multiplayer Games:</strong> Turn-based game mechanics</li>
             <li><strong>Buffer Management:</strong> Circular buffers for streaming</li>
         </ul>
-
+    </div>
+    <div>
         <h5>Special Considerations:</h5>
         <ul>
             <li><strong>No NULL termination:</strong> Traversal continues indefinitely</li>
