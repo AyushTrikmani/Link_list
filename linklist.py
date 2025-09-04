@@ -849,14 +849,16 @@ class Node:
     <div class="detail-box">
         <h4>Doubly Linked List: Enhanced Navigation</h4>
         <p><strong>Doubly Linked Lists</strong> extend singly linked lists by adding a <strong>previous pointer</strong> to each node.</p>
-
+    </div>
+    <div>
         <h5>Doubly Linked List Structure:</h5>
         <ul>
             <li><strong>Data:</strong> The actual value stored</li>
             <li><strong>Next:</strong> Pointer to the next node</li>
             <li><strong>Previous:</strong> Pointer to the previous node</li>
         </ul>
-
+    </div>
+    <div>
         <h5>Advantages of Doubly Linked Lists:</h5>
         <ul>
             <li><strong>Bidirectional Traversal:</strong> Can traverse in both directions</li>
@@ -864,7 +866,8 @@ class Node:
             <li><strong>Easier Deletion:</strong> Can delete a node with only its reference</li>
             <li><strong>Browser Navigation:</strong> Perfect for back/forward functionality</li>
         </ul>
-
+    </div>
+    <div>
         <h5>Trade-offs:</h5>
         <ul>
             <li><strong>Memory Overhead:</strong> Extra pointer per node (50% more memory)</li>
