@@ -2223,75 +2223,112 @@ def find_middle(head):
 
 elif current_section == "types":
     st.markdown('<h2 class="section-header">🔄 Types of Linked Lists</h2>', unsafe_allow_html=True)
-    
+
     st.markdown("""
     <div class="concept-box">
-        <p>There are several types of linked lists, each with its own characteristics and use cases:</p>
-        <ul>
-            <li><strong>Singly Linked List:</strong> Each node points to the next node</li>
-            <li><strong>Doubly Linked List:</strong> Each node has pointers to both next and previous nodes</li>
-            <li><strong>Circular Linked List:</strong> The last node points back to the first node</li>
-        </ul>
+        <p>Linked lists come in several variations, each designed for specific use cases and performance requirements. Understanding the differences between these types is crucial for choosing the right data structure for your application.</p>
     </div>
     """, unsafe_allow_html=True)
-    
-    # Code examples for different types
-    st.subheader("💻 Implementation Examples")
-    
-    tab1, tab2, tab3 = st.tabs(["Singly Linked", "Doubly Linked", "Circular Linked"])
-    
+
+    # Overview comparison
+    st.subheader("📊 Types Comparison")
+
+    st.markdown("""
+    <table class="comparison-table">
+        <tr>
+            <th>Feature</th>
+            <th>Singly Linked</th>
+            <th>Doubly Linked</th>
+            <th>Circular Singly</th>
+            <th>Circular Doubly</th>
+        </tr>
+        <tr>
+            <td><strong>Direction</strong></td>
+            <td>Unidirectional</td>
+            <td>Bidirectional</td>
+            <td>Unidirectional</td>
+            <td>Bidirectional</td>
+        </tr>
+        <tr>
+            <td><strong>Memory per Node</strong></td>
+            <td>2 pointers</td>
+            <td>3 pointers</td>
+            <td>2 pointers</td>
+            <td>3 pointers</td>
+        </tr>
+        <tr>
+            <td><strong>Traversal</strong></td>
+            <td>Forward only</td>
+            <td>Forward & backward</td>
+            <td>Forward (circular)</td>
+            <td>Bidirectional (circular)</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at Beginning</strong></td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at End</strong></td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from Beginning</strong></td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from End</strong></td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Memory Usage</strong></td>
+            <td>Low</td>
+            <td>Medium</td>
+            <td>Low</td>
+            <td>Medium</td>
+        </tr>
+        <tr>
+            <td><strong>Complexity</strong></td>
+            <td>Simple</td>
+            <td>Medium</td>
+            <td>Medium</td>
+            <td>High</td>
+        </tr>
+    </table>
+    """, unsafe_allow_html=True)
+
+    # Detailed sections for each type
+    st.subheader("🔍 Detailed Analysis")
+
+    tab1, tab2, tab3, tab4 = st.tabs(["Singly Linked List", "Doubly Linked List", "Circular Singly Linked", "Circular Doubly Linked"])
+
     with tab1:
-        st.code("""
-class SinglyLinkedList:
-    def __init__(self):
-        self.head = None
-    
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            return
-        current = self.head
-        while current.next:
-            current = current.next
-        current.next = new_node
-        """, language="python")
-    
-    with tab2:
-        st.code("""
-class DoublyLinkedList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-    
-    def append(self, data):
-        new_node = DoublyNode(data)
-        if not self.head:
-            self.head = self.tail = new_node
-        else:
-            new_node.prev = self.tail
-            self.tail.next = new_node
-            self.tail = new_node
-        """, language="python")
-    
-    with tab3:
-        st.code("""
-class CircularLinkedList:
-    def __init__(self):
-        self.head = None
-    
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            new_node.next = new_node
-        else:
-            current = self.head
-            while current.next != self.head:
-                current = current.next
-            current.next = new_node
-            new_node.next = self.head
-        """, language="python")
+        col1, col2 = st.columns([2, 1])
+
+        with col1:
+            st.markdown("""
+            <div class="detail-box">
+                <h4>🔗 Singly Linked List</h4>
+                <p><strong>Definition:</strong> A singly linked list is a linear data structure where each node contains data and a reference (pointer) to the next node in the sequence.</p>
+
+                <h5>📋 Characteristics:</h5>
+                <ul>
+                    <li><strong>Unidirectional:</strong> Can only traverse in one direction (forward)</li>
+                    <li><strong>Simple Structure:</strong> Each node has data and next pointer</li>
+                    <li><strong>Memory Efficient:</strong> Minimal overhead per node</li>
+                    <li><strong>Dynamic Size:</strong> Can grow and shrink as needed</li>
+                    <li><strong>No Random Access:</strong> Must traverse from head to access elements</li>
 
 elif current_section == "applications":
     st.markdown('<h2 class="section-header">🎯 Real-world Applications</h2>', unsafe_allow_html=True)
