@@ -19,6 +19,20 @@ st.set_page_config(
 
 # Modern CSS with proper light/dark mode support
 st.markdown("""
+<div class="detail-box">
+    <h4>🔗 Singly Linked List</h4>
+    <p><strong>Definition:</strong> A singly linked list is a linear data structure where each node contains data and a reference (pointer) to the next node in the sequence.</p>
+
+    <h5>📋 Characteristics:</h5>
+    <ul>
+        <li><strong>Unidirectional:</strong> Can only traverse in one direction (forward)</li>
+        <li><strong>Simple Structure:</strong> Each node has data and next pointer</li>
+        <li><strong>Memory Efficient:</strong> Minimal overhead per node</li>
+        <li><strong>Dynamic Size:</strong> Can grow and shrink as needed</li>
+        <li><strong>No Random Access:</strong> Must traverse from head to access elements</li>
+    </ul>
+</div>
+""", unsafe_allow_html=True)
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
@@ -2361,7 +2375,7 @@ elif current_section == "applications":
         
         st.markdown("""
         <div class="highlight-box">
-            <h4>🌐 Web Browsers</h4>
+            <h4>Web Browsers</h4>
             <p>Doubly linked lists are used to implement browser history and back/forward navigation.</p>
             
             <p><strong>How it works:</strong></p>
