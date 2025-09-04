@@ -12,7 +12,7 @@ import pandas as pd
 # Set page config
 st.set_page_config(
     page_title="Interactive Linked Lists",
-    page_icon="🔗",
+    page_icon="📋",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -622,25 +622,25 @@ if 'current_step' not in st.session_state:
     st.session_state.current_step = 0
 
 # Sidebar navigation
-st.sidebar.title("🔗 Navigation")
+st.sidebar.title("Navigation")
 sections = {
-    "🏠 Home": "home",
-    "📚 Basic Concepts": "basic",
-    "🔄 Types of Linked Lists": "types",
-    "⚡ Operations & Algorithms": "operations",
-    "🛠️ Interactive Operations": "interactive",
-    "🎯 Real-world Applications": "applications",
-    "🚀 Advanced Topics": "advanced",
-    "📊 Performance Analysis": "performance",
-    "❓ Quiz & Assessment": "quiz",
-    "💻 Implementation Examples": "implementations"
+    "Home": "home",
+    "Basic Concepts": "basic",
+    "Types of Linked Lists": "types",
+    "Operations & Algorithms": "operations",
+    "Interactive Operations": "interactive",
+    "Real-world Applications": "applications",
+    "Advanced Topics": "advanced",
+    "Performance Analysis": "performance",
+    "Quiz & Assessment": "quiz",
+    "Implementation Examples": "implementations"
 }
 
 selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
 current_section = sections[selected_section]
 
 # Main title
-st.markdown('<h1 class="main-header">🔗 Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">Interactive Linked Lists Tutorial</h1>', unsafe_allow_html=True)
 
 # Main content based on selected section
 if current_section == "home":
@@ -678,10 +678,10 @@ if current_section == "home":
     """, unsafe_allow_html=True)
 
 elif current_section == "basic":
-    st.markdown('<h2 class="section-header">📚 Basic Concepts</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="section-header">Basic Concepts</h2>', unsafe_allow_html=True)
     
     # What is a Linked List?
-    st.subheader("🔗 What is a Linked List?")
+    st.subheader("What is a Linked List?")
     
     st.markdown("""
     <div class="concept-box">
@@ -1533,6 +1533,631 @@ def get_intersection_node(headA, headB):
         <p><strong>Key Features:</strong></p>
         <ul>
             <li>Multiple levels of linked lists</li>
+            <li>Each level is a subset of the level below</li>
+            <li>Fast search: O(log n) average case</li>
+            <li>Simpler alternative to balanced trees</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Unrolled Linked Lists</h4>
+        <p>Unrolled linked lists store multiple elements in each node to improve cache performance.</p>
+
+        <p><strong>Benefits:</strong></p>
+        <ul>
+            <li>Better cache locality</li>
+            <li>Reduced overhead per element</li>
+            <li>Faster traversal</li>
+            <li>Trade-off: More complex operations</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+elif current_section == "performance":
+    st.markdown('<h2 class="section-header">📊 Performance Analysis</h2>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="concept-box">
+        <p>Understanding the performance characteristics of linked lists is crucial for choosing the right data structure for your use case.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Time Complexity Analysis
+    st.subheader("⏱️ Time Complexity Analysis")
+
+    st.markdown("""
+    <table class="comparison-table">
+        <tr>
+            <th>Operation</th>
+            <th>Singly Linked List</th>
+            <th>Doubly Linked List</th>
+            <th>Array</th>
+        </tr>
+        <tr>
+            <td><strong>Access by Index</strong></td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Search by Value</strong></td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at Beginning</strong></td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(n)</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at End</strong></td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at Position</strong></td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from Beginning</strong></td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+            <td>O(n)</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from End</strong></td>
+            <td>O(n)</td>
+            <td>O(1)</td>
+            <td>O(1)</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from Position</strong></td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+            <td>O(n)</td>
+        </tr>
+    </table>
+    """, unsafe_allow_html=True)
+
+    # Space Complexity
+    st.subheader("💾 Space Complexity")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Linked List Space Usage</h4>
+            <ul>
+                <li><strong>Node overhead:</strong> Each node stores data + pointer(s)</li>
+                <li><strong>Singly Linked:</strong> 2 pointers per node (data + next)</li>
+                <li><strong>Doubly Linked:</strong> 3 pointers per node (data + next + prev)</li>
+                <li><strong>Dynamic allocation:</strong> Memory scattered in heap</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Array Space Usage</h4>
+            <ul>
+                <li><strong>Contiguous memory:</strong> All elements in sequence</li>
+                <li><strong>No per-element overhead:</strong> Only data storage</li>
+                <li><strong>Fixed size:</strong> Pre-allocated memory</li>
+                <li><strong>Better cache performance:</strong> Spatial locality</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Performance Factors
+    st.subheader("⚡ Performance Factors")
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Cache Performance</h4>
+        <p>Linked lists suffer from poor cache performance due to scattered memory allocation.</p>
+
+        <p><strong>Why it matters:</strong></p>
+        <ul>
+            <li>CPU cache loads contiguous memory blocks</li>
+            <li>Linked list nodes are randomly distributed</li>
+            <li>Each pointer dereference may cause cache miss</li>
+            <li>Arrays benefit from spatial locality</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Memory Allocation Overhead</h4>
+        <p>Dynamic memory allocation in linked lists introduces overhead.</p>
+
+        <p><strong>Issues:</strong></p>
+        <ul>
+            <li>Memory fragmentation</li>
+            <li>Allocation/deallocation time</li>
+            <li>Memory leaks if not managed properly</li>
+            <li>Per-node metadata storage</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # When to Use Linked Lists
+    st.subheader("🎯 When to Use Linked Lists")
+
+    st.markdown("""
+    <div class="highlight-box">
+        <h4>Best Use Cases for Linked Lists</h4>
+        <ul>
+            <li><strong>Frequent insertions/deletions:</strong> Especially at beginning or middle</li>
+            <li><strong>Unknown size:</strong> Dynamic size requirements</li>
+            <li><strong>No random access needed:</strong> Sequential access only</li>
+            <li><strong>Memory efficiency:</strong> When memory is fragmented</li>
+            <li><strong>Implementation of other structures:</strong> Stacks, queues, graphs</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="highlight-box">
+        <h4>When Arrays are Better</h4>
+        <ul>
+            <li><strong>Random access:</strong> Need O(1) access by index</li>
+            <li><strong>Known size:</strong> Fixed size requirements</li>
+            <li><strong>Cache performance:</strong> Better spatial locality</li>
+            <li><strong>Memory efficiency:</strong> No per-element overhead</li>
+            <li><strong>Simple operations:</strong> Basic storage and retrieval</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+elif current_section == "quiz":
+    st.markdown('<h2 class="section-header">❓ Quiz & Assessment</h2>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="concept-box">
+        <p>Test your understanding of linked lists with this interactive quiz!</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Quiz questions
+    questions = [
+        {
+            "question": "What is the time complexity of inserting an element at the beginning of a singly linked list?",
+            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+            "correct": 0,
+            "explanation": "Inserting at the beginning requires only updating the head pointer, which is O(1) operation."
+        },
+        {
+            "question": "Which of the following is NOT an advantage of linked lists over arrays?",
+            "options": ["Dynamic size", "Efficient insertions/deletions", "Random access", "No memory waste"],
+            "correct": 2,
+            "explanation": "Random access is an advantage of arrays, not linked lists. Linked lists require O(n) time for random access."
+        },
+        {
+            "question": "In a doubly linked list, each node contains:",
+            "options": ["Data only", "Data and next pointer", "Data and previous pointer", "Data, next, and previous pointers"],
+            "correct": 3,
+            "explanation": "Doubly linked list nodes contain data, next pointer, and previous pointer for bidirectional traversal."
+        },
+        {
+            "question": "What algorithm is commonly used to detect cycles in a linked list?",
+            "options": ["Binary search", "Floyd's cycle detection", "Quick sort", "Depth-first search"],
+            "correct": 1,
+            "explanation": "Floyd's cycle detection algorithm (tortoise and hare) is used to detect cycles in linked lists."
+        },
+        {
+            "question": "Which operation is more efficient in a doubly linked list compared to singly linked list?",
+            "options": ["Insert at beginning", "Search by value", "Delete from end", "Traverse forward"],
+            "correct": 2,
+            "explanation": "Deleting from the end is O(1) in doubly linked lists (using tail pointer) but O(n) in singly linked lists."
+        }
+    ]
+
+    # Quiz state
+    if 'quiz_answers' not in st.session_state:
+        st.session_state.quiz_answers = {}
+    if 'quiz_score' not in st.session_state:
+        st.session_state.quiz_score = 0
+    if 'quiz_submitted' not in st.session_state:
+        st.session_state.quiz_submitted = False
+
+    # Display questions
+    for i, q in enumerate(questions):
+        st.markdown(f"**Question {i+1}:** {q['question']}")
+
+        answer = st.radio(
+            f"Select your answer for question {i+1}:",
+            q['options'],
+            key=f"q_{i}",
+            index=None if not st.session_state.quiz_submitted else st.session_state.quiz_answers.get(i, 0)
+        )
+
+        if answer:
+            st.session_state.quiz_answers[i] = q['options'].index(answer)
+
+        if st.session_state.quiz_submitted:
+            if st.session_state.quiz_answers.get(i) == q['correct']:
+                st.success("✅ Correct!")
+            else:
+                st.error("❌ Incorrect!")
+            st.info(f"**Explanation:** {q['explanation']}")
+
+        st.markdown("---")
+
+    # Submit button
+    if st.button("Submit Quiz", disabled=st.session_state.quiz_submitted):
+        if len(st.session_state.quiz_answers) == len(questions):
+            st.session_state.quiz_submitted = True
+            score = sum(1 for i, q in enumerate(questions) if st.session_state.quiz_answers.get(i) == q['correct'])
+            st.session_state.quiz_score = score
+            st.success(f"Quiz submitted! Your score: {score}/{len(questions)}")
+        else:
+            st.error("Please answer all questions before submitting.")
+
+    if st.session_state.quiz_submitted:
+        percentage = (st.session_state.quiz_score / len(questions)) * 100
+        if percentage >= 80:
+            st.success("🎉 Excellent! You have a strong understanding of linked lists.")
+        elif percentage >= 60:
+            st.info("👍 Good job! You understand most concepts but could review some topics.")
+        else:
+            st.warning("📚 You might want to review the material and try again.")
+
+        if st.button("Retake Quiz"):
+            st.session_state.quiz_answers = {}
+            st.session_state.quiz_submitted = False
+            st.session_state.quiz_score = 0
+            st.rerun()
+
+elif current_section == "implementations":
+    st.markdown('<h2 class="section-header">💻 Implementation Examples</h2>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="concept-box">
+        <p>Explore linked list implementations in different programming languages and paradigms.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Language implementations
+    tab1, tab2, tab3, tab4 = st.tabs(["C++", "Java", "JavaScript", "C#"])
+
+    with tab1:
+        st.markdown("""
+        <div class="code-block">
+```cpp
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    int data;
+    Node* next;
+    Node(int val) : data(val), next(nullptr) {}
+};
+
+class LinkedList {
+private:
+    Node* head;
+public:
+    LinkedList() : head(nullptr) {}
+
+    void insertAtBeginning(int val) {
+        Node* newNode = new Node(val);
+        newNode->next = head;
+        head = newNode;
+    }
+
+    void insertAtEnd(int val) {
+        Node* newNode = new Node(val);
+        if (!head) {
+            head = newNode;
+            return;
+        }
+        Node* temp = head;
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+
+    void display() {
+        Node* temp = head;
+        while (temp) {
+            cout << temp->data << " -> ";
+            temp = temp->next;
+        }
+        cout << "NULL" << endl;
+    }
+
+    ~LinkedList() {
+        Node* current = head;
+        while (current) {
+            Node* next = current->next;
+            delete current;
+            current = next;
+        }
+    }
+};
+```
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tab2:
+        st.markdown("""
+        <div class="code-block">
+```java
+public class Node {
+    int data;
+    Node next;
+
+    public Node(int data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+public class LinkedList {
+    private Node head;
+
+    public LinkedList() {
+        this.head = null;
+    }
+
+    public void insertAtBeginning(int data) {
+        Node newNode = new Node(data);
+        newNode.next = head;
+        head = newNode;
+    }
+
+    public void insertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node current = head;
+        while (current.next != null) {
+            current = current.next;
+        }
+        current.next = newNode;
+    }
+
+    public void display() {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.data + " -> ");
+            current = current.next;
+        }
+        System.out.println("null");
+    }
+}
+```
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tab3:
+        st.markdown("""
+        <div class="code-block">
+```javascript
+class Node {
+    constructor(data) {
+        this.data = data;
+        this.next = null;
+    }
+}
+
+class LinkedList {
+    constructor() {
+        this.head = null;
+        this.size = 0;
+    }
+
+    insertAtBeginning(data) {
+        const newNode = new Node(data);
+        newNode.next = this.head;
+        this.head = newNode;
+        this.size++;
+    }
+
+    insertAtEnd(data) {
+        const newNode = new Node(data);
+        if (!this.head) {
+            this.head = newNode;
+        } else {
+            let current = this.head;
+            while (current.next) {
+                current = current.next;
+            }
+            current.next = newNode;
+        }
+        this.size++;
+    }
+
+    display() {
+        let current = this.head;
+        let result = '';
+        while (current) {
+            result += current.data + ' -> ';
+            current = current.next;
+        }
+        console.log(result + 'null');
+    }
+
+    // ES6 Generator for iteration
+    *iterate() {
+        let current = this.head;
+        while (current) {
+            yield current.data;
+            current = current.next;
+        }
+    }
+}
+```
+        </div>
+        """, unsafe_allow_html=True)
+
+    with tab4:
+        st.markdown("""
+        <div class="code-block">
+```csharp
+using System;
+
+public class Node {
+    public int Data { get; set; }
+    public Node Next { get; set; }
+
+    public Node(int data) {
+        Data = data;
+        Next = null;
+    }
+}
+
+public class LinkedList {
+    private Node head;
+
+    public LinkedList() {
+        head = null;
+    }
+
+    public void InsertAtBeginning(int data) {
+        Node newNode = new Node(data);
+        newNode.Next = head;
+        head = newNode;
+    }
+
+    public void InsertAtEnd(int data) {
+        Node newNode = new Node(data);
+        if (head == null) {
+            head = newNode;
+            return;
+        }
+        Node current = head;
+        while (current.Next != null) {
+            current = current.Next;
+        }
+        current.Next = newNode;
+    }
+
+    public void Display() {
+        Node current = head;
+        while (current != null) {
+            Console.Write(current.Data + " -> ");
+            current = current.Next;
+        }
+        Console.WriteLine("null");
+    }
+
+    // LINQ support
+    public IEnumerable<int> GetElements() {
+        Node current = head;
+        while (current != null) {
+            yield return current.Data;
+            current = current.Next;
+        }
+    }
+}
+```
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Functional Programming Approach
+    st.subheader("🔄 Functional Programming Approach")
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Immutable Linked Lists</h4>
+        <p>Functional programming languages often use immutable linked lists for thread safety and referential transparency.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.code("""
+# Haskell - Purely Functional Linked List
+data LinkedList a = Empty | Node a (LinkedList a)
+
+-- Insert at beginning (creates new list)
+insertBeginning :: a -> LinkedList a -> LinkedList a
+insertBeginning x xs = Node x xs
+
+-- Insert at end (creates new list)
+insertEnd :: a -> LinkedList a -> LinkedList a
+insertEnd x Empty = Node x Empty
+insertEnd x (Node y ys) = Node y (insertEnd x ys)
+
+-- Functional approach in Python
+class ImmutableLinkedList:
+    def __init__(self, head=None, tail=None):
+        self.head = head
+        self.tail = tail
+
+    def prepend(self, value):
+        return ImmutableLinkedList(value, self)
+
+    def append(self, value):
+        if not self.head:
+            return ImmutableLinkedList(value)
+        return ImmutableLinkedList(self.head, self.tail.append(value))
+    """, language="python")
+
+    # Thread-Safe Implementation
+    st.subheader("🔒 Thread-Safe Implementation")
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Concurrent Linked Lists</h4>
+        <p>Thread-safe linked list implementations require careful synchronization to prevent race conditions.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.code("""
+import threading
+
+class ThreadSafeLinkedList:
+    def __init__(self):
+        self.head = None
+        self._lock = threading.RLock()
+
+    def insert_at_beginning(self, data):
+        with self._lock:
+            new_node = Node(data)
+            new_node.next = self.head
+            self.head = new_node
+
+    def insert_at_end(self, data):
+        with self._lock:
+            new_node = Node(data)
+            if not self.head:
+                self.head = new_node
+                return
+
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+
+    # Lock-free implementation (advanced)
+    class LockFreeLinkedList:
+        def __init__(self):
+            self.head = Node(None)  # Sentinel node
+
+        def insert_at_beginning(self, data):
+            new_node = Node(data)
+            while True:
+                old_head = self.head.next
+                new_node.next = old_head
+                if atomic_compare_and_swap(self.head.next, old_head, new_node):
+                    break
+    """, language="python")
+
+# Add footer
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: gray;">
