@@ -2345,7 +2345,7 @@ elif current_section == "applications":
     with col1:
         st.markdown("""
         <div class="highlight-box">
-            <h4>💾 Memory Management</h4>
+            <h4> Memory Management</h4>
             <p>Linked lists are used in memory allocators to maintain free memory blocks. 
             Each node represents a free memory block with its size and location.</p>
             <div>
