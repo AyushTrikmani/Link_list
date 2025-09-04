@@ -2361,7 +2361,7 @@ elif current_section == "applications":
         
         st.markdown("""
         <div class="highlight-box">
-            <h4>🌐 Web Browsers</h4>
+            <h4> Web Browsers</h4>
             <p>Doubly linked lists are used to implement browser history and back/forward navigation.</p>
             
             <p><strong>How it works:</strong></p>
