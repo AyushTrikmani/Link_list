@@ -743,50 +743,164 @@ class Node:
     
     # Difference between Linked List and Array
     st.subheader("⚖️ Linked List vs Array")
-    
+
     fig2 = draw_array_vs_linkedlist()
     st.pyplot(fig2)
     plt.close(fig2)
-    
+
+    # Detailed comparison
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Understanding Arrays in Detail</h4>
+        <p><strong>Arrays</strong> are fixed-size, homogeneous data structures that store elements in contiguous memory locations.</p>
+
+        <h5>Array Characteristics:</h5>
+        <ul>
+            <li><strong>Fixed Size:</strong> Size determined at compile-time or initialization</li>
+            <li><strong>Homogeneous:</strong> All elements must be of the same data type</li>
+            <li><strong>Contiguous Memory:</strong> Elements stored in adjacent memory locations</li>
+            <li><strong>Random Access:</strong> Direct access to any element using index</li>
+            <li><strong>Memory Efficient:</strong> No extra space for pointers or metadata</li>
+        </ul>
+
+        <h5>Array Operations:</h5>
+        <ul>
+            <li><strong>Access:</strong> arr[i] - O(1) time complexity</li>
+            <li><strong>Search:</strong> Linear search O(n), Binary search O(log n) if sorted</li>
+            <li><strong>Insert/Delete:</strong> O(n) - requires shifting elements</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
     # Comparison table
     st.markdown("""
     <table class="comparison-table">
         <tr>
             <th>Aspect</th>
             <th>Array</th>
-            <th>Linked List</th>
+            <th>Singly Linked List</th>
+            <th>Doubly Linked List</th>
         </tr>
         <tr>
             <td><strong>Memory Layout</strong></td>
             <td>Contiguous memory blocks</td>
+            <td>Non-contiguous, scattered memory</td>
             <td>Non-contiguous, scattered memory</td>
         </tr>
         <tr>
             <td><strong>Access Time</strong></td>
             <td>O(1) - Random access</td>
             <td>O(n) - Sequential access</td>
+            <td>O(n) - Sequential access</td>
         </tr>
         <tr>
-            <td><strong>Insertion/Deletion</strong></td>
-            <td>O(n) - Need to shift elements</td>
-            <td>O(1) - At known position</td>
+            <td><strong>Insert at Beginning</strong></td>
+            <td>O(n) - Shift all elements</td>
+            <td>O(1) - Update head pointer</td>
+            <td>O(1) - Update head pointer</td>
+        </tr>
+        <tr>
+            <td><strong>Insert at End</strong></td>
+            <td>O(1) - If space available</td>
+            <td>O(n) - Traverse to end</td>
+            <td>O(1) - Use tail pointer</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from Beginning</strong></td>
+            <td>O(n) - Shift all elements</td>
+            <td>O(1) - Update head pointer</td>
+            <td>O(1) - Update head pointer</td>
+        </tr>
+        <tr>
+            <td><strong>Delete from End</strong></td>
+            <td>O(1) - If size known</td>
+            <td>O(n) - Traverse to end</td>
+            <td>O(1) - Use tail pointer</td>
         </tr>
         <tr>
             <td><strong>Memory Overhead</strong></td>
-            <td>No extra memory for pointers</td>
-            <td>Extra memory for storing pointers</td>
+            <td>No extra memory</td>
+            <td>1 pointer per node</td>
+            <td>2 pointers per node</td>
         </tr>
         <tr>
             <td><strong>Cache Performance</strong></td>
-            <td>Better - Spatial locality</td>
-            <td>Poor - Random memory access</td>
+            <td>Excellent - Spatial locality</td>
+            <td>Poor - Random access</td>
+            <td>Poor - Random access</td>
         </tr>
         <tr>
             <td><strong>Size</strong></td>
-            <td>Fixed size (static arrays)</td>
+            <td>Fixed size</td>
+            <td>Dynamic size</td>
             <td>Dynamic size</td>
         </tr>
+        <tr>
+            <td><strong>Bidirectional Traversal</strong></td>
+            <td>Yes - Using indices</td>
+            <td>No - Only forward</td>
+            <td>Yes - Forward and backward</td>
+        </tr>
     </table>
+    """, unsafe_allow_html=True)
+
+    # Doubly Linked List explanation
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Doubly Linked List: Enhanced Navigation</h4>
+        <p><strong>Doubly Linked Lists</strong> extend singly linked lists by adding a <strong>previous pointer</strong> to each node.</p>
+
+        <h5>Doubly Linked List Structure:</h5>
+        <ul>
+            <li><strong>Data:</strong> The actual value stored</li>
+            <li><strong>Next:</strong> Pointer to the next node</li>
+            <li><strong>Previous:</strong> Pointer to the previous node</li>
+        </ul>
+
+        <h5>Advantages of Doubly Linked Lists:</h5>
+        <ul>
+            <li><strong>Bidirectional Traversal:</strong> Can traverse in both directions</li>
+            <li><strong>Efficient End Operations:</strong> O(1) insertion/deletion at both ends</li>
+            <li><strong>Easier Deletion:</strong> Can delete a node with only its reference</li>
+            <li><strong>Browser Navigation:</strong> Perfect for back/forward functionality</li>
+        </ul>
+
+        <h5>Trade-offs:</h5>
+        <ul>
+            <li><strong>Memory Overhead:</strong> Extra pointer per node (50% more memory)</li>
+            <li><strong>Complexity:</strong> More complex operations and maintenance</li>
+            <li><strong>Operations:</strong> Slightly more overhead for insertions/deletions</li>
+        </ul>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Circular Linked List
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Circular Linked List: Endless Traversal</h4>
+        <p><strong>Circular Linked Lists</strong> connect the last node back to the first node, creating a circular structure.</p>
+
+        <h5>Types of Circular Linked Lists:</h5>
+        <ul>
+            <li><strong>Circular Singly Linked:</strong> Last node points to head</li>
+            <li><strong>Circular Doubly Linked:</strong> Last node points to head, head's prev points to last</li>
+        </ul>
+
+        <h5>Use Cases:</h5>
+        <ul>
+            <li><strong>Round-robin Scheduling:</strong> CPU scheduling algorithms</li>
+            <li><strong>Music Players:</strong> Continuous playlist playback</li>
+            <li><strong>Multiplayer Games:</strong> Turn-based game mechanics</li>
+            <li><strong>Buffer Management:</strong> Circular buffers for streaming</li>
+        </ul>
+
+        <h5>Special Considerations:</h5>
+        <ul>
+            <li><strong>No NULL termination:</strong> Traversal continues indefinitely</li>
+            <li><strong>Cycle Detection:</strong> Important for debugging and validation</li>
+            <li><strong>Traversal Logic:</strong> Must handle circular nature carefully</li>
+        </ul>
+    </div>
     """, unsafe_allow_html=True)
 
 elif current_section == "interactive":
