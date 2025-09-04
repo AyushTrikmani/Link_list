@@ -425,7 +425,6 @@ st.markdown("""
     </ul>
 </div>
 """, unsafe_allow_html=True)
-    }
 
     .comparison-table tr:last-child td {
         border-bottom: none;
