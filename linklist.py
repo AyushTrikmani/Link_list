@@ -1,9 +1,13 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
-from matplotlib.patches import FancyBboxPatch, Circle, Arrow
+from matplotlib.patches import FancyBboxPatch, Circle, Arrow, ConnectionPatch
 import numpy as np
 import time
+import random
+import json
+from datetime import datetime
+import pandas as pd
 
 # Set page config
 st.set_page_config(
@@ -625,7 +629,11 @@ sections = {
     "🔄 Types of Linked Lists": "types",
     "⚡ Operations & Algorithms": "operations",
     "🛠️ Interactive Operations": "interactive",
-    "🎯 Real-world Applications": "applications"
+    "🎯 Real-world Applications": "applications",
+    "🚀 Advanced Topics": "advanced",
+    "📊 Performance Analysis": "performance",
+    "❓ Quiz & Assessment": "quiz",
+    "💻 Implementation Examples": "implementations"
 }
 
 selected_section = st.sidebar.selectbox("Choose a section:", list(sections.keys()))
@@ -1303,7 +1311,228 @@ elif current_section == "applications":
         </div>
         """, unsafe_allow_html=True)
 
-# Add footer
+elif current_section == "advanced":
+    st.markdown('<h2 class="section-header">🚀 Advanced Topics</h2>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="concept-box">
+        <p>Explore advanced concepts and algorithms related to linked lists that go beyond basic operations.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Advanced algorithms
+    st.subheader("🧠 Advanced Algorithms")
+
+    tab1, tab2, tab3, tab4 = st.tabs(["Merge Two Lists", "Remove Duplicates", "Palindrome Check", "Intersection Point"])
+
+    with tab1:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Merging Two Sorted Linked Lists</h4>
+            <p>This algorithm merges two sorted linked lists into a single sorted list.</p>
+
+            <p><strong>Approaches:</strong></p>
+            <ul>
+                <li><strong>Iterative:</strong> Use two pointers to compare and merge</li>
+                <li><strong>Recursive:</strong> Recursively merge smaller sublists</li>
+            </ul>
+
+            <p><strong>Time Complexity:</strong> O(m + n)</p>
+            <p><strong>Space Complexity:</strong> O(1) for iterative, O(m + n) for recursive</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.code("""
+# Iterative Approach
+def merge_two_lists(l1, l2):
+    dummy = Node(0)
+    current = dummy
+
+    while l1 and l2:
+        if l1.data <= l2.data:
+            current.next = l1
+            l1 = l1.next
+        else:
+            current.next = l2
+            l2 = l2.next
+        current = current.next
+
+    current.next = l1 if l1 else l2
+    return dummy.next
+            """, language="python")
+
+        with col2:
+            st.code("""
+# Recursive Approach
+def merge_two_lists_recursive(l1, l2):
+    if not l1:
+        return l2
+    if not l2:
+        return l1
+
+    if l1.data <= l2.data:
+        l1.next = merge_two_lists_recursive(l1.next, l2)
+        return l1
+    else:
+        l2.next = merge_two_lists_recursive(l1, l2.next)
+        return l2
+            """, language="python")
+
+    with tab2:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Remove Duplicates from Unsorted Linked List</h4>
+            <p>This algorithm removes duplicate values from an unsorted linked list.</p>
+
+            <p><strong>Approaches:</strong></p>
+            <ul>
+                <li><strong>Hash Set:</strong> Use a set to track seen values</li>
+                <li><strong>Two Pointers:</strong> For each node, check all subsequent nodes</li>
+            </ul>
+
+            <p><strong>Time Complexity:</strong> O(n) with hash set, O(n²) with two pointers</p>
+            <p><strong>Space Complexity:</strong> O(n) with hash set, O(1) with two pointers</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.code("""
+def remove_duplicates(head):
+    if not head:
+        return head
+
+    seen = set()
+    current = head
+    seen.add(current.data)
+
+    while current.next:
+        if current.next.data in seen:
+            current.next = current.next.next
+        else:
+            seen.add(current.next.data)
+            current = current.next
+
+    return head
+        """, language="python")
+
+    with tab3:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Palindrome Linked List Check</h4>
+            <p>This algorithm checks if a linked list is a palindrome (reads the same forwards and backwards).</p>
+
+            <p><strong>Steps:</strong></p>
+            <ol>
+                <li>Find the middle of the list</li>
+                <li>Reverse the second half</li>
+                <li>Compare the first half with reversed second half</li>
+                <li>Restore the list (optional)</li>
+            </ol>
+
+            <p><strong>Time Complexity:</strong> O(n)</p>
+            <p><strong>Space Complexity:</strong> O(1)</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.code("""
+def is_palindrome(head):
+    if not head or not head.next:
+        return True
+
+    # Find middle
+    slow = head
+    fast = head
+    while fast.next and fast.next.next:
+        slow = slow.next
+        fast = fast.next.next
+
+    # Reverse second half
+    second_half = reverse_list(slow.next)
+    slow.next = None
+
+    # Compare
+    first_half = head
+    result = True
+    while first_half and second_half:
+        if first_half.data != second_half.data:
+            result = False
+            break
+        first_half = first_half.next
+        second_half = second_half.next
+
+    # Restore list (optional)
+    slow.next = reverse_list(second_half)
+
+    return result
+        """, language="python")
+
+    with tab4:
+        st.markdown("""
+        <div class="node-structure">
+            <h4>Find Intersection Point of Two Linked Lists</h4>
+            <p>This algorithm finds the intersection point of two linked lists (where they merge).</p>
+
+            <p><strong>Approaches:</strong></p>
+            <ul>
+                <li><strong>Hash Set:</strong> Store nodes of first list, check second list</li>
+                <li><strong>Two Pointers:</strong> Traverse both lists with different lengths</li>
+            </ul>
+
+            <p><strong>Time Complexity:</strong> O(m + n)</p>
+            <p><strong>Space Complexity:</strong> O(m) or O(n) for hash set, O(1) for two pointers</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.code("""
+# Hash Set Approach
+def get_intersection_node_hash(headA, headB):
+    nodes = set()
+    current = headA
+    while current:
+        nodes.add(current)
+        current = current.next
+
+    current = headB
+    while current:
+        if current in nodes:
+            return current
+        current = current.next
+    return None
+            """, language="python")
+
+        with col2:
+            st.code("""
+# Two Pointers Approach
+def get_intersection_node(headA, headB):
+    if not headA or not headB:
+        return None
+
+    ptrA = headA
+    ptrB = headB
+
+    while ptrA != ptrB:
+        ptrA = ptrA.next if ptrA else headB
+        ptrB = ptrB.next if ptrB else headA
+
+    return ptrA
+            """, language="python")
+
+    # Advanced data structures
+    st.subheader("🏗️ Advanced Data Structures")
+
+    st.markdown("""
+    <div class="detail-box">
+        <h4>Skip Lists</h4>
+        <p>Skip lists are probabilistic data structures that allow fast search, insertion, and deletion operations.</p>
+
+        <p><strong>Key Features:</strong></p>
+        <ul>
+            <li>Multiple levels of linked lists</li>
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: gray;">
