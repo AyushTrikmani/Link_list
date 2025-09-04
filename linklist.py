@@ -17,79 +17,265 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better UI
+# Custom CSS for better UI with light/dark mode support
 st.markdown("""
 <style>
+    :root {
+        --primary-bg: #ffffff;
+        --secondary-bg: #f8f9fa;
+        --tertiary-bg: #e9ecef;
+        --text-primary: #212529;
+        --text-secondary: #6c757d;
+        --accent-primary: #007bff;
+        --accent-secondary: #28a745;
+        --accent-warning: #ffc107;
+        --accent-danger: #dc3545;
+        --border-color: #dee2e6;
+        --shadow: rgba(0, 0, 0, 0.1);
+        --gradient-start: #667eea;
+        --gradient-end: #764ba2;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --primary-bg: #1a1a1a;
+            --secondary-bg: #2d2d2d;
+            --tertiary-bg: #404040;
+            --text-primary: #ffffff;
+            --text-secondary: #cccccc;
+            --accent-primary: #4dabf7;
+            --accent-secondary: #51cf66;
+            --accent-warning: #ffd43b;
+            --accent-danger: #ff6b6b;
+            --border-color: #555555;
+            --shadow: rgba(0, 0, 0, 0.3);
+            --gradient-start: #4c63d2;
+            --gradient-end: #6b46c1;
+        }
+    }
+
+    body {
+        background-color: var(--primary-bg);
+        color: var(--text-primary);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
     .main-header {
         font-size: 3rem;
-        color: #1f77b4;
+        color: var(--accent-primary);
         text-align: center;
         margin-bottom: 2rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        text-shadow: 2px 2px 4px var(--shadow);
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
+
     .section-header {
         font-size: 2rem;
-        color: #ff7f0e;
-        border-bottom: 3px solid #ff7f0e;
+        color: var(--accent-secondary);
+        border-bottom: 3px solid var(--accent-secondary);
         padding-bottom: 10px;
         margin-bottom: 20px;
+        font-weight: 600;
     }
+
     .concept-box {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
         color: white;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 10px 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 25px;
+        border-radius: 15px;
+        margin: 15px 0;
+        box-shadow: 0 8px 25px var(--shadow);
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
+
+    .concept-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 35px var(--shadow);
+    }
+
     .comparison-table {
         border-collapse: collapse;
         width: 100%;
         margin: 20px 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 15px var(--shadow);
+        border-radius: 10px;
+        overflow: hidden;
     }
+
     .comparison-table th, .comparison-table td {
-        border: 1px solid #ddd;
-        padding: 12px;
+        border: 1px solid var(--border-color);
+        padding: 15px;
         text-align: left;
+        transition: background-color 0.3s ease;
     }
+
     .comparison-table th {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
         color: white;
         font-weight: bold;
+        font-size: 1.1em;
     }
+
     .comparison-table tr:nth-child(even) {
-        background-color: #f9f9f9;
+        background-color: var(--secondary-bg);
     }
+
+    .comparison-table tr:hover {
+        background-color: var(--tertiary-bg);
+    }
+
     .node-structure {
-        background: #f0f8ff;
-        border: 2px solid #1f77b4;
-        border-radius: 8px;
-        padding: 15px;
-        margin: 10px 0;
+        background: var(--secondary-bg);
+        border: 2px solid var(--accent-primary);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
+
+    .node-structure:hover {
+        border-color: var(--accent-secondary);
+        box-shadow: 0 6px 20px var(--shadow);
+    }
+
     .highlight-box {
-        background: #fff3cd;
-        border: 2px solid #ffc107;
-        border-radius: 8px;
-        padding: 15px;
-        margin: 10px 0;
+        background: var(--tertiary-bg);
+        border: 2px solid var(--accent-warning);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 15px 0;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: background-color 0.3s ease;
     }
+
     .code-block {
-        background: #2d2d2d;
-        color: #f8f8f2;
-        padding: 15px;
-        border-radius: 8px;
-        margin: 10px 0;
+        background: var(--secondary-bg);
+        color: var(--text-primary);
+        padding: 20px;
+        border-radius: 12px;
+        margin: 15px 0;
         font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
         overflow-x: auto;
+        border: 1px solid var(--border-color);
+        box-shadow: 0 4px 12px var(--shadow);
+        position: relative;
     }
+
+    .code-block::before {
+        content: "💻";
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 1.2em;
+    }
+
     .detail-box {
-        background: #e8f4f8;
-        border-left: 5px solid #1f77b4;
+        background: var(--secondary-bg);
+        border-left: 5px solid var(--accent-primary);
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 0 12px 12px 0;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: border-left-color 0.3s ease;
+    }
+
+    .detail-box:hover {
+        border-left-color: var(--accent-secondary);
+    }
+
+    /* Enhanced button styles */
+    .stButton > button {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px var(--shadow);
+    }
+
+    /* Enhanced input styles */
+    .stTextInput > div > div > input {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border-color: var(--accent-primary);
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+
+    /* Enhanced selectbox styles */
+    .stSelectbox > div > div {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        transition: border-color 0.3s ease;
+    }
+
+    .stSelectbox > div > div:hover {
+        border-color: var(--accent-primary);
+    }
+
+    /* Enhanced sidebar */
+    .css-1d391kg {
+        background-color: var(--secondary-bg);
+        border-right: 1px solid var(--border-color);
+    }
+
+    /* Enhanced tabs */
+    .stTabs [data-baseweb="tab-list"] {
+        background-color: var(--secondary-bg);
+        border-radius: 8px;
+        padding: 5px;
+    }
+
+    .stTabs [data-baseweb="tab"] {
+        background-color: transparent;
+        border-radius: 6px;
+        transition: background-color 0.3s ease;
+    }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        background-color: var(--tertiary-bg);
+    }
+
+    .stTabs [data-baseweb="tab"][aria-selected="true"] {
+        background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+        color: white;
+    }
+
+    /* Enhanced radio buttons */
+    .stRadio > div {
+        background-color: var(--secondary-bg);
+        border-radius: 8px;
         padding: 15px;
-        margin: 15px 0;
-        border-radius: 0 8px 8px 0;
+        border: 1px solid var(--border-color);
+    }
+
+    /* Enhanced success/warning/error messages */
+    .stSuccess, .stWarning, .stError {
+        border-radius: 8px;
+        border: none;
+        box-shadow: 0 4px 12px var(--shadow);
+    }
+
+    /* Smooth transitions for all elements */
+    * {
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
     }
 </style>
 """, unsafe_allow_html=True)
