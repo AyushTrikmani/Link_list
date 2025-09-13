@@ -3137,5 +3137,14 @@ def main():
     with tab7:
         practice_problems()
 
+    with tab8:
+        advanced_visualizations()
+
+    with tab9:
+        interactive_quiz()
+
+    with tab10:
+        data_structure_comparison()
+
 if __name__ == "__main__":
     main()
