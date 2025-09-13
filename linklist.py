@@ -1690,8 +1690,373 @@ def has_cycle(head):
 def interactive_playground():
     st.title("Interactive Playground")
 
+    # Define linked list classes
+    class Node:
+        def __init__(self, data):
+            self.data = data
+            self.next = None
+            self.prev = None  # For doubly linked list
+
+    class SinglyLinkedList:
+        def __init__(self):
+            self.head = None
+            self.size = 0
+
+        def insert_at_beginning(self, data):
+            new_node = Node(data)
+            new_node.next = self.head
+            self.head = new_node
+            self.size += 1
+
+        def insert_at_end(self, data):
+            new_node = Node(data)
+            if self.head is None:
+                self.head = new_node
+            else:
+                current = self.head
+                while current.next:
+                    current = current.next
+                current.next = new_node
+            self.size += 1
+
+        def insert_at_index(self, data, index):
+            if index < 0 or index > self.size:
+                return False
+            if index == 0:
+                self.insert_at_beginning(data)
+                return True
+            new_node = Node(data)
+            current = self.head
+            for i in range(index - 1):
+                if current is None:
+                    return False
+                current = current.next
+            new_node.next = current.next
+            current.next = new_node
+            self.size += 1
+            return True
+
+        def delete_from_beginning(self):
+            if self.head is None:
+                return None
+            deleted_data = self.head.data
+            self.head = self.head.next
+            self.size -= 1
+            return deleted_data
+
+        def delete_from_end(self):
+            if self.head is None:
+                return None
+            if self.head.next is None:
+                deleted_data = self.head.data
+                self.head = None
+                self.size -= 1
+                return deleted_data
+            current = self.head
+            while current.next.next:
+                current = current.next
+            deleted_data = current.next.data
+            current.next = None
+            self.size -= 1
+            return deleted_data
+
+        def delete_by_value(self, value):
+            if self.head is None:
+                return False
+            if self.head.data == value:
+                self.head = self.head.next
+                self.size -= 1
+                return True
+            current = self.head
+            while current.next and current.next.data != value:
+                current = current.next
+            if current.next:
+                current.next = current.next.next
+                self.size -= 1
+                return True
+            return False
+
+        def search(self, value):
+            current = self.head
+            position = 0
+            while current:
+                if current.data == value:
+                    return position
+                current = current.next
+                position += 1
+            return -1
+
+        def traverse(self):
+            elements = []
+            current = self.head
+            while current:
+                elements.append(current.data)
+                current = current.next
+            return elements
+
+    class DoublyLinkedList:
+        def __init__(self):
+            self.head = None
+            self.tail = None
+            self.size = 0
+
+        def insert_at_beginning(self, data):
+            new_node = Node(data)
+            if self.head is None:
+                self.head = self.tail = new_node
+            else:
+                new_node.next = self.head
+                self.head.prev = new_node
+                self.head = new_node
+            self.size += 1
+
+        def insert_at_end(self, data):
+            new_node = Node(data)
+            if self.tail is None:
+                self.head = self.tail = new_node
+            else:
+                new_node.prev = self.tail
+                self.tail.next = new_node
+                self.tail = new_node
+            self.size += 1
+
+        def insert_at_index(self, data, index):
+            if index < 0 or index > self.size:
+                return False
+            if index == 0:
+                self.insert_at_beginning(data)
+                return True
+            if index == self.size:
+                self.insert_at_end(data)
+                return True
+            new_node = Node(data)
+            current = self.head
+            for i in range(index):
+                current = current.next
+            new_node.prev = current.prev
+            new_node.next = current
+            current.prev.next = new_node
+            current.prev = new_node
+            self.size += 1
+            return True
+
+        def delete_from_beginning(self):
+            if self.head is None:
+                return None
+            deleted_data = self.head.data
+            if self.head == self.tail:
+                self.head = self.tail = None
+            else:
+                self.head = self.head.next
+                self.head.prev = None
+            self.size -= 1
+            return deleted_data
+
+        def delete_from_end(self):
+            if self.tail is None:
+                return None
+            deleted_data = self.tail.data
+            if self.head == self.tail:
+                self.head = self.tail = None
+            else:
+                self.tail = self.tail.prev
+                self.tail.next = None
+            self.size -= 1
+            return deleted_data
+
+        def delete_by_value(self, value):
+            current = self.head
+            while current:
+                if current.data == value:
+                    if current.prev:
+                        current.prev.next = current.next
+                    else:
+                        self.head = current.next
+                    if current.next:
+                        current.next.prev = current.prev
+                    else:
+                        self.tail = current.prev
+                    self.size -= 1
+                    return True
+                current = current.next
+            return False
+
+        def search(self, value):
+            current = self.head
+            position = 0
+            while current:
+                if current.data == value:
+                    return position
+                current = current.next
+                position += 1
+            return -1
+
+        def traverse_forward(self):
+            elements = []
+            current = self.head
+            while current:
+                elements.append(current.data)
+                current = current.next
+            return elements
+
+        def traverse_backward(self):
+            elements = []
+            current = self.tail
+            while current:
+                elements.append(current.data)
+                current = current.prev
+            return elements
+
+    class CircularLinkedList:
+        def __init__(self):
+            self.head = None
+            self.size = 0
+
+        def insert_at_beginning(self, data):
+            new_node = Node(data)
+            if self.head is None:
+                new_node.next = new_node
+                self.head = new_node
+            else:
+                new_node.next = self.head
+                current = self.head
+                while current.next != self.head:
+                    current = current.next
+                current.next = new_node
+                self.head = new_node
+            self.size += 1
+
+        def insert_at_end(self, data):
+            new_node = Node(data)
+            if self.head is None:
+                new_node.next = new_node
+                self.head = new_node
+            else:
+                new_node.next = self.head
+                current = self.head
+                while current.next != self.head:
+                    current = current.next
+                current.next = new_node
+            self.size += 1
+
+        def insert_at_index(self, data, index):
+            if index < 0 or index > self.size:
+                return False
+            if index == 0:
+                self.insert_at_beginning(data)
+                return True
+            new_node = Node(data)
+            current = self.head
+            for i in range(index - 1):
+                current = current.next
+                if current == self.head:
+                    return False
+            new_node.next = current.next
+            current.next = new_node
+            self.size += 1
+            return True
+
+        def delete_from_beginning(self):
+            if self.head is None:
+                return None
+            deleted_data = self.head.data
+            if self.head.next == self.head:
+                self.head = None
+            else:
+                current = self.head
+                while current.next != self.head:
+                    current = current.next
+                current.next = self.head.next
+                self.head = self.head.next
+            self.size -= 1
+            return deleted_data
+
+        def delete_from_end(self):
+            if self.head is None:
+                return None
+            deleted_data = self.head.data
+            if self.head.next == self.head:
+                self.head = None
+            else:
+                current = self.head
+                while current.next.next != self.head:
+                    current = current.next
+                deleted_data = current.next.data
+                current.next = self.head
+            self.size -= 1
+            return deleted_data
+
+        def delete_by_value(self, value):
+            if self.head is None:
+                return False
+            if self.head.data == value:
+                if self.head.next == self.head:
+                    self.head = None
+                else:
+                    current = self.head
+                    while current.next != self.head:
+                        current = current.next
+                    current.next = self.head.next
+                    self.head = self.head.next
+                self.size -= 1
+                return True
+            current = self.head
+            while current.next != self.head and current.next.data != value:
+                current = current.next
+            if current.next != self.head:
+                current.next = current.next.next
+                self.size -= 1
+                return True
+            return False
+
+        def search(self, value):
+            if self.head is None:
+                return -1
+            current = self.head
+            position = 0
+            while True:
+                if current.data == value:
+                    return position
+                current = current.next
+                position += 1
+                if current == self.head or position > self.size:
+                    break
+            return -1
+
+        def traverse(self, max_elements=None):
+            if self.head is None:
+                return []
+            elements = []
+            current = self.head
+            count = 0
+            while current and (max_elements is None or count < max_elements):
+                elements.append(current.data)
+                current = current.next
+                count += 1
+                if current == self.head:
+                    break
+            return elements
+
+    # Initialize session state
+    if 'list_type' not in st.session_state:
+        st.session_state.list_type = "Singly Linked List"
     if 'linked_list' not in st.session_state:
-        st.session_state.linked_list = []
+        st.session_state.linked_list = SinglyLinkedList()
+
+    # List type selector
+    st.header("Select Linked List Type")
+    list_types = ["Singly Linked List", "Doubly Linked List", "Circular Linked List"]
+    selected_type = st.selectbox("Choose list type:", list_types, index=list_types.index(st.session_state.list_type))
+
+    if selected_type != st.session_state.list_type:
+        st.session_state.list_type = selected_type
+        if selected_type == "Singly Linked List":
+            st.session_state.linked_list = SinglyLinkedList()
+        elif selected_type == "Doubly Linked List":
+            st.session_state.linked_list = DoublyLinkedList()
+        elif selected_type == "Circular Linked List":
+            st.session_state.linked_list = CircularLinkedList()
+        st.rerun()
 
     st.header("Create Your Linked List")
     col1, col2 = st.columns([2, 1])
@@ -1699,45 +2064,95 @@ def interactive_playground():
         user_input = st.text_input("Enter comma-separated values (e.g., 1, 2, 3, 4)", "")
         if st.button("Create List", key="create"):
             if user_input:
-                st.session_state.linked_list = [x.strip() for x in user_input.split(",") if x.strip()]
-                st.success(f"Linked list created with {len(st.session_state.linked_list)} elements!")
+                values = [x.strip() for x in user_input.split(",") if x.strip()]
+                if st.session_state.list_type == "Singly Linked List":
+                    st.session_state.linked_list = SinglyLinkedList()
+                    for val in values:
+                        st.session_state.linked_list.insert_at_end(val)
+                elif st.session_state.list_type == "Doubly Linked List":
+                    st.session_state.linked_list = DoublyLinkedList()
+                    for val in values:
+                        st.session_state.linked_list.insert_at_end(val)
+                elif st.session_state.list_type == "Circular Linked List":
+                    st.session_state.linked_list = CircularLinkedList()
+                    for val in values:
+                        st.session_state.linked_list.insert_at_end(val)
+                st.success(f"{st.session_state.list_type} created with {len(values)} elements!")
             else:
                 st.warning("Please enter some values.")
     with col2:
         if st.button("Clear List", key="clear"):
-            st.session_state.linked_list = []
-            st.info("Linked list cleared!")
+            if st.session_state.list_type == "Singly Linked List":
+                st.session_state.linked_list = SinglyLinkedList()
+            elif st.session_state.list_type == "Doubly Linked List":
+                st.session_state.linked_list = DoublyLinkedList()
+            elif st.session_state.list_type == "Circular Linked List":
+                st.session_state.linked_list = CircularLinkedList()
+            st.info(f"{st.session_state.list_type} cleared!")
 
-    st.header("Current Linked List")
-    if st.session_state.linked_list:
-        st.write("Elements: ", st.session_state.linked_list)
-        st.write(f"Length: {len(st.session_state.linked_list)}")
+    st.header(f"Current {st.session_state.list_type}")
+    if st.session_state.linked_list.size > 0:
+        if st.session_state.list_type == "Doubly Linked List":
+            st.write("Forward: ", st.session_state.linked_list.traverse_forward())
+            st.write("Backward: ", st.session_state.linked_list.traverse_backward())
+        else:
+            elements = st.session_state.linked_list.traverse() if st.session_state.list_type != "Circular Linked List" else st.session_state.linked_list.traverse(20)
+            st.write("Elements: ", elements)
+        st.write(f"Length: {st.session_state.linked_list.size}")
 
         # Enhanced visualization
-        fig, ax = plt.subplots(figsize=(max(8, len(st.session_state.linked_list) * 1.2), 2))
+        fig, ax = plt.subplots(figsize=(max(8, st.session_state.linked_list.size * 1.5), 3))
         ax.axis('off')
 
-        for i, val in enumerate(st.session_state.linked_list):
+        elements = []
+        if st.session_state.list_type == "Doubly Linked List":
+            elements = st.session_state.linked_list.traverse_forward()
+        elif st.session_state.list_type == "Circular Linked List":
+            elements = st.session_state.linked_list.traverse(20)
+        else:
+            elements = st.session_state.linked_list.traverse()
+
+        for i, val in enumerate(elements):
             # Draw node
-            rect = plt.Rectangle((i*1.5, 0.2), 1.2, 0.6, fill=True, facecolor='lightblue', edgecolor='blue', linewidth=2)
+            rect = plt.Rectangle((i*1.5, 0.5), 1.2, 0.6, fill=True, facecolor='lightblue', edgecolor='blue', linewidth=2)
             ax.add_patch(rect)
             # Draw data
-            ax.text(i*1.5 + 0.6, 0.5, str(val), ha='center', va='center', fontsize=12, fontweight='bold')
-            # Draw pointer
-            if i < len(st.session_state.linked_list) - 1:
-                ax.arrow(i*1.5 + 1.3, 0.5, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
-                ax.text(i*1.5 + 1.45, 0.7, "next", fontsize=8, color='red')
+            ax.text(i*1.5 + 0.6, 0.8, str(val), ha='center', va='center', fontsize=12, fontweight='bold')
 
-        # Add NULL at the end
-        ax.text(len(st.session_state.linked_list)*1.5 + 0.3, 0.5, "NULL", fontsize=10, color='gray')
-        ax.arrow(len(st.session_state.linked_list)*1.5 - 0.1, 0.5, 0.4, 0, head_width=0.05, head_length=0.05, fc='gray', ec='gray')
+            # Draw pointers based on list type
+            if st.session_state.list_type == "Doubly Linked List":
+                if i < len(elements) - 1:
+                    # Forward arrow
+                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
+                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
+                if i > 0:
+                    # Backward arrow
+                    ax.arrow(i*1.5 - 0.05, 0.8, -0.15, 0, head_width=0.1, head_length=0.1, fc='green', ec='green')
+                    ax.text(i*1.5 - 0.2, 1.0, "prev", fontsize=8, color='green')
+            elif st.session_state.list_type == "Circular Linked List":
+                if i < len(elements) - 1:
+                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
+                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
+                else:
+                    # Circular arrow back to first
+                    ax.arrow(i*1.5 + 1.3, 0.8, -i*1.5 - 0.7, -0.3, head_width=0.1, head_length=0.1, fc='purple', ec='purple')
+                    ax.text(i*1.5 + 0.8, 0.3, "circular", fontsize=8, color='purple')
+            else:  # Singly
+                if i < len(elements) - 1:
+                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
+                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
+
+        # Add NULL at the end for non-circular
+        if st.session_state.list_type != "Circular Linked List":
+            ax.text(len(elements)*1.5 + 0.3, 0.8, "NULL", fontsize=10, color='gray')
+            ax.arrow(len(elements)*1.5 - 0.1, 0.8, 0.4, 0, head_width=0.05, head_length=0.05, fc='gray', ec='gray')
 
         st.pyplot(fig)
     else:
-        st.info("No linked list created yet. Use the input above to create one!")
+        st.info(f"No {st.session_state.list_type.lower()} created yet. Use the input above to create one!")
 
-    st.header("Operations on Linked List")
-    if st.session_state.linked_list:
+    st.header(f"Operations on {st.session_state.list_type}")
+    if st.session_state.linked_list.size > 0:
         col1, col2, col3 = st.columns(3)
 
         with col1:
@@ -1746,18 +2161,25 @@ def interactive_playground():
             insert_val = st.text_input("Value to insert", key="insert_val")
 
             if insert_pos == "At Index":
-                insert_idx = st.number_input("Index", min_value=0, max_value=len(st.session_state.linked_list), value=0, key="insert_idx")
+                insert_idx = st.number_input("Index", min_value=0, max_value=st.session_state.linked_list.size, value=0, key="insert_idx")
 
             if st.button("Insert", key="insert_btn"):
                 if insert_val:
+                    success = False
                     if insert_pos == "Beginning":
-                        st.session_state.linked_list.insert(0, insert_val)
+                        st.session_state.linked_list.insert_at_beginning(insert_val)
+                        success = True
                     elif insert_pos == "End":
-                        st.session_state.linked_list.append(insert_val)
+                        st.session_state.linked_list.insert_at_end(insert_val)
+                        success = True
                     else:  # At Index
-                        st.session_state.linked_list.insert(insert_idx, insert_val)
-                    st.success(f"Inserted '{insert_val}' at {insert_pos.lower()}!")
-                    st.rerun()
+                        success = st.session_state.linked_list.insert_at_index(insert_val, insert_idx)
+
+                    if success:
+                        st.success(f"Inserted '{insert_val}' at {insert_pos.lower()}!")
+                        st.rerun()
+                    else:
+                        st.warning("Invalid index!")
                 else:
                     st.warning("Please enter a value to insert.")
 
@@ -1768,35 +2190,36 @@ def interactive_playground():
                 delete_val = st.text_input("Value to delete", key="delete_val")
 
             if st.button("Delete", key="delete_btn"):
-                if not st.session_state.linked_list:
+                if st.session_state.linked_list.size == 0:
                     st.warning("List is empty!")
-                elif delete_pos == "Beginning":
-                    removed = st.session_state.linked_list.pop(0)
-                    st.success(f"Removed '{removed}' from beginning!")
-                    st.rerun()
-                elif delete_pos == "End":
-                    removed = st.session_state.linked_list.pop()
-                    st.success(f"Removed '{removed}' from end!")
-                    st.rerun()
-                else:  # By Value
-                    if delete_val in st.session_state.linked_list:
-                        st.session_state.linked_list.remove(delete_val)
-                        st.success(f"Removed '{delete_val}' from list!")
+                else:
+                    deleted = None
+                    if delete_pos == "Beginning":
+                        deleted = st.session_state.linked_list.delete_from_beginning()
+                    elif delete_pos == "End":
+                        deleted = st.session_state.linked_list.delete_from_end()
+                    else:  # By Value
+                        if st.session_state.linked_list.delete_by_value(delete_val):
+                            deleted = delete_val
+
+                    if deleted is not None:
+                        st.success(f"Removed '{deleted}' from {delete_pos.lower()}!")
                         st.rerun()
                     else:
-                        st.warning(f"'{delete_val}' not found in list!")
+                        st.warning(f"'{delete_val}' not found in list!" if delete_pos == "By Value" else "Operation failed!")
 
         with col3:
             st.subheader("Search Element")
             search_val = st.text_input("Value to search", key="search_val")
 
             if st.button("Search", key="search_btn"):
-                if search_val in st.session_state.linked_list:
-                    idx = st.session_state.linked_list.index(search_val)
+                idx = st.session_state.linked_list.search(search_val)
+                if idx != -1:
                     st.success(f"Found '{search_val}' at index {idx}!")
                 else:
                     st.warning(f"'{search_val}' not found in list!")
 
+    # Code examples remain the same
     st.header("Code Implementation & Execution")
     st.markdown("Here's how the operations above are implemented in Python. You can also run example code!")
 
@@ -1944,119 +2367,6 @@ print("Reversed:", ll.traverse())
     selected_example = st.selectbox("Choose an example to run:", list(code_examples.keys()))
 
     if st.button("Run Code", key="run_code"):
-        code_to_run = code_examples[selected_example]
-
-        # Capture output
-        old_stdout = sys.stdout
-        sys.stdout = captured_output = StringIO()
-
-        try:
-            # Execute the code
-            exec(code_to_run)
-            output = captured_output.getvalue()
-            st.success("Code executed successfully!")
-            st.code(output, language="text")
-        except Exception as e:
-            st.error(f"Error executing code: {str(e)}")
-        finally:
-            sys.stdout = old_stdout
-
-    # Show the code
-    with st.expander("View Implementation Code"):
-        st.code("""
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-class LinkedList:
-    def __init__(self):
-        self.head = None
-
-    def insert_at_beginning(self, data):
-        new_node = Node(data)
-        new_node.next = self.head
-        self.head = new_node
-
-    def insert_at_end(self, data):
-        new_node = Node(data)
-        if self.head is None:
-            self.head = new_node
-            return
-
-        current = self.head
-        while current.next:
-            current = current.next
-        current.next = new_node
-
-    def delete_from_beginning(self):
-        if self.head is None:
-            return None
-
-        deleted_data = self.head.data
-        self.head = self.head.next
-        return deleted_data
-
-    def search(self, target):
-        current = self.head
-        position = 0
-
-        while current:
-            if current.data == target:
-                return position
-            current = current.next
-            position += 1
-
-        return -1
-
-    def traverse(self):
-        elements = []
-        current = self.head
-        while current:
-            elements.append(current.data)
-            current = current.next
-        return elements
-        """, language="python")
-
-    # Custom code input
-    st.subheader("✏️ Write & Run Your Own Code")
-    custom_code = st.text_area("Enter your Python code here:", height=200,
-                               value="""# Example: Create a simple linked list
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-
-# Create nodes
-head = Node(1)
-head.next = Node(2)
-head.next.next = Node(3)
-
-# Print the list
-current = head
-while current:
-    print(current.data, end=" -> ")
-    current = current.next
-print("None")""")
-
-    if st.button("Run Custom Code", key="run_custom"):
-        # Capture output
-        old_stdout = sys.stdout
-        sys.stdout = captured_output = StringIO()
-
-        try:
-            # Execute the custom code
-            exec(custom_code)
-            output = captured_output.getvalue()
-            if output.strip():
-                st.success("Code executed successfully!")
-                st.code(output, language="text")
-            else:
-                st.info("Code executed successfully! (No output)")
-        except Exception as e:
-            st.error(f"Error executing code: {str(e)}")
-        finally:
-            sys.stdout = old_stdout
 
 # Performance Analysis section
 def performance_analysis():
@@ -3255,7 +3565,11 @@ def performance_benchmarks():
 
 # Main app function
 def main():
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+    # Initialize session state for tab navigation
+    if 'current_tab' not in st.session_state:
+        st.session_state.current_tab = 0
+
+    tab_names = [
         "🏠 Welcome",
         "📖 Introduction",
         "🔗 Types",
@@ -3266,36 +3580,32 @@ def main():
         "🎨 Advanced Viz",
         "🧠 Quiz",
         "⚖️ Comparison"
-    ])
+    ]
 
-    with tab1:
+    # Navigation selectbox
+    selected_tab = st.selectbox("Navigate to:", tab_names, index=st.session_state.current_tab, key="nav_select")
+    st.session_state.current_tab = tab_names.index(selected_tab)
+
+    # Render the selected tab content
+    if st.session_state.current_tab == 0:
         welcome_dashboard()
-
-    with tab2:
+    elif st.session_state.current_tab == 1:
         introduction()
-
-    with tab3:
+    elif st.session_state.current_tab == 2:
         types_of_linked_lists()
-
-    with tab4:
+    elif st.session_state.current_tab == 3:
         operations_and_algorithms()
-
-    with tab5:
+    elif st.session_state.current_tab == 4:
         interactive_playground()
-
-    with tab6:
+    elif st.session_state.current_tab == 5:
         performance_analysis()
-
-    with tab7:
+    elif st.session_state.current_tab == 6:
         practice_problems()
-
-    with tab8:
+    elif st.session_state.current_tab == 7:
         advanced_visualizations()
-
-    with tab9:
+    elif st.session_state.current_tab == 8:
         interactive_quiz()
-
-    with tab10:
+    elif st.session_state.current_tab == 9:
         data_structure_comparison()
 
 if __name__ == "__main__":
