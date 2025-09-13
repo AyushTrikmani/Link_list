@@ -2580,130 +2580,272 @@ def references_and_resources():
 def advanced_visualizations():
     st.title("Advanced Visualizations")
 
-    # Create sample data if no linked list exists
-    if 'linked_list' not in st.session_state or st.session_state.linked_list.size == 0:
-        st.info("Creating sample visualization with demo data")
-        elements = [10, 20, 30, 40]
-        list_type = "Singly Linked List"
-    else:
+    # List type selector for visualization
+    viz_type = st.selectbox(
+        "Select visualization type:",
+        ["Singly Linked List", "Doubly Linked List", "Circular Linked List"],
+        help="Choose which type of linked list to visualize"
+    )
+    
+    # Get data based on selection or session state
+    if 'linked_list' in st.session_state and st.session_state.linked_list.size > 0:
         if hasattr(st.session_state.linked_list, 'traverse_forward'):
             elements = st.session_state.linked_list.traverse_forward()
-            list_type = "Doubly Linked List"
         else:
             elements = st.session_state.linked_list.traverse()
-            list_type = st.session_state.list_type
+    else:
+        elements = [10, 20, 30, 40, 50]
 
-    st.header("3D Network Visualization")
+    st.header(f"3D {viz_type} Visualization")
     
-    # Create 3D visualization
+    # Create 3D visualization based on type
     fig = go.Figure()
     
-    # Node positions in 3D
-    node_x = [i * 2 for i in range(len(elements))]
-    node_y = [0] * len(elements)
-    node_z = [0] * len(elements)
-    
-    # Add 3D scatter plot for nodes
-    fig.add_trace(go.Scatter3d(
-        x=node_x, y=node_y, z=node_z,
-        mode='markers+text',
-        marker=dict(
-            size=15,
-            color=['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#9B59B6'][:len(elements)],
-            opacity=0.9,
-            line=dict(width=2, color='#2C3E50')
-        ),
-        text=[f"Node {i}<br>Value: {val}" for i, val in enumerate(elements)],
-        textposition="middle center",
-        textfont=dict(size=12, color='white', family="Arial Black"),
-        name="Nodes"
-    ))
-    
-    # Add connections
-    for i in range(len(elements) - 1):
+    if viz_type == "Singly Linked List":
+        # Linear arrangement for singly linked list
+        node_x = [i * 3 for i in range(len(elements))]
+        node_y = [0] * len(elements)
+        node_z = [0] * len(elements)
+        
+        # Add nodes
         fig.add_trace(go.Scatter3d(
-            x=[node_x[i], node_x[i+1]],
-            y=[node_y[i], node_y[i+1]],
-            z=[node_z[i], node_z[i+1]],
-            mode='lines',
-            line=dict(color='#2C3E50', width=5),
-            showlegend=False
+            x=node_x, y=node_y, z=node_z,
+            mode='markers+text',
+            marker=dict(
+                size=20,
+                color='#4A90E2',
+                opacity=0.9,
+                line=dict(width=3, color='#2E5BBA')
+            ),
+            text=[str(val) for val in elements],
+            textposition="middle center",
+            textfont=dict(size=14, color='white', family="Arial Black"),
+            name="Nodes"
         ))
+        
+        # Add forward connections
+        for i in range(len(elements) - 1):
+            fig.add_trace(go.Scatter3d(
+                x=[node_x[i], node_x[i+1]],
+                y=[node_y[i], node_y[i+1]],
+                z=[node_z[i], node_z[i+1]],
+                mode='lines',
+                line=dict(color='#FF6B6B', width=8),
+                showlegend=False
+            ))
+            
+    elif viz_type == "Doubly Linked List":
+        # Linear arrangement with bidirectional arrows
+        node_x = [i * 4 for i in range(len(elements))]
+        node_y = [0] * len(elements)
+        node_z = [0] * len(elements)
+        
+        # Add nodes
+        fig.add_trace(go.Scatter3d(
+            x=node_x, y=node_y, z=node_z,
+            mode='markers+text',
+            marker=dict(
+                size=20,
+                color='#E74C3C',
+                opacity=0.9,
+                line=dict(width=3, color='#C0392B')
+            ),
+            text=[str(val) for val in elements],
+            textposition="middle center",
+            textfont=dict(size=14, color='white', family="Arial Black"),
+            name="Nodes"
+        ))
+        
+        # Add forward connections (above)
+        for i in range(len(elements) - 1):
+            fig.add_trace(go.Scatter3d(
+                x=[node_x[i], node_x[i+1]],
+                y=[0.5, 0.5],
+                z=[0, 0],
+                mode='lines',
+                line=dict(color='#FF6B6B', width=6),
+                showlegend=False
+            ))
+            
+        # Add backward connections (below)
+        for i in range(1, len(elements)):
+            fig.add_trace(go.Scatter3d(
+                x=[node_x[i], node_x[i-1]],
+                y=[-0.5, -0.5],
+                z=[0, 0],
+                mode='lines',
+                line=dict(color='#4ECDC4', width=6),
+                showlegend=False
+            ))
+            
+    else:  # Circular Linked List
+        # Circular arrangement
+        import math
+        radius = 3
+        node_x = [radius * math.cos(2 * math.pi * i / len(elements)) for i in range(len(elements))]
+        node_y = [radius * math.sin(2 * math.pi * i / len(elements)) for i in range(len(elements))]
+        node_z = [0] * len(elements)
+        
+        # Add nodes
+        fig.add_trace(go.Scatter3d(
+            x=node_x, y=node_y, z=node_z,
+            mode='markers+text',
+            marker=dict(
+                size=20,
+                color='#9B59B6',
+                opacity=0.9,
+                line=dict(width=3, color='#8E44AD')
+            ),
+            text=[str(val) for val in elements],
+            textposition="middle center",
+            textfont=dict(size=14, color='white', family="Arial Black"),
+            name="Nodes"
+        ))
+        
+        # Add circular connections
+        for i in range(len(elements)):
+            next_i = (i + 1) % len(elements)
+            fig.add_trace(go.Scatter3d(
+                x=[node_x[i], node_x[next_i]],
+                y=[node_y[i], node_y[next_i]],
+                z=[node_z[i], node_z[next_i]],
+                mode='lines',
+                line=dict(color='#FF6B6B', width=8),
+                showlegend=False
+            ))
     
     fig.update_layout(
         title=dict(
-            text=f"3D {list_type} Visualization",
+            text=f"3D {viz_type} Visualization",
             font=dict(size=18, color='#2C3E50')
         ),
         scene=dict(
-            xaxis_title="Position",
-            yaxis_title="Y",
-            zaxis_title="Z",
+            xaxis_title="X Position",
+            yaxis_title="Y Position",
+            zaxis_title="Z Position",
             camera=dict(eye=dict(x=1.5, y=1.5, z=1.5)),
             bgcolor='rgba(0,0,0,0)'
         ),
-        height=500,
+        height=600,
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)'
     )
     
     st.plotly_chart(fig, use_container_width=True)
-
-    st.header("Interactive Memory Layout")
     
-    # Use sample data if no linked list
-    if 'linked_list' not in st.session_state or st.session_state.linked_list.size == 0:
-        demo_elements = [10, 20, 30, 40]
+    # Add description based on type
+    if viz_type == "Singly Linked List":
+        st.info("🔗 **Singly Linked List**: Nodes connected in one direction with forward pointers only.")
+    elif viz_type == "Doubly Linked List":
+        st.info("↔️ **Doubly Linked List**: Nodes with bidirectional connections - red arrows show 'next' pointers, teal arrows show 'prev' pointers.")
     else:
-        if hasattr(st.session_state.linked_list, 'traverse_forward'):
-            demo_elements = st.session_state.linked_list.traverse_forward()
-        else:
-            demo_elements = st.session_state.linked_list.traverse()
+        st.info("🔄 **Circular Linked List**: Nodes arranged in a circle where the last node points back to the first node.")
+
+    st.header("Memory Layout Comparison")
     
-    # Memory layout visualization
-    st.subheader("Memory Blocks Visualization")
+    # Use elements from the selected visualization type
+    demo_elements = elements[:4]  # Limit to 4 for better display
     
-    cols = st.columns(len(demo_elements) + 1)
+    # Memory layout visualization based on selected type
+    st.subheader(f"Memory Structure: {viz_type}")
     
-    for i, val in enumerate(demo_elements):
-        with cols[i]:
-            st.markdown(f"""
+    if viz_type == "Singly Linked List":
+        cols = st.columns(len(demo_elements) + 1)
+        
+        for i, val in enumerate(demo_elements):
+            with cols[i]:
+                st.markdown(f"""
+                <div style="
+                    border: 3px solid #4A90E2;
+                    border-radius: 15px;
+                    padding: 15px;
+                    margin: 5px;
+                    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+                    text-align: center;
+                    color: white;
+                ">
+                    <div style="font-weight: bold;">Node {i}</div>
+                    <div style="font-size: 1.3em; margin: 8px 0;">{val}</div>
+                    <div style="font-size: 0.7em;">Next: 0x{(i+1)*100:03X}</div>
+                    <div style="margin-top: 8px;">→</div>
+                </div>
+                """, unsafe_allow_html=True)
+        
+        with cols[-1]:
+            st.markdown("""
             <div style="
-                border: 3px solid #4A90E2;
+                border: 3px solid #95A5A6;
                 border-radius: 15px;
-                padding: 20px;
-                margin: 10px;
-                background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+                padding: 15px;
+                margin: 5px;
+                background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%);
                 text-align: center;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-                transition: transform 0.3s ease;
                 color: white;
             ">
-                <div style="font-weight: bold; font-size: 1.1em;">Block {i}</div>
-                <div style="font-size: 1.5em; margin: 10px 0; font-weight: bold;">{val}</div>
-                <div style="font-size: 0.8em; opacity: 0.9;">0x{i*100+100:03X}</div>
-                <div style="margin-top: 10px; font-size: 1.2em;">{'→' if i < len(demo_elements) - 1 else ''}</div>
+                <div style="font-weight: bold;">NULL</div>
+                <div style="font-size: 1.3em; margin: 8px 0;">∅</div>
+                <div style="font-size: 0.7em;">End</div>
             </div>
             """, unsafe_allow_html=True)
+            
+    elif viz_type == "Doubly Linked List":
+        cols = st.columns(len(demo_elements))
+        
+        for i, val in enumerate(demo_elements):
+            with cols[i]:
+                st.markdown(f"""
+                <div style="
+                    border: 3px solid #E74C3C;
+                    border-radius: 15px;
+                    padding: 15px;
+                    margin: 5px;
+                    background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
+                    text-align: center;
+                    color: white;
+                ">
+                    <div style="font-weight: bold;">Node {i}</div>
+                    <div style="font-size: 1.3em; margin: 8px 0;">{val}</div>
+                    <div style="font-size: 0.6em;">Prev: {'NULL' if i == 0 else f'0x{i*100:03X}'}</div>
+                    <div style="font-size: 0.6em;">Next: {'NULL' if i == len(demo_elements)-1 else f'0x{(i+1)*100:03X}'}</div>
+                    <div style="margin-top: 5px;">{'↔️' if 0 < i < len(demo_elements)-1 else '→' if i == 0 else '←'}</div>
+                </div>
+                """, unsafe_allow_html=True)
+                
+    else:  # Circular Linked List
+        cols = st.columns(len(demo_elements))
+        
+        for i, val in enumerate(demo_elements):
+            with cols[i]:
+                next_addr = f"0x{((i+1) % len(demo_elements))*100:03X}"
+                st.markdown(f"""
+                <div style="
+                    border: 3px solid #9B59B6;
+                    border-radius: 15px;
+                    padding: 15px;
+                    margin: 5px;
+                    background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%);
+                    text-align: center;
+                    color: white;
+                ">
+                    <div style="font-weight: bold;">Node {i}</div>
+                    <div style="font-size: 1.3em; margin: 8px 0;">{val}</div>
+                    <div style="font-size: 0.7em;">Next: {next_addr}</div>
+                    <div style="margin-top: 8px;">{'🔄' if i == len(demo_elements)-1 else '→'}</div>
+                </div>
+                """, unsafe_allow_html=True)
+        
+    # Add comparison table
+    st.subheader("Memory Structure Comparison")
     
-    # NULL block
-    with cols[-1]:
-        st.markdown("""
-        <div style="
-            border: 3px solid #E74C3C;
-            border-radius: 15px;
-            padding: 20px;
-            margin: 10px;
-            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            color: white;
-        ">
-            <div style="font-weight: bold; font-size: 1.1em;">NULL</div>
-            <div style="font-size: 1.2em; margin: 10px 0; font-weight: bold;">∅</div>
-            <div style="font-size: 0.8em; opacity: 0.9;">End</div>
-        </div>
-        """, unsafe_allow_html=True)
+    comparison_data = {
+        "Aspect": ["Pointers per Node", "Memory Overhead", "Traversal", "Insertion Complexity", "Use Case"],
+        "Singly Linked": ["1 (next)", "Low", "Forward only", "Simple", "Stacks, Queues"],
+        "Doubly Linked": ["2 (next, prev)", "High", "Bidirectional", "Complex", "Deques, Caches"],
+        "Circular Linked": ["1 (next)", "Low", "Circular", "Moderate", "Round-robin, Buffers"]
+    }
+    
+    df = pd.DataFrame(comparison_data)
+    st.dataframe(df, use_container_width=True)
 
 # Interactive Quiz section
 def interactive_quiz():
