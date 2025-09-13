@@ -1757,10 +1757,7 @@ def interactive_playground():
             st.write("Elements: ", elements)
         st.write(f"Length: {st.session_state.linked_list.size}")
 
-        # Enhanced visualization
-        fig, ax = plt.subplots(figsize=(max(8, st.session_state.linked_list.size * 1.5), 3))
-        ax.axis('off')
-
+        # Enhanced Plotly visualization
         elements = []
         if st.session_state.list_type == "Doubly Linked List":
             elements = st.session_state.linked_list.traverse_forward()
@@ -1769,42 +1766,98 @@ def interactive_playground():
         else:
             elements = st.session_state.linked_list.traverse()
 
-        for i, val in enumerate(elements):
-            # Draw node
-            rect = plt.Rectangle((i*1.5, 0.5), 1.2, 0.6, fill=True, facecolor='lightblue', edgecolor='blue', linewidth=2)
-            ax.add_patch(rect)
-            # Draw data
-            ax.text(i*1.5 + 0.6, 0.8, str(val), ha='center', va='center', fontsize=12, fontweight='bold')
-
-            # Draw pointers based on list type
+        # Create interactive Plotly visualization
+        fig = go.Figure()
+        
+        # Add nodes
+        node_x = [i * 2 for i in range(len(elements))]
+        node_y = [0] * len(elements)
+        
+        fig.add_trace(go.Scatter(
+            x=node_x, y=node_y,
+            mode='markers+text',
+            marker=dict(size=50, color='lightblue', line=dict(width=3, color='blue')),
+            text=[str(val) for val in elements],
+            textposition="middle center",
+            textfont=dict(size=14, color='black'),
+            name="Nodes",
+            hovertemplate="<b>Node %{pointNumber}</b><br>Value: %{text}<extra></extra>"
+        ))
+        
+        # Add arrows based on list type
+        for i in range(len(elements)):
             if st.session_state.list_type == "Doubly Linked List":
                 if i < len(elements) - 1:
-                    # Forward arrow
-                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
-                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
+                    fig.add_annotation(
+                        x=node_x[i] + 0.5, y=0.2,
+                        ax=node_x[i+1] - 0.5, ay=0.2,
+                        xref='x', yref='y', axref='x', ayref='y',
+                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
+                        text="next", showarrow=True
+                    )
                 if i > 0:
-                    # Backward arrow
-                    ax.arrow(i*1.5 - 0.05, 0.8, -0.15, 0, head_width=0.1, head_length=0.1, fc='green', ec='green')
-                    ax.text(i*1.5 - 0.2, 1.0, "prev", fontsize=8, color='green')
+                    fig.add_annotation(
+                        x=node_x[i] - 0.5, y=-0.2,
+                        ax=node_x[i-1] + 0.5, ay=-0.2,
+                        xref='x', yref='y', axref='x', ayref='y',
+                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='green',
+                        text="prev", showarrow=True
+                    )
             elif st.session_state.list_type == "Circular Linked List":
                 if i < len(elements) - 1:
-                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
-                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
-                else:
-                    # Circular arrow back to first
-                    ax.arrow(i*1.5 + 1.3, 0.8, -i*1.5 - 0.7, -0.3, head_width=0.1, head_length=0.1, fc='purple', ec='purple')
-                    ax.text(i*1.5 + 0.8, 0.3, "circular", fontsize=8, color='purple')
+                    fig.add_annotation(
+                        x=node_x[i] + 0.5, y=0,
+                        ax=node_x[i+1] - 0.5, ay=0,
+                        xref='x', yref='y', axref='x', ayref='y',
+                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
+                        showarrow=True
+                    )
+                elif len(elements) > 1:
+                    fig.add_annotation(
+                        x=node_x[i] + 0.5, y=0.5,
+                        ax=node_x[0] - 0.5, ay=0.5,
+                        xref='x', yref='y', axref='x', ayref='y',
+                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='purple',
+                        text="circular", showarrow=True
+                    )
             else:  # Singly
                 if i < len(elements) - 1:
-                    ax.arrow(i*1.5 + 1.3, 0.8, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
-                    ax.text(i*1.5 + 1.45, 1.0, "next", fontsize=8, color='red')
-
-        # Add NULL at the end for non-circular
-        if st.session_state.list_type != "Circular Linked List":
-            ax.text(len(elements)*1.5 + 0.3, 0.8, "NULL", fontsize=10, color='gray')
-            ax.arrow(len(elements)*1.5 - 0.1, 0.8, 0.4, 0, head_width=0.05, head_length=0.05, fc='gray', ec='gray')
-
-        st.pyplot(fig)
+                    fig.add_annotation(
+                        x=node_x[i] + 0.5, y=0,
+                        ax=node_x[i+1] - 0.5, ay=0,
+                        xref='x', yref='y', axref='x', ayref='y',
+                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
+                        showarrow=True
+                    )
+        
+        # Add NULL for non-circular lists
+        if st.session_state.list_type != "Circular Linked List" and elements:
+            fig.add_trace(go.Scatter(
+                x=[node_x[-1] + 2], y=[0],
+                mode='markers+text',
+                marker=dict(size=40, color='lightgray', line=dict(width=2, color='gray')),
+                text=["NULL"],
+                textposition="middle center",
+                name="NULL",
+                showlegend=False
+            ))
+            fig.add_annotation(
+                x=node_x[-1] + 0.5, y=0,
+                ax=node_x[-1] + 1.5, ay=0,
+                arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='gray',
+                showarrow=True
+            )
+        
+        fig.update_layout(
+            title=f"{st.session_state.list_type} Visualization",
+            xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-1, 1]),
+            showlegend=False,
+            height=300,
+            margin=dict(l=20, r=20, t=40, b=20)
+        )
+        
+        st.plotly_chart(fig, use_container_width=True)
     else:
         st.info(f"No {st.session_state.list_type.lower()} created yet. Use the input above to create one!")
 
