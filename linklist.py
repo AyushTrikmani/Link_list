@@ -3,22 +3,150 @@ import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 
 # Set page config
-st.set_page_config(page_title="Linked List Data Structures", layout="wide")
+st.set_page_config(
+    page_title="Linked List Data Structures",
+    layout="wide",
+    page_icon="🔗",
+    initial_sidebar_state="collapsed"
+)
 
-# Sidebar navigation menu
-def sidebar():
-    st.sidebar.title("Navigation")
-    menu = [
-        "Introduction",
-        "Types of Linked Lists",
-        "Operations and Algorithms",
-        "Interactive Playground",
-        "Performance Analysis",
-        "Practice Problems",
-        "References and Resources"
-    ]
-    choice = st.sidebar.radio("Go to", menu)
-    return choice
+# Custom CSS for better UI/UX
+st.markdown("""
+<style>
+    .main-header {
+        font-size: 3rem;
+        font-weight: bold;
+        background: linear-gradient(45deg, #1e3c72, #2a5298);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    .section-card {
+        background: white;
+        border-radius: 10px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 1rem 0;
+        border-left: 5px solid #1e3c72;
+    }
+    .feature-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 0.5rem;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .code-block {
+        background: #f8f9fa;
+        border-left: 4px solid #1e3c72;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-radius: 5px;
+    }
+    .highlight-box {
+        background: #e3f2fd;
+        border: 1px solid #2196f3;
+        border-radius: 8px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    .tab-content {
+        padding: 2rem 0;
+    }
+    .metric-card {
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        margin: 0.5rem;
+    }
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 2px;
+    }
+    .stTabs [data-baseweb="tab"] {
+        background-color: #f0f2f6;
+        border-radius: 4px 4px 0 0;
+        padding: 10px 20px;
+        font-weight: 600;
+    }
+    .stTabs [aria-selected="true"] {
+        background-color: #1e3c72 !important;
+        color: white !important;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Welcome/Dashboard section
+def welcome_dashboard():
+    st.markdown('<h1 class="main-header">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="section-card">
+    <h2 style="color: #1e3c72; text-align: center;">Welcome to Your Interactive Learning Journey!</h2>
+    <p style="font-size: 1.2em; text-align: center; color: #666;">
+    Master linked lists through interactive visualizations, hands-on practice, and comprehensive analysis.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Feature cards
+    col1, col2, col3, col4 = st.columns(4)
+
+    with col1:
+        st.markdown("""
+        <div class="feature-card">
+        <h3>📚 Learn</h3>
+        <p>Comprehensive guide to singly, doubly, and circular linked lists</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="feature-card">
+        <h3>🎮 Practice</h3>
+        <p>Interactive playground with real-time operations</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col3:
+        st.markdown("""
+        <div class="feature-card">
+        <h3>📊 Analyze</h3>
+        <p>Performance comparisons and optimization tips</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col4:
+        st.markdown("""
+        <div class="feature-card">
+        <h3>💡 Solve</h3>
+        <p>Practice problems with detailed solutions</p>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Quick stats
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.subheader("🚀 Quick Start Guide")
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Data Structures", "3 Types", "Singly, Doubly, Circular")
+    with col2:
+        st.metric("Operations", "8+ Methods", "Insert, Delete, Search, Traverse")
+    with col3:
+        st.metric("Practice Problems", "10+ Examples", "With Solutions")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    # Progress indicator
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.subheader("📈 Learning Progress")
+    progress = st.progress(0)
+    st.caption("Complete sections to track your progress")
+    st.markdown('</div>', unsafe_allow_html=True)
 
 # Introduction section
 def introduction():
@@ -1458,22 +1586,36 @@ def references_and_resources():
 
 # Main app function
 def main():
-    choice = sidebar()
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+        "🏠 Welcome",
+        "📖 Introduction",
+        "🔗 Types",
+        "⚙️ Operations",
+        "🎮 Playground",
+        "📊 Analysis",
+        "💡 Practice"
+    ])
 
-    if choice == "Introduction":
+    with tab1:
+        welcome_dashboard()
+
+    with tab2:
         introduction()
-    elif choice == "Types of Linked Lists":
+
+    with tab3:
         types_of_linked_lists()
-    elif choice == "Operations and Algorithms":
+
+    with tab4:
         operations_and_algorithms()
-    elif choice == "Interactive Playground":
+
+    with tab5:
         interactive_playground()
-    elif choice == "Performance Analysis":
+
+    with tab6:
         performance_analysis()
-    elif choice == "Practice Problems":
+
+    with tab7:
         practice_problems()
-    elif choice == "References and Resources":
-        references_and_resources()
 
 if __name__ == "__main__":
     main()
