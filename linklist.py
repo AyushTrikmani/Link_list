@@ -1785,50 +1785,89 @@ def interactive_playground():
         ))
         
         # Add arrows based on list type
-        for i in range(len(elements)):
-            if st.session_state.list_type == "Doubly Linked List":
-                if i < len(elements) - 1:
-                    fig.add_annotation(
-                        x=node_x[i] + 0.5, y=0.2,
-                        ax=node_x[i+1] - 0.5, ay=0.2,
-                        xref='x', yref='y', axref='x', ayref='y',
-                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
-                        text="next", showarrow=True
-                    )
-                if i > 0:
-                    fig.add_annotation(
-                        x=node_x[i] - 0.5, y=-0.2,
-                        ax=node_x[i-1] + 0.5, ay=-0.2,
-                        xref='x', yref='y', axref='x', ayref='y',
-                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='green',
-                        text="prev", showarrow=True
-                    )
-            elif st.session_state.list_type == "Circular Linked List":
-                if i < len(elements) - 1:
-                    fig.add_annotation(
-                        x=node_x[i] + 0.5, y=0,
-                        ax=node_x[i+1] - 0.5, ay=0,
-                        xref='x', yref='y', axref='x', ayref='y',
-                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
-                        showarrow=True
-                    )
-                elif len(elements) > 1:
-                    fig.add_annotation(
-                        x=node_x[i] + 0.5, y=0.5,
-                        ax=node_x[0] - 0.5, ay=0.5,
-                        xref='x', yref='y', axref='x', ayref='y',
-                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='purple',
-                        text="circular", showarrow=True
-                    )
-            else:  # Singly
-                if i < len(elements) - 1:
-                    fig.add_annotation(
-                        x=node_x[i] + 0.5, y=0,
-                        ax=node_x[i+1] - 0.5, ay=0,
-                        xref='x', yref='y', axref='x', ayref='y',
-                        arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='red',
-                        showarrow=True
-                    )
+        if st.session_state.list_type == "Doubly Linked List":
+            # Forward arrows (next pointers)
+            for i in range(len(elements) - 1):
+                fig.add_annotation(
+                    x=node_x[i] + 0.6, y=0.3,
+                    ax=node_x[i+1] - 0.6, ay=0.3,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    showarrow=True
+                )
+                # Add "next" label
+                fig.add_annotation(
+                    x=(node_x[i] + node_x[i+1]) / 2, y=0.5,
+                    text="next", showarrow=False,
+                    font=dict(size=10, color='red')
+                )
+            
+            # Backward arrows (prev pointers)
+            for i in range(1, len(elements)):
+                fig.add_annotation(
+                    x=node_x[i] - 0.6, y=-0.3,
+                    ax=node_x[i-1] + 0.6, ay=-0.3,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='green',
+                    showarrow=True
+                )
+                # Add "prev" label
+                fig.add_annotation(
+                    x=(node_x[i] + node_x[i-1]) / 2, y=-0.5,
+                    text="prev", showarrow=False,
+                    font=dict(size=10, color='green')
+                )
+                
+        elif st.session_state.list_type == "Circular Linked List":
+            # Regular forward arrows
+            for i in range(len(elements) - 1):
+                fig.add_annotation(
+                    x=node_x[i] + 0.6, y=0,
+                    ax=node_x[i+1] - 0.6, ay=0,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    showarrow=True
+                )
+            
+            # Circular arrow from last to first (curved)
+            if len(elements) > 1:
+                # Create curved path for circular arrow
+                last_x = node_x[-1]
+                first_x = node_x[0]
+                mid_x = (last_x + first_x) / 2
+                
+                # Add curved arrow using path
+                fig.add_shape(
+                    type="path",
+                    path=f"M {last_x + 0.6},0 Q {mid_x},{-1.2} {first_x - 0.6},0",
+                    line=dict(color="purple", width=3),
+                )
+                
+                # Add arrowhead at the end
+                fig.add_annotation(
+                    x=first_x - 0.6, y=0,
+                    ax=first_x - 0.8, ay=-0.1,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor='purple',
+                    showarrow=True
+                )
+                
+                # Add "circular" label
+                fig.add_annotation(
+                    x=mid_x, y=-0.8,
+                    text="circular", showarrow=False,
+                    font=dict(size=12, color='purple', family="Arial Black")
+                )
+                
+        else:  # Singly Linked List
+            for i in range(len(elements) - 1):
+                fig.add_annotation(
+                    x=node_x[i] + 0.6, y=0,
+                    ax=node_x[i+1] - 0.6, ay=0,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    showarrow=True
+                )
         
         # Add NULL for non-circular lists
         if st.session_state.list_type != "Circular Linked List" and elements:
@@ -1851,9 +1890,10 @@ def interactive_playground():
         fig.update_layout(
             title=f"{st.session_state.list_type} Visualization",
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, range=[-1, 1]),
+            yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, 
+                      range=[-1.5, 1] if st.session_state.list_type == "Circular Linked List" else [-0.8, 0.8]),
             showlegend=False,
-            height=300,
+            height=400 if st.session_state.list_type in ["Circular Linked List", "Doubly Linked List"] else 300,
             margin=dict(l=20, r=20, t=40, b=20)
         )
         
@@ -2522,128 +2562,120 @@ def references_and_resources():
 def advanced_visualizations():
     st.title("Advanced Visualizations")
 
-    st.header("Network Graph Visualization")
-
-    # Check if linked list exists and has data
+    # Create sample data if no linked list exists
     if 'linked_list' not in st.session_state or st.session_state.linked_list.size == 0:
-        st.warning("Please create a linked list in the Playground section first!")
-        return
-
-    st.subheader("Linked List as Network Graph")
-
-    # Get list elements based on type
-    if hasattr(st.session_state.linked_list, 'traverse_forward'):
-        elements = st.session_state.linked_list.traverse_forward()
+        st.info("Creating sample visualization with demo data")
+        elements = [10, 20, 30, 40]
+        list_type = "Singly Linked List"
     else:
-        elements = st.session_state.linked_list.traverse()
+        if hasattr(st.session_state.linked_list, 'traverse_forward'):
+            elements = st.session_state.linked_list.traverse_forward()
+            list_type = "Doubly Linked List"
+        else:
+            elements = st.session_state.linked_list.traverse()
+            list_type = st.session_state.list_type
+
+    st.header("3D Network Visualization")
     
-    if not elements:
-        st.info("No elements to visualize")
-        return
-
-    # Create network graph
-    G = nx.DiGraph()
-
-    # Add nodes and edges
-    for i, val in enumerate(elements):
-        G.add_node(f"Node_{i}", label=str(val), pos=(i, 0))
-
-    for i in range(len(elements) - 1):
-        G.add_edge(f"Node_{i}", f"Node_{i+1}")
-
-    # Create positions
-    pos = nx.spring_layout(G)
-
-    # Create edge traces
-    edge_x = []
-    edge_y = []
-    for edge in G.edges():
-        x0, y0 = pos[edge[0]]
-        x1, y1 = pos[edge[1]]
-        edge_x.extend([x0, x1, None])
-        edge_y.extend([y0, y1, None])
-
-    edge_trace = go.Scatter(
-        x=edge_x, y=edge_y,
-        line=dict(width=2, color='#888'),
-        hoverinfo='none',
-        mode='lines')
-
-    # Create node traces
-    node_x = []
-    node_y = []
-    node_text = []
-    for node in G.nodes():
-        x, y = pos[node]
-        node_x.append(x)
-        node_y.append(y)
-        node_text.append(f"{G.nodes[node]['label']}")
-
-    node_trace = go.Scatter(
-        x=node_x, y=node_y,
+    # Create 3D visualization
+    fig = go.Figure()
+    
+    # Node positions in 3D
+    node_x = [i * 2 for i in range(len(elements))]
+    node_y = [0] * len(elements)
+    node_z = [0] * len(elements)
+    
+    # Add 3D scatter plot for nodes
+    fig.add_trace(go.Scatter3d(
+        x=node_x, y=node_y, z=node_z,
         mode='markers+text',
-        text=node_text,
-        textposition="middle center",
-        hoverinfo='text',
         marker=dict(
-            showscale=False,
-            color='#1e3c72',
-            size=40,
-            line_width=2))
-
-    # Create the figure
-    fig = go.Figure(data=[edge_trace, node_trace],
-                   layout=go.Layout(
-                       showlegend=False,
-                       hovermode='closest',
-                       margin=dict(b=20,l=5,r=5,t=40),
-                       xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                       yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                       height=400
-                   ))
-
+            size=15,
+            color=['red', 'green', 'blue', 'orange', 'purple'][:len(elements)],
+            opacity=0.8
+        ),
+        text=[f"Node {i}<br>Value: {val}" for i, val in enumerate(elements)],
+        textposition="middle center",
+        name="Nodes"
+    ))
+    
+    # Add connections
+    for i in range(len(elements) - 1):
+        fig.add_trace(go.Scatter3d(
+            x=[node_x[i], node_x[i+1]],
+            y=[node_y[i], node_y[i+1]],
+            z=[node_z[i], node_z[i+1]],
+            mode='lines',
+            line=dict(color='black', width=5),
+            showlegend=False
+        ))
+    
+    fig.update_layout(
+        title=f"3D {list_type} Visualization",
+        scene=dict(
+            xaxis_title="Position",
+            yaxis_title="Y",
+            zaxis_title="Z",
+            camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
+        ),
+        height=500
+    )
+    
     st.plotly_chart(fig, use_container_width=True)
 
-    st.header("Memory Layout Animation")
-
-    # Animated memory layout
-    st.subheader("Dynamic Memory Allocation")
-
-    animation_placeholder = st.empty()
-
-    if st.button("Animate Memory Allocation"):
-        # Get elements for animation
+    st.header("Interactive Memory Layout")
+    
+    # Use sample data if no linked list
+    if 'linked_list' not in st.session_state or st.session_state.linked_list.size == 0:
+        demo_elements = [10, 20, 30, 40]
+    else:
         if hasattr(st.session_state.linked_list, 'traverse_forward'):
-            anim_elements = st.session_state.linked_list.traverse_forward()
+            demo_elements = st.session_state.linked_list.traverse_forward()
         else:
-            anim_elements = st.session_state.linked_list.traverse()
-            
-        for i in range(len(anim_elements) + 1):
-            with animation_placeholder.container():
-                cols = st.columns(min(5, len(anim_elements) + 1))
-
-                for j in range(min(5, i + 1)):
-                    if j < len(anim_elements):
-                        with cols[j]:
-                            st.markdown(f"""
-                            <div style="border: 2px solid #1e3c72; border-radius: 10px; padding: 10px; margin: 5px; background: {'#e3f2fd' if j < i else '#f5f5f5'};">
-                                <div style="font-weight: bold; color: #1e3c72;">Memory Block {j}</div>
-                                <div>Data: {anim_elements[j]}</div>
-                                <div style="font-size: 0.8em; color: #666;">Address: 0x{j*100:03X}</div>
-                            </div>
-                            """, unsafe_allow_html=True)
-                    elif j == len(anim_elements):
-                        with cols[j]:
-                            st.markdown(f"""
-                            <div style="border: 2px solid #f44336; border-radius: 10px; padding: 10px; margin: 5px; background: {'#ffebee' if j <= i else '#f5f5f5'};">
-                                <div style="font-weight: bold; color: #f44336;">NULL</div>
-                                <div>End of List</div>
-                                <div style="font-size: 0.8em; color: #666;">Address: 0x{j*100:03X}</div>
-                            </div>
-                            """, unsafe_allow_html=True)
-
-            import time
-            time.sleep(0.5)
+            demo_elements = st.session_state.linked_list.traverse()
+    
+    # Memory layout visualization
+    st.subheader("Memory Blocks Visualization")
+    
+    cols = st.columns(len(demo_elements) + 1)
+    
+    for i, val in enumerate(demo_elements):
+        with cols[i]:
+            st.markdown(f"""
+            <div style="
+                border: 3px solid #1e3c72;
+                border-radius: 15px;
+                padding: 20px;
+                margin: 10px;
+                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                transition: transform 0.3s ease;
+            ">
+                <div style="font-weight: bold; color: #1e3c72; font-size: 1.1em;">Block {i}</div>
+                <div style="font-size: 1.5em; margin: 10px 0; color: #2a5298;">{val}</div>
+                <div style="font-size: 0.8em; color: #666;">0x{i*100+100:03X}</div>
+                <div style="margin-top: 10px; color: #1e3c72;">{'→' if i < len(demo_elements) - 1 else ''}</div>
+            </div>
+            """, unsafe_allow_html=True)
+    
+    # NULL block
+    with cols[-1]:
+        st.markdown("""
+        <div style="
+            border: 3px solid #f44336;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 10px;
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        ">
+            <div style="font-weight: bold; color: #f44336; font-size: 1.1em;">NULL</div>
+            <div style="font-size: 1.2em; margin: 10px 0; color: #d32f2f;">∅</div>
+            <div style="font-size: 0.8em; color: #666;">End</div>
+        </div>
+        """, unsafe_allow_html=True)
 
 # Interactive Quiz section
 def interactive_quiz():
