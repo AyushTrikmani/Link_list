@@ -549,11 +549,18 @@ def welcome_dashboard():
     <p style="font-size: 1.2em; text-align: center; color: #666; margin-bottom: 2rem;">
     Master linked lists through interactive visualizations, hands-on practice, and comprehensive analysis.
     </p>
-    <div style="text-align: center; margin-top: 2rem;">
-    <button class="modern-button" onclick="document.querySelector('.stTabs').scrollIntoView({behavior: 'smooth'})">
-    🚀 Start Learning
-    </button>
     </div>
+    """, unsafe_allow_html=True)
+    
+    # Add Start Learning button
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("🚀 Start Learning", key="start_learning", use_container_width=True):
+            st.session_state.current_tab = 1  # Navigate to Introduction
+            st.rerun()
+    
+    st.markdown("""
+    <div class="section-card">
     </div>
     """, unsafe_allow_html=True)
 
@@ -892,11 +899,18 @@ class Node:
     <div style="margin-top: 0.5rem; font-weight: 600;">Operations</div>
     </div>
     </div>
-    <div style="text-align: center; margin-top: 2rem;">
-    <button class="modern-button" onclick="document.querySelector('.stTabs [aria-selected=true]').nextElementSibling?.click()">
-    Continue to Types →
-    </button>
     </div>
+    """, unsafe_allow_html=True)
+    
+    # Add Continue to Types button
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("Continue to Types →", key="continue_to_types", use_container_width=True):
+            st.session_state.current_tab = 2  # Navigate to Types
+            st.rerun()
+    
+    st.markdown("""
+    <div class="section-card">
     </div>
     """, unsafe_allow_html=True)
 
