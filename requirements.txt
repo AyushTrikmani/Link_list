@@ -4,3 +4,4 @@ plotly
 numpy
 networkx
 pillow
+plotly.graph_objects
