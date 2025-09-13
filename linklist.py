@@ -557,6 +557,7 @@ def welcome_dashboard():
     with col2:
         if st.button("🚀 Start Learning", key="start_learning", use_container_width=True):
             st.session_state.current_tab = 1  # Navigate to Introduction
+            st.session_state.scroll_to_top = True  # Flag to scroll to top
             st.rerun()
     
     st.markdown("""
@@ -907,6 +908,7 @@ class Node:
     with col2:
         if st.button("Continue to Types →", key="continue_to_types", use_container_width=True):
             st.session_state.current_tab = 2  # Navigate to Types
+            st.session_state.scroll_to_top = True  # Flag to scroll to top
             st.rerun()
     
     st.markdown("""
@@ -3505,11 +3507,21 @@ def main():
         for i, (name, desc) in enumerate(nav_options):
             if st.button(name, key=f"nav_{i}", help=desc, use_container_width=True):
                 st.session_state.current_tab = i
+                st.session_state.scroll_to_top = True  # Flag to scroll to top
                 st.rerun()
         
         st.markdown("---")
         st.markdown("<p style='text-align: center; color: #666; font-size: 0.8em;'>Select a section above to explore</p>", unsafe_allow_html=True)
 
+    # Add scroll to top functionality
+    if st.session_state.get('scroll_to_top', False):
+        st.markdown("""
+        <script>
+        window.parent.document.querySelector('.main').scrollTop = 0;
+        </script>
+        """, unsafe_allow_html=True)
+        st.session_state.scroll_to_top = False
+    
     # Render the selected tab content
     if st.session_state.current_tab == 0:
         welcome_dashboard()
