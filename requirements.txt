@@ -1,5 +1,6 @@
 streamlit
 matplotlib
 plotly
-pandas
+numpy
 networkx
+pillow
