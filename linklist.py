@@ -2471,21 +2471,31 @@ def advanced_visualizations():
 
     st.header("Network Graph Visualization")
 
-    # Create network graph for linked list
-    if 'linked_list' not in st.session_state or not st.session_state.linked_list:
+    # Check if linked list exists and has data
+    if 'linked_list' not in st.session_state or st.session_state.linked_list.size == 0:
         st.warning("Please create a linked list in the Playground section first!")
         return
 
     st.subheader("Linked List as Network Graph")
 
+    # Get list elements based on type
+    if hasattr(st.session_state.linked_list, 'traverse_forward'):
+        elements = st.session_state.linked_list.traverse_forward()
+    else:
+        elements = st.session_state.linked_list.traverse()
+    
+    if not elements:
+        st.info("No elements to visualize")
+        return
+
     # Create network graph
     G = nx.DiGraph()
 
     # Add nodes and edges
-    for i, val in enumerate(st.session_state.linked_list):
+    for i, val in enumerate(elements):
         G.add_node(f"Node_{i}", label=str(val), pos=(i, 0))
 
-    for i in range(len(st.session_state.linked_list) - 1):
+    for i in range(len(elements) - 1):
         G.add_edge(f"Node_{i}", f"Node_{i+1}")
 
     # Create positions
@@ -2549,21 +2559,27 @@ def advanced_visualizations():
     animation_placeholder = st.empty()
 
     if st.button("Animate Memory Allocation"):
-        for i in range(len(st.session_state.linked_list) + 1):
+        # Get elements for animation
+        if hasattr(st.session_state.linked_list, 'traverse_forward'):
+            anim_elements = st.session_state.linked_list.traverse_forward()
+        else:
+            anim_elements = st.session_state.linked_list.traverse()
+            
+        for i in range(len(anim_elements) + 1):
             with animation_placeholder.container():
-                cols = st.columns(min(5, len(st.session_state.linked_list) + 1))
+                cols = st.columns(min(5, len(anim_elements) + 1))
 
                 for j in range(min(5, i + 1)):
-                    if j < len(st.session_state.linked_list):
+                    if j < len(anim_elements):
                         with cols[j]:
                             st.markdown(f"""
                             <div style="border: 2px solid #1e3c72; border-radius: 10px; padding: 10px; margin: 5px; background: {'#e3f2fd' if j < i else '#f5f5f5'};">
                                 <div style="font-weight: bold; color: #1e3c72;">Memory Block {j}</div>
-                                <div>Data: {st.session_state.linked_list[j]}</div>
+                                <div>Data: {anim_elements[j]}</div>
                                 <div style="font-size: 0.8em; color: #666;">Address: 0x{j*100:03X}</div>
                             </div>
                             """, unsafe_allow_html=True)
-                    elif j == len(st.session_state.linked_list):
+                    elif j == len(anim_elements):
                         with cols[j]:
                             st.markdown(f"""
                             <div style="border: 2px solid #f44336; border-radius: 10px; padding: 10px; margin: 5px; background: {'#ffebee' if j <= i else '#f5f5f5'};">
