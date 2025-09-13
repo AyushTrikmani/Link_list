@@ -2022,12 +2022,38 @@ print("Reversed:", ll.traverse())
     }
 
     selected_example = st.selectbox("Choose an example to run:", list(code_examples.keys()))
-
     
+    # Display selected code
+    st.code(code_examples[selected_example], language="python")
+    
+    # Add run button below the code
+    if st.button(f"▶️ Run {selected_example}", key="run_selected_code"):
+        with st.spinner("Executing code..."):
+            try:
+                # Capture output
+                old_stdout = sys.stdout
+                sys.stdout = captured_output = StringIO()
+                
+                # Execute the code
+                exec(code_examples[selected_example])
+                
+                # Get output
+                sys.stdout = old_stdout
+                output = captured_output.getvalue()
+                
+                if output:
+                    st.success("Code executed successfully!")
+                    st.text("Output:")
+                    st.code(output, language="text")
+                else:
+                    st.success("Code executed successfully (no output)")
+                    
+            except Exception as e:
+                sys.stdout = old_stdout
+                st.error(f"Error executing code: {str(e)}")
 
 # Performance Analysis section
 def performance_analysis():
-    pass  # Add implementation here
     st.title("Performance Analysis")
 
     st.header("Time Complexity Comparison")
@@ -2035,11 +2061,7 @@ def performance_analysis():
     st.markdown("""
     Understanding the performance characteristics of different linked list operations is crucial for choosing
     the right data structure for your use case. Below is a detailed analysis of time complexities.
-    """)
-
-if st.button("Run Code", key="run_code"):
-    performance_analysis() 
-    
+    """) 
     # Create comprehensive data
     operations = [
         'Insert at Beginning',
