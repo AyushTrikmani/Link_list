@@ -10,9 +10,10 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for better UI/UX
+# Enhanced Custom CSS for Modern UI/UX
 st.markdown("""
 <style>
+    /* Modern Typography and Layout */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
@@ -21,196 +22,872 @@ st.markdown("""
         -webkit-text-fill-color: transparent;
         text-align: center;
         margin-bottom: 2rem;
+        animation: fadeInUp 1s ease-out;
     }
+
     .section-card {
-        background: white;
-        border-radius: 10px;
-        padding: 2rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        margin: 1rem 0;
-        border-left: 5px solid #1e3c72;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 15px;
+        padding: 2.5rem;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        margin: 1.5rem 0;
+        border-left: 6px solid #1e3c72;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
+
+    .section-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #1e3c72, #2a5298, #667eea);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .section-card:hover::before {
+        opacity: 1;
+    }
+
     .feature-card {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: white;
-        border-radius: 10px;
-        padding: 1.5rem;
-        margin: 0.5rem;
+        border-radius: 15px;
+        padding: 2rem;
+        margin: 0.75rem;
         text-align: center;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
     }
+
+    .feature-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .feature-card::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+        transform: rotate(45deg);
+        transition: all 0.3s ease;
+        opacity: 0;
+    }
+
+    .feature-card:hover::after {
+        opacity: 1;
+        animation: shimmer 1.5s ease-in-out;
+    }
+
+    /* Interactive Elements */
+    .interactive-card {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .interactive-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 25px rgba(245, 87, 108, 0.3);
+    }
+
     .code-block {
-        background: #f8f9fa;
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: #ecf0f1;
         border-left: 4px solid #1e3c72;
-        padding: 1rem;
-        margin: 1rem 0;
-        border-radius: 5px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 10px;
+        position: relative;
+        font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
+
+    .code-block::before {
+        content: '💻';
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 1.2rem;
+        opacity: 0.7;
+    }
+
     .highlight-box {
-        background: #e3f2fd;
-        border: 1px solid #2196f3;
-        border-radius: 8px;
-        padding: 1rem;
-        margin: 1rem 0;
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        border: 2px solid #2196f3;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        position: relative;
+        animation: pulse 2s infinite;
     }
+
+    .highlight-box::before {
+        content: '💡';
+        position: absolute;
+        top: -10px;
+        left: 20px;
+        background: white;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Progress and Metrics */
+    .progress-container {
+        background: #f8f9fa;
+        border-radius: 25px;
+        padding: 3px;
+        margin: 1rem 0;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, #1e3c72, #667eea);
+        height: 20px;
+        border-radius: 22px;
+        transition: width 1s ease-in-out;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 0.75rem;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .metric-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .metric-card .metric-value {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .metric-card .metric-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Tab Enhancements */
     .tab-content {
         padding: 2rem 0;
+        animation: fadeIn 0.5s ease-out;
     }
-    .metric-card {
-        background: #f5f5f5;
-        border-radius: 8px;
-        padding: 1rem;
-        text-align: center;
-        margin: 0.5rem;
-    }
+
     .stTabs [data-baseweb="tab-list"] {
-        gap: 2px;
+        gap: 4px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        padding: 10px;
+        border-radius: 15px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
+
     .stTabs [data-baseweb="tab"] {
-        background-color: #f0f2f6;
-        border-radius: 4px 4px 0 0;
-        padding: 10px 20px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        border-radius: 10px;
+        padding: 12px 24px;
         font-weight: 600;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        position: relative;
+        overflow: hidden;
     }
+
+    .stTabs [data-baseweb="tab"]:hover {
+        background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
     .stTabs [aria-selected="true"] {
-        background-color: #1e3c72 !important;
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%) !important;
         color: white !important;
+        box-shadow: 0 4px 20px rgba(30, 60, 114, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .stTabs [aria-selected="true"]::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%;
+        height: 3px;
+        background: linear-gradient(90deg, #667eea, #764ba2);
+        border-radius: 2px;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%) rotate(45deg); }
+        100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    /* Interactive Buttons */
+    .modern-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        padding: 12px 30px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .modern-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    .modern-button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s ease;
+    }
+
+    .modern-button:hover::before {
+        left: 100%;
+    }
+
+    /* Enhanced Code Blocks */
+    .code-container {
+        position: relative;
+        margin: 1.5rem 0;
+    }
+
+    .code-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 8px 8px 0 0;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .code-content {
+        background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+        color: #ecf0f1;
+        padding: 1.5rem;
+        border-radius: 0 0 8px 8px;
+        font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+
+    .copy-button {
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        color: white;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .copy-button:hover {
+        background: rgba(255,255,255,0.2);
+        transform: scale(1.05);
+    }
+
+    /* Visual Enhancements */
+    .visual-diagram {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 1.5rem 0;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    .visual-diagram::before {
+        content: '🎨';
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 1.5rem;
+        opacity: 0.6;
+    }
+
+    /* Interactive Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, #1e3c72, #667eea);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 30px;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -22px;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #1e3c72, #667eea);
+        box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.2);
+    }
+
+    .timeline-content {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #1e3c72;
+    }
+
+    /* Floating Action Elements */
+    .floating-element {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s ease;
+        z-index: 1000;
+    }
+
+    .floating-element:hover {
+        transform: scale(1.1);
+        box-shadow: 0 6px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2rem;
+        }
+
+        .section-card {
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            margin: 0.5rem;
+        }
+
+        .stTabs [data-baseweb="tab"] {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+        }
+    }
+
+    /* Loading Animation */
+    .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Success Animation */
+    .success-checkmark {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #4CAF50;
+        position: relative;
+    }
+
+    .success-checkmark::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: bold;
+        animation: checkmark 0.5s ease-in-out;
+    }
+
+    @keyframes checkmark {
+        0% { transform: translate(-50%, -50%) scale(0); }
+        50% { transform: translate(-50%, -50%) scale(1.2); }
+        100% { transform: translate(-50%, -50%) scale(1); }
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Welcome/Dashboard section
+# Enhanced Welcome/Dashboard section with modern UI/UX
 def welcome_dashboard():
     st.markdown('<h1 class="main-header">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
 
     st.markdown("""
     <div class="section-card">
-    <h2 style="color: #1e3c72; text-align: center;">Welcome to Your Interactive Learning Journey!</h2>
-    <p style="font-size: 1.2em; text-align: center; color: #666;">
+    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 1rem;">Welcome to Your Interactive Learning Journey!</h2>
+    <p style="font-size: 1.2em; text-align: center; color: #666; margin-bottom: 2rem;">
     Master linked lists through interactive visualizations, hands-on practice, and comprehensive analysis.
     </p>
+    <div style="text-align: center; margin-top: 2rem;">
+    <button class="modern-button" onclick="document.querySelector('.stTabs').scrollIntoView({behavior: 'smooth'})">
+    🚀 Start Learning
+    </button>
+    </div>
     </div>
     """, unsafe_allow_html=True)
 
-    # Feature cards
+    # Interactive Feature cards with enhanced animations
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.markdown("""
-        <div class="feature-card">
+        <div class="feature-card" style="animation-delay: 0.1s;">
         <h3>📚 Learn</h3>
         <p>Comprehensive guide to singly, doubly, and circular linked lists</p>
+        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
+        <span class="success-checkmark"></span> Interactive Examples
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div class="feature-card">
+        <div class="feature-card" style="animation-delay: 0.2s;">
         <h3>🎮 Practice</h3>
         <p>Interactive playground with real-time operations</p>
+        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
+        <span class="success-checkmark"></span> Live Visualization
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div class="feature-card">
+        <div class="feature-card" style="animation-delay: 0.3s;">
         <h3>📊 Analyze</h3>
         <p>Performance comparisons and optimization tips</p>
+        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
+        <span class="success-checkmark"></span> Big O Analysis
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col4:
         st.markdown("""
-        <div class="feature-card">
+        <div class="feature-card" style="animation-delay: 0.4s;">
         <h3>💡 Solve</h3>
         <p>Practice problems with detailed solutions</p>
+        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
+        <span class="success-checkmark"></span> Step-by-Step Solutions
+        </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Quick stats
+    # Enhanced Quick stats with metric cards
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.subheader("🚀 Quick Start Guide")
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.metric("Data Structures", "3 Types", "Singly, Doubly, Circular")
+        st.markdown("""
+        <div class="metric-card">
+        <div class="metric-value">3</div>
+        <div class="metric-label">Data Structures</div>
+        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">Singly, Doubly, Circular</div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.metric("Operations", "8+ Methods", "Insert, Delete, Search, Traverse")
+        st.markdown("""
+        <div class="metric-card">
+        <div class="metric-value">8+</div>
+        <div class="metric-label">Operations</div>
+        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">Insert, Delete, Search, Traverse</div>
+        </div>
+        """, unsafe_allow_html=True)
+
     with col3:
-        st.metric("Practice Problems", "10+ Examples", "With Solutions")
+        st.markdown("""
+        <div class="metric-card">
+        <div class="metric-value">10+</div>
+        <div class="metric-label">Practice Problems</div>
+        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">With Detailed Solutions</div>
+        </div>
+        """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # Progress indicator
+    # Enhanced Progress indicator with visual progress bar
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
     st.subheader("📈 Learning Progress")
-    progress = st.progress(0)
-    st.caption("Complete sections to track your progress")
+
+    # Progress visualization
+    st.markdown("""
+    <div style="margin: 2rem 0;">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+    <span style="font-weight: 600; color: #1e3c72;">Your Progress</span>
+    <span style="font-weight: 600; color: #1e3c72;">0%</span>
+    </div>
+    <div class="progress-container">
+    <div class="progress-bar" style="width: 0%;"></div>
+    </div>
+    <div style="margin-top: 1rem; font-size: 0.9em; color: #666;">
+    Complete sections to track your progress and unlock achievements! 🏆
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Interactive learning path
+    st.markdown("""
+    <div class="visual-diagram">
+    <h4 style="margin-bottom: 1.5rem; color: #1e3c72;">🎯 Learning Path</h4>
+    <div class="timeline">
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>📖 Introduction</h5>
+    <p>Learn the fundamentals of linked lists</p>
+    </div>
+    </div>
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>🔗 Types</h5>
+    <p>Explore singly, doubly, and circular variants</p>
+    </div>
+    </div>
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>⚙️ Operations</h5>
+    <p>Master insertion, deletion, and traversal</p>
+    </div>
+    </div>
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>🎮 Playground</h5>
+    <p>Practice with interactive visualizations</p>
+    </div>
+    </div>
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>📊 Analysis</h5>
+    <p>Understand performance characteristics</p>
+    </div>
+    </div>
+    <div class="timeline-item">
+    <div class="timeline-content">
+    <h5>💡 Practice</h5>
+    <p>Solve challenging problems</p>
+    </div>
+    </div>
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True)
 
-# Introduction section
+# Enhanced Introduction section with modern UI/UX
 def introduction():
-    st.title("Introduction to Linked Lists")
+    st.markdown('<h1 class="main-header">📖 Introduction to Linked Lists</h1>', unsafe_allow_html=True)
 
-    st.header("What is a Linked List?")
+    # Interactive concept overview
     st.markdown("""
-    A linked list is a fundamental data structure in computer science that consists of a sequence of elements called nodes.
+    <div class="section-card">
+    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 1.5rem;">What is a Linked List?</h2>
+    <div style="text-align: center; margin-bottom: 2rem;">
+    <div class="highlight-box">
+    <strong>A linked list is a fundamental data structure that consists of a sequence of elements called nodes.</strong>
+    <br><br>
     Each node contains two parts:
-    - **Data**: The actual information stored in the node
-    - **Reference/Pointer**: A link to the next node in the sequence
+    <ul style="text-align: left; display: inline-block; margin-top: 1rem;">
+    <li><strong>Data</strong>: The actual information stored in the node</li>
+    <li><strong>Reference/Pointer</strong>: A link to the next node in the sequence</li>
+    </ul>
+    </div>
+    </div>
+    <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 1.5rem; border-radius: 12px; margin: 1.5rem 0;">
+    <strong>Key Difference from Arrays:</strong> Unlike arrays, linked lists do not store elements in contiguous memory locations.
+    Instead, each node points to the next one, forming a chain-like structure that provides dynamic memory allocation.
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
 
-    Unlike arrays, linked lists do not store elements in contiguous memory locations. Instead, each node points to the next one,
-    forming a chain-like structure.
-    """)
-
+    # Enhanced Advantages/Disadvantages with interactive cards
     st.header("Why Use Linked Lists?")
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader("Advantages")
-        st.markdown("""
-        - **Dynamic Size**: Can grow or shrink during runtime
-        - **Efficient Insertions/Deletions**: O(1) time for operations at known positions
-        - **No Memory Waste**: Only allocates memory when needed
-        - **Flexible Structure**: Easy to implement stacks, queues, and other data structures
-        """)
-    with col2:
-        st.subheader("Disadvantages")
-        st.markdown("""
-        - **Random Access**: O(n) time to access elements by index
-        - **Extra Memory**: Each node requires additional space for pointers
-        - **Sequential Access**: Must traverse from beginning for most operations
-        - **Cache Performance**: Poor locality of reference
-        """)
 
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("""
+        <div class="interactive-card" style="border-left: 4px solid #4CAF50;">
+        <h3 style="color: #4CAF50; margin-bottom: 1rem;">✅ Advantages</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="display: flex; align-items: center;">
+        <span style="color: #4CAF50; margin-right: 0.5rem;">🔸</span>
+        <strong>Dynamic Size:</strong> Can grow or shrink during runtime
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #4CAF50; margin-right: 0.5rem;">⚡</span>
+        <strong>Efficient Operations:</strong> O(1) for insertions/deletions at known positions
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #4CAF50; margin-right: 0.5rem;">💾</span>
+        <strong>No Memory Waste:</strong> Only allocates memory when needed
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #4CAF50; margin-right: 0.5rem;">🔧</span>
+        <strong>Flexible Structure:</strong> Easy to implement stacks, queues, and other data structures
+        </div>
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.markdown("""
+        <div class="interactive-card" style="border-left: 4px solid #f44336;">
+        <h3 style="color: #f44336; margin-bottom: 1rem;">❌ Disadvantages</h3>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        <div style="display: flex; align-items: center;">
+        <span style="color: #f44336; margin-right: 0.5rem;">🎯</span>
+        <strong>Random Access:</strong> O(n) time to access elements by index
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #f44336; margin-right: 0.5rem;">📊</span>
+        <strong>Extra Memory:</strong> Each node requires additional space for pointers
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #f44336; margin-right: 0.5rem;">➡️</span>
+        <strong>Sequential Access:</strong> Must traverse from beginning for most operations
+        </div>
+        <div style="display: flex; align-items: center;">
+        <span style="color: #f44336; margin-right: 0.5rem;">⚡</span>
+        <strong>Cache Performance:</strong> Poor locality of reference
+        </div>
+        </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # Enhanced Node Structure with interactive code block
     st.header("Basic Node Structure")
-    st.code("""
+
+    st.markdown("""
+    <div class="code-container">
+    <div class="code-header">
+    <span>🔧 Node Implementation</span>
+    <button class="copy-button" onclick="navigator.clipboard.writeText(`class Node:\\n    def __init__(self, data):\\n        self.data = data\\n        self.next = None`)">Copy</button>
+    </div>
+    <div class="code-content">
 class Node:
     def __init__(self, data):
-        self.data = data
-        self.next = None
-    """, language="python")
+        self.data = data        # The actual data stored in the node
+        self.next = None        # Pointer to the next node (None if last node)
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
 
+    # Interactive Real-World Applications
     st.header("Real-World Applications")
-    st.markdown("""
-    - **Music Playlists**: Songs linked in sequence
-    - **Browser History**: Web pages linked for back/forward navigation
-    - **Undo Functionality**: Operations stored as linked list
-    - **Hash Tables**: Collision resolution using separate chaining
-    - **Memory Management**: Free memory blocks tracking
-    - **Polynomial Representation**: Terms linked by degree
-    """)
 
+    applications = [
+        {"icon": "🎵", "title": "Music Playlists", "desc": "Songs linked in sequence for easy navigation"},
+        {"icon": "🌐", "title": "Browser History", "desc": "Web pages linked for back/forward navigation"},
+        {"icon": "↩️", "title": "Undo Functionality", "desc": "Operations stored as linked list in editors"},
+        {"icon": "🔗", "title": "Hash Tables", "desc": "Collision resolution using separate chaining"},
+        {"icon": "💾", "title": "Memory Management", "desc": "Free memory blocks tracking in OS"},
+        {"icon": "📈", "title": "Polynomial Representation", "desc": "Mathematical terms linked by degree"}
+    ]
+
+    cols = st.columns(3)
+    for i, app in enumerate(applications):
+        with cols[i % 3]:
+            st.markdown(f"""
+            <div class="feature-card" style="animation-delay: {i * 0.1}s; min-height: 120px;">
+            <h4 style="margin-bottom: 0.5rem;">{app['icon']} {app['title']}</h4>
+            <p style="font-size: 0.9em; opacity: 0.9;">{app['desc']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+
+    # Enhanced Memory Representation with visual diagram
     st.header("Memory Representation")
-    st.markdown("Visual representation of how linked list nodes are stored in memory:")
-    # Simple diagram using text
-    st.code("""
-Memory Layout:
-+-------------------+     +-------------------+     +-------------------+
-| Data: 10          |     | Data: 20          |     | Data: 30          |
-| Next: 0x200       | --> | Next: 0x300       | --> | Next: None        |
-+-------------------+     +-------------------+     +-------------------+
-0x100                   0x200                   0x300
-    """)
+
+    st.markdown("""
+    <div class="visual-diagram">
+    <h3 style="margin-bottom: 1rem; color: #1e3c72;">🔍 How Linked Lists are Stored in Memory</h3>
+    <p style="margin-bottom: 1.5rem;">Visual representation of how linked list nodes are scattered in memory:</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Enhanced memory layout visualization
+    st.markdown("""
+    <div class="section-card">
+    <div style="font-family: 'Courier New', monospace; background: #2c3e50; color: #ecf0f1; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+    <div style="text-align: center; margin-bottom: 1rem; color: #3498db; font-weight: bold;">Memory Layout Visualization</div>
+    <div style="display: flex; justify-content: space-around; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <div style="border: 2px solid #e74c3c; border-radius: 8px; padding: 1rem; background: #34495e; min-width: 150px;">
+    <div style="text-align: center; color: #e74c3c; font-weight: bold; margin-bottom: 0.5rem;">Node 1</div>
+    <div><strong>Data:</strong> 10</div>
+    <div><strong>Next:</strong> 0x200 →</div>
+    <div style="text-align: center; margin-top: 0.5rem; color: #95a5a6; font-size: 0.8em;">Address: 0x100</div>
+    </div>
+    <div style="color: #e74c3c; font-size: 1.5rem;">→</div>
+    <div style="border: 2px solid #27ae60; border-radius: 8px; padding: 1rem; background: #34495e; min-width: 150px;">
+    <div style="text-align: center; color: #27ae60; font-weight: bold; margin-bottom: 0.5rem;">Node 2</div>
+    <div><strong>Data:</strong> 20</div>
+    <div><strong>Next:</strong> 0x300 →</div>
+    <div style="text-align: center; margin-top: 0.5rem; color: #95a5a6; font-size: 0.8em;">Address: 0x200</div>
+    </div>
+    <div style="color: #27ae60; font-size: 1.5rem;">→</div>
+    <div style="border: 2px solid #f39c12; border-radius: 8px; padding: 1rem; background: #34495e; min-width: 150px;">
+    <div style="text-align: center; color: #f39c12; font-weight: bold; margin-bottom: 0.5rem;">Node 3</div>
+    <div><strong>Data:</strong> 30</div>
+    <div><strong>Next:</strong> NULL</div>
+    <div style="text-align: center; margin-top: 0.5rem; color: #95a5a6; font-size: 0.8em;">Address: 0x300</div>
+    </div>
+    </div>
+    <div style="margin-top: 1rem; text-align: center; color: #95a5a6; font-style: italic;">
+    Nodes are scattered in memory, connected only by pointers
+    </div>
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Interactive learning checkpoint
+    st.markdown("""
+    <div class="section-card">
+    <h3 style="color: #1e3c72; text-align: center; margin-bottom: 1rem;">🎯 Learning Checkpoint</h3>
+    <div style="display: flex; justify-content: space-around; margin: 1.5rem 0;">
+    <div style="text-align: center;">
+    <div style="font-size: 2rem; color: #4CAF50;">✓</div>
+    <div style="margin-top: 0.5rem; font-weight: 600;">Node Structure</div>
+    </div>
+    <div style="text-align: center;">
+    <div style="font-size: 2rem; color: #4CAF50;">✓</div>
+    <div style="margin-top: 0.5rem; font-weight: 600;">Memory Layout</div>
+    </div>
+    <div style="text-align: center;">
+    <div style="font-size: 2rem; color: #2196F3;">○</div>
+    <div style="margin-top: 0.5rem; font-weight: 600;">Types of Lists</div>
+    </div>
+    <div style="text-align: center;">
+    <div style="font-size: 2rem; color: #9E9E9E;">○</div>
+    <div style="margin-top: 0.5rem; font-weight: 600;">Operations</div>
+    </div>
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+    <button class="modern-button" onclick="document.querySelector('.stTabs [aria-selected=true]').nextElementSibling?.click()">
+    Continue to Types →
+    </button>
+    </div>
+    </div>
+    """, unsafe_allow_html=True)
 
 # Types of Linked Lists section
 def types_of_linked_lists():
