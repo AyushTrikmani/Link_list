@@ -1831,32 +1831,44 @@ def interactive_playground():
             
             # Circular arrow from last to first (curved)
             if len(elements) > 1:
-                # Create curved path for circular arrow
                 last_x = node_x[-1]
                 first_x = node_x[0]
                 mid_x = (last_x + first_x) / 2
                 
-                # Add curved arrow using path
+                # Create a more visible curved path
                 fig.add_shape(
                     type="path",
-                    path=f"M {last_x + 0.6},0 Q {mid_x},{-1.2} {first_x - 0.6},0",
-                    line=dict(color="#9B59B6", width=3),
+                    path=f"M {last_x + 0.7},0 Q {mid_x},{-1.0} {first_x - 0.7},0",
+                    line=dict(color="#9B59B6", width=4),
                 )
                 
-                # Add arrowhead at the end
+                # Add multiple arrow segments for better visibility
+                # Arrow at the end pointing to first node
                 fig.add_annotation(
-                    x=first_x - 0.8, y=-0.1,
-                    ax=first_x - 0.6, ay=0,
+                    x=first_x - 0.7, y=0,
+                    ax=first_x - 0.9, ay=-0.2,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor='#9B59B6',
+                    arrowhead=2, arrowsize=2, arrowwidth=4, arrowcolor='#9B59B6',
                     showarrow=True
                 )
                 
-                # Add "circular" label
+                # Add arrow at the start from last node
                 fig.add_annotation(
-                    x=mid_x, y=-0.8,
-                    text="circular", showarrow=False,
-                    font=dict(size=12, color='#9B59B6', family="Arial Black")
+                    x=last_x + 0.9, y=-0.2,
+                    ax=last_x + 0.7, ay=0,
+                    xref='x', yref='y', axref='x', ayref='y',
+                    arrowhead=2, arrowsize=2, arrowwidth=4, arrowcolor='#9B59B6',
+                    showarrow=True
+                )
+                
+                # Add "circular" label with background
+                fig.add_annotation(
+                    x=mid_x, y=-0.7,
+                    text="↻ CIRCULAR", showarrow=False,
+                    font=dict(size=11, color='#9B59B6', family="Arial Black"),
+                    bgcolor="rgba(255,255,255,0.8)",
+                    bordercolor="#9B59B6",
+                    borderwidth=1
                 )
                 
         else:  # Singly Linked List
