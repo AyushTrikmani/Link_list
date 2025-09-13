@@ -1789,8 +1789,8 @@ def interactive_playground():
             # Forward arrows (next pointers)
             for i in range(len(elements) - 1):
                 fig.add_annotation(
-                    x=node_x[i] + 0.6, y=0.3,
-                    ax=node_x[i+1] - 0.6, ay=0.3,
+                    x=node_x[i+1] - 0.6, y=0.3,
+                    ax=node_x[i] + 0.6, ay=0.3,
                     xref='x', yref='y', axref='x', ayref='y',
                     arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
@@ -1805,8 +1805,8 @@ def interactive_playground():
             # Backward arrows (prev pointers)
             for i in range(1, len(elements)):
                 fig.add_annotation(
-                    x=node_x[i] - 0.6, y=-0.3,
-                    ax=node_x[i-1] + 0.6, ay=-0.3,
+                    x=node_x[i-1] + 0.6, y=-0.3,
+                    ax=node_x[i] - 0.6, ay=-0.3,
                     xref='x', yref='y', axref='x', ayref='y',
                     arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#4ECDC4',
                     showarrow=True
@@ -1822,8 +1822,8 @@ def interactive_playground():
             # Regular forward arrows
             for i in range(len(elements) - 1):
                 fig.add_annotation(
-                    x=node_x[i] + 0.6, y=0,
-                    ax=node_x[i+1] - 0.6, ay=0,
+                    x=node_x[i+1] - 0.6, y=0,
+                    ax=node_x[i] + 0.6, ay=0,
                     xref='x', yref='y', axref='x', ayref='y',
                     arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
@@ -1845,8 +1845,8 @@ def interactive_playground():
                 
                 # Add arrowhead at the end
                 fig.add_annotation(
-                    x=first_x - 0.6, y=0,
-                    ax=first_x - 0.8, ay=-0.1,
+                    x=first_x - 0.8, y=-0.1,
+                    ax=first_x - 0.6, ay=0,
                     xref='x', yref='y', axref='x', ayref='y',
                     arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor='#9B59B6',
                     showarrow=True
@@ -1862,8 +1862,8 @@ def interactive_playground():
         else:  # Singly Linked List
             for i in range(len(elements) - 1):
                 fig.add_annotation(
-                    x=node_x[i] + 0.6, y=0,
-                    ax=node_x[i+1] - 0.6, ay=0,
+                    x=node_x[i+1] - 0.6, y=0,
+                    ax=node_x[i] + 0.6, ay=0,
                     xref='x', yref='y', axref='x', ayref='y',
                     arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
@@ -1882,8 +1882,8 @@ def interactive_playground():
                 showlegend=False
             ))
             fig.add_annotation(
-                x=node_x[-1] + 0.5, y=0,
-                ax=node_x[-1] + 1.5, ay=0,
+                x=node_x[-1] + 1.5, y=0,
+                ax=node_x[-1] + 0.5, ay=0,
                 arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='#95A5A6',
                 showarrow=True
             )
