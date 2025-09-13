@@ -17,6 +17,7 @@ try:
 except ImportError:
     # Fallback quiz data if quiz_config.py is not found
     QUIZ_QUESTIONS = [
+        # Easy Questions
         {
             "question": "What is the time complexity of inserting an element at the beginning of a singly linked list?",
             "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
@@ -26,6 +27,39 @@ except ImportError:
             "points": 10
         },
         {
+            "question": "In a doubly linked list, each node contains:",
+            "options": ["Only data", "Data and one pointer", "Data and two pointers", "Data and three pointers"],
+            "correct": 2,
+            "explanation": "Doubly linked list nodes contain data, a previous pointer, and a next pointer.",
+            "difficulty": "easy",
+            "points": 10
+        },
+        {
+            "question": "Which linked list type has the last node pointing back to the first node?",
+            "options": ["Singly linked list", "Doubly linked list", "Circular linked list", "XOR linked list"],
+            "correct": 2,
+            "explanation": "Circular linked lists form a loop by pointing the last node to the first.",
+            "difficulty": "easy",
+            "points": 10
+        },
+        {
+            "question": "What does NULL represent in a linked list?",
+            "options": ["Empty data", "End of list", "Beginning of list", "Invalid node"],
+            "correct": 1,
+            "explanation": "NULL indicates the end of the linked list where no more nodes exist.",
+            "difficulty": "easy",
+            "points": 10
+        },
+        {
+            "question": "Which operation is typically O(1) in a linked list?",
+            "options": ["Insertion at beginning", "Searching", "Traversal", "Deletion by value"],
+            "correct": 0,
+            "explanation": "Insertion at the beginning is constant time as it only requires updating the head pointer.",
+            "difficulty": "easy",
+            "points": 10
+        },
+        # Medium Questions
+        {
             "question": "Which of the following is NOT an advantage of linked lists over arrays?",
             "options": ["Dynamic size", "Efficient random access", "No memory waste", "Flexible structure"],
             "correct": 1,
@@ -34,10 +68,75 @@ except ImportError:
             "points": 15
         },
         {
+            "question": "What is the space complexity of a singly linked list with n elements?",
+            "options": ["O(1)", "O(n)", "O(n²)", "O(log n)"],
+            "correct": 1,
+            "explanation": "Each node requires O(1) space, so n nodes require O(n) space.",
+            "difficulty": "medium",
+            "points": 15
+        },
+        {
+            "question": "What is the time complexity of searching for an element in a linked list?",
+            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+            "correct": 1,
+            "explanation": "Searching requires traversing the list, which is O(n) in the worst case.",
+            "difficulty": "medium",
+            "points": 15
+        },
+        {
+            "question": "What is the main advantage of a doubly linked list over a singly linked list?",
+            "options": ["Less memory usage", "Bidirectional traversal", "Simpler implementation", "Faster insertion at end"],
+            "correct": 1,
+            "explanation": "Doubly linked lists allow traversal in both forward and backward directions.",
+            "difficulty": "medium",
+            "points": 15
+        },
+        {
+            "question": "In which scenario would you prefer a linked list over an array?",
+            "options": ["Random access needed", "Frequent insertions/deletions", "Memory is limited", "Cache performance critical"],
+            "correct": 1,
+            "explanation": "Linked lists excel at frequent insertions and deletions, especially at the beginning.",
+            "difficulty": "medium",
+            "points": 15
+        },
+        # Hard Questions
+        {
             "question": "Which algorithm is commonly used to detect cycles in a linked list?",
             "options": ["Quick Sort", "Merge Sort", "Floyd's Cycle Detection", "Binary Search"],
             "correct": 2,
             "explanation": "Floyd's Cycle Detection algorithm uses two pointers moving at different speeds.",
+            "difficulty": "hard",
+            "points": 25
+        },
+        {
+            "question": "What is a common use case for circular linked lists?",
+            "options": ["Undo functionality", "Round-robin scheduling", "Browser history", "Polynomial representation"],
+            "correct": 1,
+            "explanation": "Circular linked lists are ideal for round-robin scheduling algorithms.",
+            "difficulty": "hard",
+            "points": 25
+        },
+        {
+            "question": "In Floyd's cycle detection algorithm, what happens when the slow and fast pointers meet?",
+            "options": ["No cycle exists", "Cycle is detected", "List is empty", "Algorithm fails"],
+            "correct": 1,
+            "explanation": "When slow and fast pointers meet, it confirms the presence of a cycle in the linked list.",
+            "difficulty": "hard",
+            "points": 25
+        },
+        {
+            "question": "What is the time complexity of merging two sorted linked lists?",
+            "options": ["O(1)", "O(n)", "O(n + m)", "O(n * m)"],
+            "correct": 2,
+            "explanation": "Merging requires traversing both lists once, resulting in O(n + m) time complexity.",
+            "difficulty": "hard",
+            "points": 25
+        },
+        {
+            "question": "Which technique is used to find the middle element of a linked list in one pass?",
+            "options": ["Binary search", "Two-pointer technique", "Recursion", "Hash table"],
+            "correct": 1,
+            "explanation": "Two-pointer technique with slow and fast pointers finds the middle in one traversal.",
             "difficulty": "hard",
             "points": 25
         }
@@ -59,8 +158,20 @@ except ImportError:
         {
             "title": "Quick Quiz: Basic Operations",
             "time_limit": 60,
-            "questions": [0, 1],
+            "questions": [0, 1, 2, 3, 4],  # Easy questions
             "bonus_points": 20
+        },
+        {
+            "title": "Speed Round: Complexity Analysis",
+            "time_limit": 90,
+            "questions": [5, 6, 7, 8, 9],  # Medium questions
+            "bonus_points": 30
+        },
+        {
+            "title": "Lightning Round: Advanced Concepts",
+            "time_limit": 120,
+            "questions": [10, 11, 12, 13, 14],  # Hard questions
+            "bonus_points": 50
         }
     ]
 
@@ -362,6 +473,132 @@ st.markdown("""
         border-radius: 2px;
     }
 
+    /* Quiz Section Styling */
+    .quiz-container {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 1rem 0;
+        color: white;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    }
+    
+    .quiz-question {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .quiz-options {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .quiz-options:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(5px);
+    }
+    
+    .difficulty-badge {
+        display: inline-block;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        margin: 0.5rem 0;
+    }
+    
+    .difficulty-easy {
+        background: #4CAF50;
+        color: white;
+    }
+    
+    .difficulty-medium {
+        background: #FF9800;
+        color: white;
+    }
+    
+    .difficulty-hard {
+        background: #F44336;
+        color: white;
+    }
+    
+    .quiz-progress {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        height: 8px;
+        margin: 1rem 0;
+        overflow: hidden;
+    }
+    
+    .quiz-progress-fill {
+        background: linear-gradient(90deg, #4CAF50, #8BC34A);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+    }
+    
+    .quiz-score {
+        background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1rem;
+        text-align: center;
+        margin: 1rem 0;
+        box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+    }
+    
+    .quiz-explanation {
+        background: linear-gradient(135deg, #2196F3 0%, #21CBF3 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #0D47A1;
+    }
+    
+    /* Gamification Elements */
+    .achievement-badge {
+        background: linear-gradient(135deg, #FFD700 0%, #FFA000 100%);
+        color: #333;
+        border-radius: 25px;
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        display: inline-block;
+        font-weight: bold;
+        box-shadow: 0 3px 10px rgba(255, 215, 0, 0.3);
+        animation: bounce 0.5s ease;
+    }
+    
+    .leaderboard-entry {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+    }
+    
+    .time-challenge-timer {
+        background: linear-gradient(135deg, #FF5722 0%, #FF9800 100%);
+        color: white;
+        border-radius: 50px;
+        padding: 1rem 2rem;
+        text-align: center;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin: 1rem 0;
+        box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+        animation: pulse 1s infinite;
+    }
+    
     /* Animation Keyframes */
     @keyframes fadeInUp {
         from {
@@ -387,6 +624,12 @@ st.markdown("""
     @keyframes shimmer {
         0% { transform: translateX(-100%) rotate(45deg); }
         100% { transform: translateX(100%) rotate(45deg); }
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
     }
 
     /* Interactive Buttons */
@@ -2998,7 +3241,8 @@ def interactive_quiz():
         leaderboard_section()
 
 def enhanced_quiz_section():
-    st.header("🧠 Interactive Quiz")
+    st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
+    st.markdown('<h2 style="text-align: center; margin-bottom: 1rem;">🧠 Interactive Quiz</h2>', unsafe_allow_html=True)
     
     # Quiz mode selector
     quiz_mode = st.selectbox("Select Quiz Mode:", 
@@ -3032,14 +3276,23 @@ def enhanced_quiz_section():
         progress = (st.session_state.current_question + 1) / len(questions)
         st.progress(progress)
         
+        # Progress bar
+        progress_html = f"""
+        <div class="quiz-progress">
+            <div class="quiz-progress-fill" style="width: {progress * 100}%;"></div>
+        </div>
+        """
+        st.markdown(progress_html, unsafe_allow_html=True)
+        
         col1, col2 = st.columns([3, 1])
         with col1:
-            st.subheader(f"Question {st.session_state.current_question + 1} of {len(questions)}")
+            st.markdown(f'<div class="quiz-question"><h3>Question {st.session_state.current_question + 1} of {len(questions)}</h3></div>', unsafe_allow_html=True)
         with col2:
-            difficulty_color = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}
-            st.write(f"Difficulty: {difficulty_color.get(q.get('difficulty', 'medium'), '🟡')} {q.get('difficulty', 'medium').title()}")
+            difficulty = q.get('difficulty', 'medium')
+            badge_class = f"difficulty-{difficulty}"
+            st.markdown(f'<span class="difficulty-badge {badge_class}">{difficulty.upper()}</span>', unsafe_allow_html=True)
         
-        st.write(q["question"])
+        st.markdown(f'<div class="quiz-question"><h4>{q["question"]}</h4></div>', unsafe_allow_html=True)
         
         user_answer = st.radio("Select your answer:", q["options"], 
                               key=f"q_{st.session_state.current_question}")
@@ -3051,7 +3304,7 @@ def enhanced_quiz_section():
                 points = q.get('points', 10)
                 
                 if selected_index == q["correct"]:
-                    st.success(f"Correct! 🎉 +{points} points")
+                    st.markdown(f'<div class="quiz-score">✅ Correct! 🎉 +{points} points</div>', unsafe_allow_html=True)
                     st.session_state.quiz_score += 1
                     st.session_state.user_score += points
                     st.session_state.correct_answers += 1
@@ -3059,9 +3312,9 @@ def enhanced_quiz_section():
                     # Check for achievements
                     check_achievements()
                 else:
-                    st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
+                    st.markdown(f'<div style="background: linear-gradient(135deg, #F44336 0%, #E57373 100%); color: white; border-radius: 15px; padding: 1rem; margin: 1rem 0;">❌ Incorrect. The correct answer is: {q["options"][q["correct"]]}</div>', unsafe_allow_html=True)
                 
-                st.info(f"💡 {q['explanation']}")
+                st.markdown(f'<div class="quiz-explanation">💡 {q["explanation"]}</div>', unsafe_allow_html=True)
                 st.session_state.quiz_attempts += 1
         
         with col2:
@@ -3116,6 +3369,8 @@ def enhanced_quiz_section():
             st.session_state.quiz_score = 0
             st.session_state.current_question = 0
             st.rerun()
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def coding_challenges_section():
     st.header("💻 Coding Challenges")
@@ -3264,17 +3519,15 @@ def time_challenges_section():
             remaining = max(0, challenge['time_limit'] - elapsed)
             
             # Timer display
-            col1, col2 = st.columns([3, 1])
-            with col1:
+            if remaining > 0:
+                timer_html = f'<div class="time-challenge-timer">⏱️ {remaining:.1f}s</div>'
+                st.markdown(timer_html, unsafe_allow_html=True)
                 progress = min(1.0, elapsed / challenge['time_limit'])
                 st.progress(progress)
-            with col2:
-                if remaining > 0:
-                    st.metric("Time Left", f"{remaining:.1f}s")
-                else:
-                    st.error("⏰ Time's Up!")
-                    end_time_challenge(challenge)
-                    st.rerun()
+            else:
+                st.markdown('<div style="background: #F44336; color: white; border-radius: 15px; padding: 1rem; text-align: center; font-weight: bold;">⏰ Time\'s Up!</div>', unsafe_allow_html=True)
+                end_time_challenge(challenge)
+                st.rerun()
             
             # Current question
             if st.session_state.time_challenge_current < len(st.session_state.time_challenge_questions):
@@ -3363,15 +3616,15 @@ def leaderboard_section():
     for i, entry in enumerate(sorted_leaderboard[:10]):
         rank_emoji = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
         
-        col1, col2, col3, col4 = st.columns([1, 3, 2, 2])
-        with col1:
-            st.write(f"{rank_emoji[i]} #{i+1}")
-        with col2:
-            st.write(f"**{entry['username']}**")
-        with col3:
-            st.write(f"Score: {entry['score']}")
-        with col4:
-            st.write(f"Time: {entry['time']:.1f}s")
+        leaderboard_html = f"""
+        <div class="leaderboard-entry">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div><strong>{rank_emoji[i]} #{i+1} {entry['username']}</strong></div>
+                <div>Score: {entry['score']} | Time: {entry['time']:.1f}s</div>
+            </div>
+        </div>
+        """
+        st.markdown(leaderboard_html, unsafe_allow_html=True)
     
     # Personal stats
     st.subheader("📊 Your Statistics")
@@ -3395,10 +3648,10 @@ def leaderboard_section():
     # Achievements display
     st.subheader("🏅 Your Achievements")
     if st.session_state.achievements:
-        cols = st.columns(min(4, len(st.session_state.achievements)))
-        for i, achievement in enumerate(st.session_state.achievements):
-            with cols[i % 4]:
-                st.success(achievement)
+        achievement_html = ""
+        for achievement in st.session_state.achievements:
+            achievement_html += f'<span class="achievement-badge">{achievement}</span>'
+        st.markdown(achievement_html, unsafe_allow_html=True)
     else:
         st.info("🎯 Complete challenges to earn achievements!")
 
