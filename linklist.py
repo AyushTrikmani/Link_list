@@ -1,4 +1,6 @@
 import streamlit as st
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import networkx as nx
@@ -2972,6 +2974,126 @@ def reverse_k_groups(head, k):
 
 # Example: reverse_k_groups([1,2,3,4,5], 2) -> [2,1,4,3,5]
         """, language="python")
+
+# Memory Layout Visualizations section
+def memory_layout_visualizations():
+    st.title("Memory Layout Visualizations")
+
+    st.header("How Linked Lists are Stored in Memory")
+
+    st.markdown("""
+    **Key Concept:** Unlike arrays that store elements in contiguous memory locations,
+    linked list nodes are scattered throughout memory and connected via pointers.
+    """)
+
+    # Interactive memory layout demo
+    st.subheader("Interactive Memory Layout")
+
+    if 'demo_list' not in st.session_state:
+        st.session_state.demo_list = [10, 20, 30, 40]
+
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        st.markdown("### Memory Blocks")
+        memory_placeholder = st.empty()
+
+    with col2:
+        st.markdown("### Controls")
+        if st.button("Add Node"):
+            st.session_state.demo_list.append(len(st.session_state.demo_list) * 10 + 10)
+            st.rerun()
+
+        if st.button("Remove Node") and st.session_state.demo_list:
+            st.session_state.demo_list.pop()
+            st.rerun()
+
+        if st.button("Shuffle Memory"):
+            import random
+            random.shuffle(st.session_state.demo_list)
+            st.rerun()
+
+    # Display memory layout
+    with memory_placeholder.container():
+        if st.session_state.demo_list:
+            cols = st.columns(min(6, len(st.session_state.demo_list)))
+
+            for i, val in enumerate(st.session_state.demo_list):
+                if i < 6:  # Show max 6 blocks
+                    with cols[i]:
+                        st.markdown(f"""
+                        <div style="border: 2px solid #1e3c72; border-radius: 10px; padding: 15px; margin: 5px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                            <div style="font-weight: bold; color: #1e3c72; text-align: center;">Block {i}</div>
+                            <div style="text-align: center; font-size: 1.2em; margin: 10px 0;">{val}</div>
+                            <div style="font-size: 0.8em; color: #666; text-align: center;">Addr: 0x{i*100:03X}</div>
+                            {'<div style="text-align: center; margin-top: 10px;">→</div>' if i < len(st.session_state.demo_list) - 1 else '<div style="text-align: center; margin-top: 10px; color: #f44336;">NULL</div>'}
+                        </div>
+                        """, unsafe_allow_html=True)
+        else:
+            st.info("Add some nodes to see the memory layout!")
+
+    st.header("Memory Fragmentation")
+
+    st.markdown("""
+    **Memory Fragmentation** occurs when free memory is divided into small, non-contiguous blocks.
+    This can happen with frequent insertions and deletions in linked lists.
+    """)
+
+    # Fragmentation visualization
+    st.subheader("Fragmentation Demo")
+
+    fragmentation_data = [
+        {"address": "0x100", "size": 32, "status": "used", "data": "Node A"},
+        {"address": "0x120", "size": 16, "status": "free", "data": ""},
+        {"address": "0x130", "size": 48, "status": "used", "data": "Node B"},
+        {"address": "0x160", "size": 24, "status": "free", "data": ""},
+        {"address": "0x184", "size": 40, "status": "used", "data": "Node C"},
+    ]
+
+    for block in fragmentation_data:
+        color = "#4CAF50" if block["status"] == "used" else "#f44336"
+        st.markdown(f"""
+        <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; border-radius: 8px; background: {'#e8f5e8' if block['status'] == 'used' else '#ffebee'};">
+            <div style="width: 100px; font-weight: bold;">{block['address']}</div>
+            <div style="width: 60px;">{block['size']}B</div>
+            <div style="width: 80px; color: {color};">{block['status'].upper()}</div>
+            <div style="flex: 1;">{block['data']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("""
+    **Impact of Fragmentation:**
+    - **Memory Waste:** Small free blocks can't be used for larger allocations
+    - **Performance:** Increased time for memory allocation/deallocation
+    - **Cache Issues:** Scattered memory access patterns
+    """)
+
+    st.header("Cache Performance")
+
+    st.markdown("""
+    **Cache Locality** refers to how closely related data elements are stored in memory.
+    Arrays have excellent cache locality, while linked lists have poor cache locality.
+    """)
+
+    # Cache performance visualization
+    st.subheader("Cache Access Patterns")
+
+    cache_demo = st.selectbox("Select data structure:", ["Array", "Linked List"])
+
+    if cache_demo == "Array":
+        st.markdown("""
+        **Array Access Pattern:**
+        - Elements stored contiguously: [10][20][30][40][50]
+        - Memory addresses: 0x100, 0x104, 0x108, 0x10C, 0x110
+        - **Cache Performance:** Excellent - sequential access
+        """)
+    else:
+        st.markdown("""
+        **Linked List Access Pattern:**
+        - Elements scattered: 10(0x100) → 20(0x200) → 30(0x150) → 40(0x300)
+        - Memory addresses: 0x100, 0x200, 0x150, 0x300
+        - **Cache Performance:** Poor - random access, cache misses
+        """)
 
 # Performance Benchmarks section
 def performance_benchmarks():
