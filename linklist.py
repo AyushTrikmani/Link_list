@@ -32,6 +32,14 @@ except ImportError:
             "explanation": "Linked lists have poor random access (O(n)) compared to arrays (O(1)).",
             "difficulty": "medium",
             "points": 15
+        },
+        {
+            "question": "Which algorithm is commonly used to detect cycles in a linked list?",
+            "options": ["Quick Sort", "Merge Sort", "Floyd's Cycle Detection", "Binary Search"],
+            "correct": 2,
+            "explanation": "Floyd's Cycle Detection algorithm uses two pointers moving at different speeds.",
+            "difficulty": "hard",
+            "points": 25
         }
     ]
     
@@ -2999,6 +3007,9 @@ def enhanced_quiz_section():
     if quiz_mode == "Difficulty-Based":
         difficulty = st.selectbox("Choose Difficulty:", ["easy", "medium", "hard"])
         questions = [q for q in QUIZ_QUESTIONS if q.get('difficulty', 'medium') == difficulty]
+        if not questions:
+            st.warning(f"No {difficulty} questions available. Showing all questions instead.")
+            questions = QUIZ_QUESTIONS
     else:
         questions = QUIZ_QUESTIONS
     
