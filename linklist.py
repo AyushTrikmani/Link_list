@@ -2366,8 +2366,6 @@ print("Reversed:", ll.traverse())
 
     selected_example = st.selectbox("Choose an example to run:", list(code_examples.keys()))
 
-    if st.button("Run Code", key="run_code"):
-
 # Performance Analysis section
 def performance_analysis():
     st.title("Performance Analysis")
@@ -2378,7 +2376,8 @@ def performance_analysis():
     Understanding the performance characteristics of different linked list operations is crucial for choosing
     the right data structure for your use case. Below is a detailed analysis of time complexities.
     """)
-
+if st.button("Run Code", key="run_code"):
+    performance_analysis() 
     # Create comprehensive data
     operations = [
         'Insert at Beginning',
