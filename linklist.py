@@ -10,6 +10,8 @@ import sys
 from io import StringIO
 import contextlib
 import pandas as pd
+from quiz_config import QUIZ_QUESTIONS
+from linked_list_classes import Node, SinglyLinkedList, DoublyLinkedList, CircularLinkedList
 
 # Set page config
 st.set_page_config(
@@ -1690,352 +1692,7 @@ def has_cycle(head):
 def interactive_playground():
     st.title("Interactive Playground")
 
-    # Define linked list classes
-    class Node:
-        def __init__(self, data):
-            self.data = data
-            self.next = None
-            self.prev = None  # For doubly linked list
-
-    class SinglyLinkedList:
-        def __init__(self):
-            self.head = None
-            self.size = 0
-
-        def insert_at_beginning(self, data):
-            new_node = Node(data)
-            new_node.next = self.head
-            self.head = new_node
-            self.size += 1
-
-        def insert_at_end(self, data):
-            new_node = Node(data)
-            if self.head is None:
-                self.head = new_node
-            else:
-                current = self.head
-                while current.next:
-                    current = current.next
-                current.next = new_node
-            self.size += 1
-
-        def insert_at_index(self, data, index):
-            if index < 0 or index > self.size:
-                return False
-            if index == 0:
-                self.insert_at_beginning(data)
-                return True
-            new_node = Node(data)
-            current = self.head
-            for i in range(index - 1):
-                if current is None:
-                    return False
-                current = current.next
-            new_node.next = current.next
-            current.next = new_node
-            self.size += 1
-            return True
-
-        def delete_from_beginning(self):
-            if self.head is None:
-                return None
-            deleted_data = self.head.data
-            self.head = self.head.next
-            self.size -= 1
-            return deleted_data
-
-        def delete_from_end(self):
-            if self.head is None:
-                return None
-            if self.head.next is None:
-                deleted_data = self.head.data
-                self.head = None
-                self.size -= 1
-                return deleted_data
-            current = self.head
-            while current.next.next:
-                current = current.next
-            deleted_data = current.next.data
-            current.next = None
-            self.size -= 1
-            return deleted_data
-
-        def delete_by_value(self, value):
-            if self.head is None:
-                return False
-            if self.head.data == value:
-                self.head = self.head.next
-                self.size -= 1
-                return True
-            current = self.head
-            while current.next and current.next.data != value:
-                current = current.next
-            if current.next:
-                current.next = current.next.next
-                self.size -= 1
-                return True
-            return False
-
-        def search(self, value):
-            current = self.head
-            position = 0
-            while current:
-                if current.data == value:
-                    return position
-                current = current.next
-                position += 1
-            return -1
-
-        def traverse(self):
-            elements = []
-            current = self.head
-            while current:
-                elements.append(current.data)
-                current = current.next
-            return elements
-
-    class DoublyLinkedList:
-        def __init__(self):
-            self.head = None
-            self.tail = None
-            self.size = 0
-
-        def insert_at_beginning(self, data):
-            new_node = Node(data)
-            if self.head is None:
-                self.head = self.tail = new_node
-            else:
-                new_node.next = self.head
-                self.head.prev = new_node
-                self.head = new_node
-            self.size += 1
-
-        def insert_at_end(self, data):
-            new_node = Node(data)
-            if self.tail is None:
-                self.head = self.tail = new_node
-            else:
-                new_node.prev = self.tail
-                self.tail.next = new_node
-                self.tail = new_node
-            self.size += 1
-
-        def insert_at_index(self, data, index):
-            if index < 0 or index > self.size:
-                return False
-            if index == 0:
-                self.insert_at_beginning(data)
-                return True
-            if index == self.size:
-                self.insert_at_end(data)
-                return True
-            new_node = Node(data)
-            current = self.head
-            for i in range(index):
-                current = current.next
-            new_node.prev = current.prev
-            new_node.next = current
-            current.prev.next = new_node
-            current.prev = new_node
-            self.size += 1
-            return True
-
-        def delete_from_beginning(self):
-            if self.head is None:
-                return None
-            deleted_data = self.head.data
-            if self.head == self.tail:
-                self.head = self.tail = None
-            else:
-                self.head = self.head.next
-                self.head.prev = None
-            self.size -= 1
-            return deleted_data
-
-        def delete_from_end(self):
-            if self.tail is None:
-                return None
-            deleted_data = self.tail.data
-            if self.head == self.tail:
-                self.head = self.tail = None
-            else:
-                self.tail = self.tail.prev
-                self.tail.next = None
-            self.size -= 1
-            return deleted_data
-
-        def delete_by_value(self, value):
-            current = self.head
-            while current:
-                if current.data == value:
-                    if current.prev:
-                        current.prev.next = current.next
-                    else:
-                        self.head = current.next
-                    if current.next:
-                        current.next.prev = current.prev
-                    else:
-                        self.tail = current.prev
-                    self.size -= 1
-                    return True
-                current = current.next
-            return False
-
-        def search(self, value):
-            current = self.head
-            position = 0
-            while current:
-                if current.data == value:
-                    return position
-                current = current.next
-                position += 1
-            return -1
-
-        def traverse_forward(self):
-            elements = []
-            current = self.head
-            while current:
-                elements.append(current.data)
-                current = current.next
-            return elements
-
-        def traverse_backward(self):
-            elements = []
-            current = self.tail
-            while current:
-                elements.append(current.data)
-                current = current.prev
-            return elements
-
-    class CircularLinkedList:
-        def __init__(self):
-            self.head = None
-            self.size = 0
-
-        def insert_at_beginning(self, data):
-            new_node = Node(data)
-            if self.head is None:
-                new_node.next = new_node
-                self.head = new_node
-            else:
-                new_node.next = self.head
-                current = self.head
-                while current.next != self.head:
-                    current = current.next
-                current.next = new_node
-                self.head = new_node
-            self.size += 1
-
-        def insert_at_end(self, data):
-            new_node = Node(data)
-            if self.head is None:
-                new_node.next = new_node
-                self.head = new_node
-            else:
-                new_node.next = self.head
-                current = self.head
-                while current.next != self.head:
-                    current = current.next
-                current.next = new_node
-            self.size += 1
-
-        def insert_at_index(self, data, index):
-            if index < 0 or index > self.size:
-                return False
-            if index == 0:
-                self.insert_at_beginning(data)
-                return True
-            new_node = Node(data)
-            current = self.head
-            for i in range(index - 1):
-                current = current.next
-                if current == self.head:
-                    return False
-            new_node.next = current.next
-            current.next = new_node
-            self.size += 1
-            return True
-
-        def delete_from_beginning(self):
-            if self.head is None:
-                return None
-            deleted_data = self.head.data
-            if self.head.next == self.head:
-                self.head = None
-            else:
-                current = self.head
-                while current.next != self.head:
-                    current = current.next
-                current.next = self.head.next
-                self.head = self.head.next
-            self.size -= 1
-            return deleted_data
-
-        def delete_from_end(self):
-            if self.head is None:
-                return None
-            deleted_data = self.head.data
-            if self.head.next == self.head:
-                self.head = None
-            else:
-                current = self.head
-                while current.next.next != self.head:
-                    current = current.next
-                deleted_data = current.next.data
-                current.next = self.head
-            self.size -= 1
-            return deleted_data
-
-        def delete_by_value(self, value):
-            if self.head is None:
-                return False
-            if self.head.data == value:
-                if self.head.next == self.head:
-                    self.head = None
-                else:
-                    current = self.head
-                    while current.next != self.head:
-                        current = current.next
-                    current.next = self.head.next
-                    self.head = self.head.next
-                self.size -= 1
-                return True
-            current = self.head
-            while current.next != self.head and current.next.data != value:
-                current = current.next
-            if current.next != self.head:
-                current.next = current.next.next
-                self.size -= 1
-                return True
-            return False
-
-        def search(self, value):
-            if self.head is None:
-                return -1
-            current = self.head
-            position = 0
-            while True:
-                if current.data == value:
-                    return position
-                current = current.next
-                position += 1
-                if current == self.head or position > self.size:
-                    break
-            return -1
-
-        def traverse(self, max_elements=None):
-            if self.head is None:
-                return []
-            elements = []
-            current = self.head
-            count = 0
-            while current and (max_elements is None or count < max_elements):
-                elements.append(current.data)
-                current = current.next
-                count += 1
-                if current == self.head:
-                    break
-            return elements
+    # Linked list classes are now imported from linked_list_classes module
 
     # Initialize session state
     if 'list_type' not in st.session_state:
@@ -2366,8 +2023,11 @@ print("Reversed:", ll.traverse())
 
     selected_example = st.selectbox("Choose an example to run:", list(code_examples.keys()))
 
+    
+
 # Performance Analysis section
 def performance_analysis():
+    pass  # Add implementation here
     st.title("Performance Analysis")
 
     st.header("Time Complexity Comparison")
@@ -2376,8 +2036,10 @@ def performance_analysis():
     Understanding the performance characteristics of different linked list operations is crucial for choosing
     the right data structure for your use case. Below is a detailed analysis of time complexities.
     """)
+
 if st.button("Run Code", key="run_code"):
     performance_analysis() 
+    
     # Create comprehensive data
     operations = [
         'Insert at Beginning',
@@ -2903,68 +2565,7 @@ def interactive_quiz():
     if 'current_question' not in st.session_state:
         st.session_state.current_question = 0
 
-    questions = [
-        {
-            "question": "What is the time complexity of inserting an element at the beginning of a singly linked list?",
-            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
-            "correct": 0,
-            "explanation": "Inserting at the beginning requires only updating the head pointer, which is O(1) time."
-        },
-        {
-            "question": "Which of the following is NOT an advantage of linked lists over arrays?",
-            "options": ["Dynamic size", "Efficient random access", "No memory waste", "Flexible structure"],
-            "correct": 1,
-            "explanation": "Linked lists have poor random access (O(n)) compared to arrays (O(1))."
-        },
-        {
-            "question": "In a doubly linked list, each node contains:",
-            "options": ["Only data", "Data and one pointer", "Data and two pointers", "Data and three pointers"],
-            "correct": 2,
-            "explanation": "Doubly linked list nodes contain data, a previous pointer, and a next pointer."
-        },
-        {
-            "question": "What is the space complexity of a singly linked list with n elements?",
-            "options": ["O(1)", "O(n)", "O(n²)", "O(log n)"],
-            "correct": 1,
-            "explanation": "Each node requires O(1) space, so n nodes require O(n) space."
-        },
-        {
-            "question": "Which algorithm is commonly used to detect cycles in a linked list?",
-            "options": ["Quick Sort", "Merge Sort", "Floyd's Cycle Detection", "Binary Search"],
-            "correct": 2,
-            "explanation": "Floyd's Cycle Detection algorithm uses two pointers moving at different speeds."
-        },
-        {
-            "question": "What is the main advantage of a doubly linked list over a singly linked list?",
-            "options": ["Less memory usage", "Bidirectional traversal", "Simpler implementation", "Faster insertion at end"],
-            "correct": 1,
-            "explanation": "Doubly linked lists allow traversal in both directions."
-        },
-        {
-            "question": "Which linked list type has the last node pointing back to the first node?",
-            "options": ["Singly linked list", "Doubly linked list", "Circular linked list", "XOR linked list"],
-            "correct": 2,
-            "explanation": "Circular linked lists form a loop by pointing the last node to the first."
-        },
-        {
-            "question": "What is the time complexity of searching for an element in a linked list?",
-            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
-            "correct": 1,
-            "explanation": "Searching requires traversing the list, which is O(n)."
-        },
-        {
-            "question": "Which operation is typically O(1) in a linked list?",
-            "options": ["Insertion at beginning", "Searching", "Traversal", "Deletion by value"],
-            "correct": 0,
-            "explanation": "Insertion at the beginning is constant time."
-        },
-        {
-            "question": "What is a common use case for circular linked lists?",
-            "options": ["Undo functionality", "Round-robin scheduling", "Browser history", "Polynomial representation"],
-            "correct": 1,
-            "explanation": "Circular linked lists are used in round-robin scheduling."
-        }
-    ]
+    questions = QUIZ_QUESTIONS
 
     st.header("Test Your Knowledge!")
 
@@ -2986,9 +2587,10 @@ def interactive_quiz():
 
             st.info(f"Explanation: {q['explanation']}")
 
-            if st.button("Next Question"):
-                st.session_state.current_question += 1
-                st.rerun()
+        
+        if st.button("Next Question"):
+            st.session_state.current_question += 1
+            st.rerun()
     else:
         # Quiz completed
         st.header("Quiz Completed! 🎊")
@@ -3200,6 +2802,12 @@ def quick_sort(head):
                 greater_tail = current
         current = current.next
 
+    # Terminate partitions properly
+    if smaller_tail:
+        smaller_tail.next = None
+    if greater_tail:
+        greater_tail.next = None
+        
     # Recursively sort partitions
     smaller_sorted = quick_sort(smaller_head)
     greater_sorted = quick_sort(greater_head)
