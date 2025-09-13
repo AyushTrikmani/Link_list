@@ -4,6 +4,9 @@ import plotly.graph_objects as go
 import networkx as nx
 import io
 from PIL import Image
+import sys
+from io import StringIO
+import contextlib
 
 # Set page config
 st.set_page_config(
