@@ -1,6 +1,9 @@
 import streamlit as st
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import networkx as nx
+import io
+from PIL import Image
 
 # Set page config
 st.set_page_config(
