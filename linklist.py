@@ -10,8 +10,57 @@ import sys
 from io import StringIO
 import contextlib
 import pandas as pd
-from quiz_config import QUIZ_QUESTIONS, CODING_CHALLENGES, TIME_CHALLENGES
-from linked_list_classes import Node, SinglyLinkedList, DoublyLinkedList, CircularLinkedList
+import time
+import random
+try:
+    from quiz_config import QUIZ_QUESTIONS, CODING_CHALLENGES, TIME_CHALLENGES
+except ImportError:
+    # Fallback quiz data if quiz_config.py is not found
+    QUIZ_QUESTIONS = [
+        {
+            "question": "What is the time complexity of inserting an element at the beginning of a singly linked list?",
+            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+            "correct": 0,
+            "explanation": "Inserting at the beginning requires only updating the head pointer, which is O(1) time.",
+            "difficulty": "easy",
+            "points": 10
+        },
+        {
+            "question": "Which of the following is NOT an advantage of linked lists over arrays?",
+            "options": ["Dynamic size", "Efficient random access", "No memory waste", "Flexible structure"],
+            "correct": 1,
+            "explanation": "Linked lists have poor random access (O(n)) compared to arrays (O(1)).",
+            "difficulty": "medium",
+            "points": 15
+        }
+    ]
+    
+    CODING_CHALLENGES = [
+        {
+            "title": "Reverse a Linked List",
+            "difficulty": "easy",
+            "points": 50,
+            "description": "Write a function to reverse a singly linked list.",
+            "starter_code": "def reverse_linked_list(head):\n    # Your code here\n    pass",
+            "solution": "def reverse_linked_list(head):\n    prev = None\n    current = head\n    while current:\n        next_node = current.next\n        current.next = prev\n        prev = current\n        current = next_node\n    return prev",
+            "test_cases": [{"input": "[1,2,3,4,5]", "expected": "[5,4,3,2,1]"}]
+        }
+    ]
+    
+    TIME_CHALLENGES = [
+        {
+            "title": "Quick Quiz: Basic Operations",
+            "time_limit": 60,
+            "questions": [0, 1],
+            "bonus_points": 20
+        }
+    ]
+
+try:
+    from linked_list_classes import Node, SinglyLinkedList, DoublyLinkedList, CircularLinkedList
+except ImportError:
+    st.error("linked_list_classes.py not found. Please ensure the file exists.")
+    st.stop()
 
 # Set page config
 st.set_page_config(
