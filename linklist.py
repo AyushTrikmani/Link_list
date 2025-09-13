@@ -541,6 +541,8 @@ st.markdown("""
 
 # Enhanced Welcome/Dashboard section with modern UI/UX
 def welcome_dashboard():
+    # Add anchor for scroll to top
+    st.markdown('<div id="welcome-top"></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="main-header">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
 
     st.markdown("""
@@ -715,6 +717,8 @@ def welcome_dashboard():
 
 # Enhanced Introduction section with modern UI/UX
 def introduction():
+    # Add anchor for scroll to top
+    st.markdown('<div id="intro-top"></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="main-header">📖 Introduction to Linked Lists</h1>', unsafe_allow_html=True)
 
     # Interactive concept overview
@@ -918,6 +922,8 @@ class Node:
 
 # Types of Linked Lists section
 def types_of_linked_lists():
+    # Add anchor for scroll to top
+    st.markdown('<div id="types-top"></div>', unsafe_allow_html=True)
     st.title("Types of Linked Lists")
 
     st.markdown("""
@@ -3515,11 +3521,7 @@ def main():
 
     # Add scroll to top functionality
     if st.session_state.get('scroll_to_top', False):
-        st.markdown("""
-        <script>
-        window.parent.document.querySelector('.main').scrollTop = 0;
-        </script>
-        """, unsafe_allow_html=True)
+        st.markdown('<div id="top"></div>', unsafe_allow_html=True)
         st.session_state.scroll_to_top = False
     
     # Render the selected tab content
