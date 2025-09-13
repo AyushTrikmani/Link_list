@@ -1776,10 +1776,10 @@ def interactive_playground():
         fig.add_trace(go.Scatter(
             x=node_x, y=node_y,
             mode='markers+text',
-            marker=dict(size=50, color='lightblue', line=dict(width=3, color='blue')),
+            marker=dict(size=50, color='#4A90E2', line=dict(width=3, color='#2E5BBA')),
             text=[str(val) for val in elements],
             textposition="middle center",
-            textfont=dict(size=14, color='black'),
+            textfont=dict(size=14, color='white', family="Arial Black"),
             name="Nodes",
             hovertemplate="<b>Node %{pointNumber}</b><br>Value: %{text}<extra></extra>"
         ))
@@ -1792,14 +1792,14 @@ def interactive_playground():
                     x=node_x[i] + 0.6, y=0.3,
                     ax=node_x[i+1] - 0.6, ay=0.3,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
                 )
                 # Add "next" label
                 fig.add_annotation(
                     x=(node_x[i] + node_x[i+1]) / 2, y=0.5,
                     text="next", showarrow=False,
-                    font=dict(size=10, color='red')
+                    font=dict(size=10, color='#FF6B6B', family="Arial Black")
                 )
             
             # Backward arrows (prev pointers)
@@ -1808,14 +1808,14 @@ def interactive_playground():
                     x=node_x[i] - 0.6, y=-0.3,
                     ax=node_x[i-1] + 0.6, ay=-0.3,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='green',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#4ECDC4',
                     showarrow=True
                 )
                 # Add "prev" label
                 fig.add_annotation(
                     x=(node_x[i] + node_x[i-1]) / 2, y=-0.5,
                     text="prev", showarrow=False,
-                    font=dict(size=10, color='green')
+                    font=dict(size=10, color='#4ECDC4', family="Arial Black")
                 )
                 
         elif st.session_state.list_type == "Circular Linked List":
@@ -1825,7 +1825,7 @@ def interactive_playground():
                     x=node_x[i] + 0.6, y=0,
                     ax=node_x[i+1] - 0.6, ay=0,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
                 )
             
@@ -1840,7 +1840,7 @@ def interactive_playground():
                 fig.add_shape(
                     type="path",
                     path=f"M {last_x + 0.6},0 Q {mid_x},{-1.2} {first_x - 0.6},0",
-                    line=dict(color="purple", width=3),
+                    line=dict(color="#9B59B6", width=3),
                 )
                 
                 # Add arrowhead at the end
@@ -1848,7 +1848,7 @@ def interactive_playground():
                     x=first_x - 0.6, y=0,
                     ax=first_x - 0.8, ay=-0.1,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor='purple',
+                    arrowhead=2, arrowsize=2, arrowwidth=3, arrowcolor='#9B59B6',
                     showarrow=True
                 )
                 
@@ -1856,7 +1856,7 @@ def interactive_playground():
                 fig.add_annotation(
                     x=mid_x, y=-0.8,
                     text="circular", showarrow=False,
-                    font=dict(size=12, color='purple', family="Arial Black")
+                    font=dict(size=12, color='#9B59B6', family="Arial Black")
                 )
                 
         else:  # Singly Linked List
@@ -1865,7 +1865,7 @@ def interactive_playground():
                     x=node_x[i] + 0.6, y=0,
                     ax=node_x[i+1] - 0.6, ay=0,
                     xref='x', yref='y', axref='x', ayref='y',
-                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='red',
+                    arrowhead=2, arrowsize=1.5, arrowwidth=3, arrowcolor='#FF6B6B',
                     showarrow=True
                 )
         
@@ -1874,27 +1874,33 @@ def interactive_playground():
             fig.add_trace(go.Scatter(
                 x=[node_x[-1] + 2], y=[0],
                 mode='markers+text',
-                marker=dict(size=40, color='lightgray', line=dict(width=2, color='gray')),
+                marker=dict(size=40, color='#95A5A6', line=dict(width=2, color='#7F8C8D')),
                 text=["NULL"],
                 textposition="middle center",
+                textfont=dict(size=12, color='white', family="Arial Black"),
                 name="NULL",
                 showlegend=False
             ))
             fig.add_annotation(
                 x=node_x[-1] + 0.5, y=0,
                 ax=node_x[-1] + 1.5, ay=0,
-                arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='gray',
+                arrowhead=2, arrowsize=1, arrowwidth=2, arrowcolor='#95A5A6',
                 showarrow=True
             )
         
         fig.update_layout(
-            title=f"{st.session_state.list_type} Visualization",
+            title=dict(
+                text=f"{st.session_state.list_type} Visualization",
+                font=dict(size=18, color='#2C3E50')
+            ),
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False, 
                       range=[-1.5, 1] if st.session_state.list_type == "Circular Linked List" else [-0.8, 0.8]),
             showlegend=False,
             height=400 if st.session_state.list_type in ["Circular Linked List", "Doubly Linked List"] else 300,
-            margin=dict(l=20, r=20, t=40, b=20)
+            margin=dict(l=20, r=20, t=40, b=20),
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)'
         )
         
         st.plotly_chart(fig, use_container_width=True)
@@ -2591,11 +2597,13 @@ def advanced_visualizations():
         mode='markers+text',
         marker=dict(
             size=15,
-            color=['red', 'green', 'blue', 'orange', 'purple'][:len(elements)],
-            opacity=0.8
+            color=['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#9B59B6'][:len(elements)],
+            opacity=0.9,
+            line=dict(width=2, color='#2C3E50')
         ),
         text=[f"Node {i}<br>Value: {val}" for i, val in enumerate(elements)],
         textposition="middle center",
+        textfont=dict(size=12, color='white', family="Arial Black"),
         name="Nodes"
     ))
     
@@ -2606,19 +2614,25 @@ def advanced_visualizations():
             y=[node_y[i], node_y[i+1]],
             z=[node_z[i], node_z[i+1]],
             mode='lines',
-            line=dict(color='black', width=5),
+            line=dict(color='#2C3E50', width=5),
             showlegend=False
         ))
     
     fig.update_layout(
-        title=f"3D {list_type} Visualization",
+        title=dict(
+            text=f"3D {list_type} Visualization",
+            font=dict(size=18, color='#2C3E50')
+        ),
         scene=dict(
             xaxis_title="Position",
             yaxis_title="Y",
             zaxis_title="Z",
-            camera=dict(eye=dict(x=1.5, y=1.5, z=1.5))
+            camera=dict(eye=dict(x=1.5, y=1.5, z=1.5)),
+            bgcolor='rgba(0,0,0,0)'
         ),
-        height=500
+        height=500,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
     )
     
     st.plotly_chart(fig, use_container_width=True)
@@ -2643,19 +2657,20 @@ def advanced_visualizations():
         with cols[i]:
             st.markdown(f"""
             <div style="
-                border: 3px solid #1e3c72;
+                border: 3px solid #4A90E2;
                 border-radius: 15px;
                 padding: 20px;
                 margin: 10px;
-                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
                 text-align: center;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.2);
                 transition: transform 0.3s ease;
+                color: white;
             ">
-                <div style="font-weight: bold; color: #1e3c72; font-size: 1.1em;">Block {i}</div>
-                <div style="font-size: 1.5em; margin: 10px 0; color: #2a5298;">{val}</div>
-                <div style="font-size: 0.8em; color: #666;">0x{i*100+100:03X}</div>
-                <div style="margin-top: 10px; color: #1e3c72;">{'→' if i < len(demo_elements) - 1 else ''}</div>
+                <div style="font-weight: bold; font-size: 1.1em;">Block {i}</div>
+                <div style="font-size: 1.5em; margin: 10px 0; font-weight: bold;">{val}</div>
+                <div style="font-size: 0.8em; opacity: 0.9;">0x{i*100+100:03X}</div>
+                <div style="margin-top: 10px; font-size: 1.2em;">{'→' if i < len(demo_elements) - 1 else ''}</div>
             </div>
             """, unsafe_allow_html=True)
     
@@ -2663,17 +2678,18 @@ def advanced_visualizations():
     with cols[-1]:
         st.markdown("""
         <div style="
-            border: 3px solid #f44336;
+            border: 3px solid #E74C3C;
             border-radius: 15px;
             padding: 20px;
             margin: 10px;
-            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            color: white;
         ">
-            <div style="font-weight: bold; color: #f44336; font-size: 1.1em;">NULL</div>
-            <div style="font-size: 1.2em; margin: 10px 0; color: #d32f2f;">∅</div>
-            <div style="font-size: 0.8em; color: #666;">End</div>
+            <div style="font-weight: bold; font-size: 1.1em;">NULL</div>
+            <div style="font-size: 1.2em; margin: 10px 0; font-weight: bold;">∅</div>
+            <div style="font-size: 0.8em; opacity: 0.9;">End</div>
         </div>
         """, unsafe_allow_html=True)
 
