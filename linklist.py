@@ -7,6 +7,7 @@ from PIL import Image
 import sys
 from io import StringIO
 import contextlib
+import pandas as pd
 
 # Set page config
 st.set_page_config(
@@ -1794,9 +1795,171 @@ def interactive_playground():
                 else:
                     st.warning(f"'{search_val}' not found in list!")
 
-    st.header("Code Implementation")
-    st.markdown("Here's how the operations above are implemented in Python:")
+    st.header("Code Implementation & Execution")
+    st.markdown("Here's how the operations above are implemented in Python. You can also run example code!")
 
+    # Code execution functionality
+    st.subheader("🔧 Code Runner")
+
+    # Predefined code examples
+    code_examples = {
+        "Create Linked List": """
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Create a linked list
+ll = LinkedList()
+ll.head = Node(1)
+ll.head.next = Node(2)
+ll.head.next.next = Node(3)
+
+print("Linked List:", ll.traverse())
+""",
+        "Insert at Beginning": """
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Create and modify linked list
+ll = LinkedList()
+ll.insert_at_beginning(3)
+ll.insert_at_beginning(2)
+ll.insert_at_beginning(1)
+
+print("After insertions:", ll.traverse())
+""",
+        "Search Element": """
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def search(self, target):
+        current = self.head
+        position = 0
+        while current:
+            if current.data == target:
+                return position
+            current = current.next
+            position += 1
+        return -1
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Create linked list and search
+ll = LinkedList()
+ll.head = Node(10)
+ll.head.next = Node(20)
+ll.head.next.next = Node(30)
+
+print("List:", ll.traverse())
+print("Position of 20:", ll.search(20))
+print("Position of 40:", ll.search(40))
+""",
+        "Reverse List": """
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def reverse(self):
+        prev = None
+        current = self.head
+        while current:
+            next_node = current.next
+            current.next = prev
+            prev = current
+            current = next_node
+        self.head = prev
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Create and reverse linked list
+ll = LinkedList()
+ll.head = Node(1)
+ll.head.next = Node(2)
+ll.head.next.next = Node(3)
+ll.head.next.next.next = Node(4)
+
+print("Original:", ll.traverse())
+ll.reverse()
+print("Reversed:", ll.traverse())
+"""
+    }
+
+    selected_example = st.selectbox("Choose an example to run:", list(code_examples.keys()))
+
+    if st.button("Run Code", key="run_code"):
+        code_to_run = code_examples[selected_example]
+
+        # Capture output
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = StringIO()
+
+        try:
+            # Execute the code
+            exec(code_to_run)
+            output = captured_output.getvalue()
+            st.success("Code executed successfully!")
+            st.code(output, language="text")
+        except Exception as e:
+            st.error(f"Error executing code: {str(e)}")
+        finally:
+            sys.stdout = old_stdout
+
+    # Show the code
     with st.expander("View Implementation Code"):
         st.code("""
 class Node:
@@ -1852,6 +2015,46 @@ class LinkedList:
             current = current.next
         return elements
         """, language="python")
+
+    # Custom code input
+    st.subheader("✏️ Write & Run Your Own Code")
+    custom_code = st.text_area("Enter your Python code here:", height=200,
+                               value="""# Example: Create a simple linked list
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+# Create nodes
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+
+# Print the list
+current = head
+while current:
+    print(current.data, end=" -> ")
+    current = current.next
+print("None")""")
+
+    if st.button("Run Custom Code", key="run_custom"):
+        # Capture output
+        old_stdout = sys.stdout
+        sys.stdout = captured_output = StringIO()
+
+        try:
+            # Execute the custom code
+            exec(custom_code)
+            output = captured_output.getvalue()
+            if output.strip():
+                st.success("Code executed successfully!")
+                st.code(output, language="text")
+            else:
+                st.info("Code executed successfully! (No output)")
+        except Exception as e:
+            st.error(f"Error executing code: {str(e)}")
+        finally:
+            sys.stdout = old_stdout
 
 # Performance Analysis section
 def performance_analysis():
@@ -2267,16 +2470,650 @@ def references_and_resources():
     - [Streamlit Documentation](https://docs.streamlit.io/)
     """)
 
+# Advanced Visualizations section
+def advanced_visualizations():
+    st.title("Advanced Visualizations")
+
+    st.header("Network Graph Visualization")
+
+    # Create network graph for linked list
+    if 'linked_list' not in st.session_state or not st.session_state.linked_list:
+        st.warning("Please create a linked list in the Playground section first!")
+        return
+
+    st.subheader("Linked List as Network Graph")
+
+    # Create network graph
+    G = nx.DiGraph()
+
+    # Add nodes and edges
+    for i, val in enumerate(st.session_state.linked_list):
+        G.add_node(f"Node_{i}", label=str(val), pos=(i, 0))
+
+    for i in range(len(st.session_state.linked_list) - 1):
+        G.add_edge(f"Node_{i}", f"Node_{i+1}")
+
+    # Create positions
+    pos = nx.spring_layout(G)
+
+    # Create edge traces
+    edge_x = []
+    edge_y = []
+    for edge in G.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        edge_x.extend([x0, x1, None])
+        edge_y.extend([y0, y1, None])
+
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y,
+        line=dict(width=2, color='#888'),
+        hoverinfo='none',
+        mode='lines')
+
+    # Create node traces
+    node_x = []
+    node_y = []
+    node_text = []
+    for node in G.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
+        node_text.append(f"{G.nodes[node]['label']}")
+
+    node_trace = go.Scatter(
+        x=node_x, y=node_y,
+        mode='markers+text',
+        text=node_text,
+        textposition="middle center",
+        hoverinfo='text',
+        marker=dict(
+            showscale=False,
+            color='#1e3c72',
+            size=40,
+            line_width=2))
+
+    # Create the figure
+    fig = go.Figure(data=[edge_trace, node_trace],
+                   layout=go.Layout(
+                       showlegend=False,
+                       hovermode='closest',
+                       margin=dict(b=20,l=5,r=5,t=40),
+                       xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                       yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                       height=400
+                   ))
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.header("Memory Layout Animation")
+
+    # Animated memory layout
+    st.subheader("Dynamic Memory Allocation")
+
+    animation_placeholder = st.empty()
+
+    if st.button("Animate Memory Allocation"):
+        for i in range(len(st.session_state.linked_list) + 1):
+            with animation_placeholder.container():
+                cols = st.columns(min(5, len(st.session_state.linked_list) + 1))
+
+                for j in range(min(5, i + 1)):
+                    if j < len(st.session_state.linked_list):
+                        with cols[j]:
+                            st.markdown(f"""
+                            <div style="border: 2px solid #1e3c72; border-radius: 10px; padding: 10px; margin: 5px; background: {'#e3f2fd' if j < i else '#f5f5f5'};">
+                                <div style="font-weight: bold; color: #1e3c72;">Memory Block {j}</div>
+                                <div>Data: {st.session_state.linked_list[j]}</div>
+                                <div style="font-size: 0.8em; color: #666;">Address: 0x{j*100:03X}</div>
+                            </div>
+                            """, unsafe_allow_html=True)
+                    elif j == len(st.session_state.linked_list):
+                        with cols[j]:
+                            st.markdown(f"""
+                            <div style="border: 2px solid #f44336; border-radius: 10px; padding: 10px; margin: 5px; background: {'#ffebee' if j <= i else '#f5f5f5'};">
+                                <div style="font-weight: bold; color: #f44336;">NULL</div>
+                                <div>End of List</div>
+                                <div style="font-size: 0.8em; color: #666;">Address: 0x{j*100:03X}</div>
+                            </div>
+                            """, unsafe_allow_html=True)
+
+            import time
+            time.sleep(0.5)
+
+# Interactive Quiz section
+def interactive_quiz():
+    st.title("Interactive Quiz")
+
+    if 'quiz_score' not in st.session_state:
+        st.session_state.quiz_score = 0
+    if 'quiz_questions' not in st.session_state:
+        st.session_state.quiz_questions = 0
+    if 'current_question' not in st.session_state:
+        st.session_state.current_question = 0
+
+    questions = [
+        {
+            "question": "What is the time complexity of inserting an element at the beginning of a singly linked list?",
+            "options": ["O(1)", "O(n)", "O(log n)", "O(n²)"],
+            "correct": 0,
+            "explanation": "Inserting at the beginning requires only updating the head pointer, which is O(1) time."
+        },
+        {
+            "question": "Which of the following is NOT an advantage of linked lists over arrays?",
+            "options": ["Dynamic size", "Efficient random access", "No memory waste", "Flexible structure"],
+            "correct": 1,
+            "explanation": "Linked lists have poor random access (O(n)) compared to arrays (O(1))."
+        },
+        {
+            "question": "In a doubly linked list, each node contains:",
+            "options": ["Only data", "Data and one pointer", "Data and two pointers", "Data and three pointers"],
+            "correct": 2,
+            "explanation": "Doubly linked list nodes contain data, a previous pointer, and a next pointer."
+        },
+        {
+            "question": "What is the space complexity of a singly linked list with n elements?",
+            "options": ["O(1)", "O(n)", "O(n²)", "O(log n)"],
+            "correct": 1,
+            "explanation": "Each node requires O(1) space, so n nodes require O(n) space."
+        },
+        {
+            "question": "Which algorithm is commonly used to detect cycles in a linked list?",
+            "options": ["Quick Sort", "Merge Sort", "Floyd's Cycle Detection", "Binary Search"],
+            "correct": 2,
+            "explanation": "Floyd's Cycle Detection algorithm uses two pointers moving at different speeds."
+        }
+    ]
+
+    st.header("Test Your Knowledge!")
+
+    if st.session_state.current_question < len(questions):
+        q = questions[st.session_state.current_question]
+
+        st.subheader(f"Question {st.session_state.current_question + 1} of {len(questions)}")
+        st.write(q["question"])
+
+        user_answer = st.radio("Select your answer:", q["options"], key=f"q_{st.session_state.current_question}")
+
+        if st.button("Submit Answer"):
+            selected_index = q["options"].index(user_answer)
+            if selected_index == q["correct"]:
+                st.success("Correct! 🎉")
+                st.session_state.quiz_score += 1
+            else:
+                st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
+
+            st.info(f"Explanation: {q['explanation']}")
+
+            if st.button("Next Question"):
+                st.session_state.current_question += 1
+                st.rerun()
+    else:
+        # Quiz completed
+        st.header("Quiz Completed! 🎊")
+
+        score_percentage = (st.session_state.quiz_score / len(questions)) * 100
+
+        if score_percentage >= 80:
+            st.success(f"Excellent! You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%)")
+        elif score_percentage >= 60:
+            st.warning(f"Good job! You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%)")
+        else:
+            st.error(f"You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%). Keep studying!")
+
+        if st.button("Restart Quiz"):
+            st.session_state.quiz_score = 0
+            st.session_state.current_question = 0
+            st.rerun()
+
+# Data Structure Comparison section
+def data_structure_comparison():
+    st.title("Data Structure Comparison")
+
+    st.header("Linked Lists vs Arrays")
+
+    comparison_data = {
+        'Aspect': [
+            'Random Access',
+            'Insertion at Beginning',
+            'Insertion at End',
+            'Deletion from Beginning',
+            'Deletion from End',
+            'Memory Usage',
+            'Cache Performance',
+            'Implementation Complexity'
+        ],
+        'Linked List': ['O(n)', 'O(1)', 'O(n)', 'O(1)', 'O(n)', 'Higher', 'Poor', 'Moderate'],
+        'Dynamic Array': ['O(1)', 'O(n)', 'O(1)*', 'O(n)', 'O(1)', 'Lower', 'Excellent', 'Simple']
+    }
+
+    df = pd.DataFrame(comparison_data)
+    st.dataframe(df, use_container_width=True)
+
+    st.markdown("*Note: * Amortized O(1) for dynamic arrays")
+
+    # Interactive comparison chart
+    st.header("Performance Comparison Chart")
+
+    aspects = ['Random Access', 'Insert Beginning', 'Insert End', 'Delete Beginning', 'Delete End']
+    linked_list_scores = [10, 1, 10, 1, 10]  # Lower is better
+    array_scores = [1, 10, 1, 10, 1]
+
+    fig = go.Figure()
+
+    fig.add_trace(go.Bar(
+        name='Linked List',
+        x=aspects,
+        y=linked_list_scores,
+        marker_color='#1e3c72'
+    ))
+
+    fig.add_trace(go.Bar(
+        name='Dynamic Array',
+        x=aspects,
+        y=array_scores,
+        marker_color='#667eea'
+    ))
+
+    fig.update_layout(
+        title="Performance Comparison (Lower is Better)",
+        barmode='group',
+        yaxis_title="Complexity Score",
+        height=400
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.header("When to Use Which?")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Choose Linked List when:")
+        st.markdown("""
+        - ✅ Frequent insertions/deletions at beginning
+        - ✅ Dynamic size requirements
+        - ✅ Memory allocation/deallocation is expensive
+        - ✅ Implementing stacks, queues, or graphs
+        - ✅ Sequential access patterns
+        """)
+
+    with col2:
+        st.subheader("Choose Array when:")
+        st.markdown("""
+        - ✅ Need fast random access
+        - ✅ Memory efficiency is critical
+        - ✅ Most operations are at the end
+        - ✅ Simple implementation needed
+        - ✅ Cache performance matters
+        """)
+
+    st.header("Linked Lists vs Other Data Structures")
+
+    structures = ['Linked List', 'Array', 'Stack', 'Queue', 'Tree', 'Graph']
+    use_cases = [
+        'Dynamic sequences, undo operations',
+        'Static sequences, fast access',
+        'LIFO operations, function calls',
+        'FIFO operations, scheduling',
+        'Hierarchical data, searching',
+        'Complex relationships, networks'
+    ]
+
+    comparison_df = pd.DataFrame({
+        'Data Structure': structures,
+        'Primary Use Cases': use_cases
+    })
+
+    st.dataframe(comparison_df, use_container_width=True)
+
+# Advanced Algorithms section
+def advanced_algorithms():
+    st.title("Advanced Algorithms")
+
+    st.header("Merge Sort on Linked Lists")
+
+    st.markdown("""
+    **Why Merge Sort for Linked Lists?**
+    - Linked lists don't support random access
+    - Merge sort is efficient for linked structures
+    - No extra space needed for merging
+    - Stable sorting algorithm
+    """)
+
+    with st.expander("Merge Sort Implementation"):
+        st.code("""
+def merge_sort(head):
+    if not head or not head.next:
+        return head
+
+    # Find middle of list
+    slow = head
+    fast = head.next
+
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+
+    # Split the list
+    middle = slow.next
+    slow.next = None
+
+    # Recursively sort both halves
+    left = merge_sort(head)
+    right = merge_sort(middle)
+
+    # Merge the sorted halves
+    return merge(left, right)
+
+def merge(left, right):
+    if not left:
+        return right
+    if not right:
+        return left
+
+    if left.data <= right.data:
+        result = left
+        result.next = merge(left.next, right)
+    else:
+        result = right
+        result.next = merge(left, right.next)
+
+    return result
+
+# Time Complexity: O(n log n)
+# Space Complexity: O(log n) for recursion stack
+        """, language="python")
+
+    st.header("Quick Sort on Linked Lists")
+
+    with st.expander("Quick Sort Implementation"):
+        st.code("""
+def quick_sort(head):
+    if not head or not head.next:
+        return head
+
+    # Partition around pivot
+    pivot = head
+    smaller_head = None
+    smaller_tail = None
+    greater_head = None
+    greater_tail = None
+
+    current = head.next
+
+    while current:
+        if current.data < pivot.data:
+            if not smaller_head:
+                smaller_head = current
+                smaller_tail = current
+            else:
+                smaller_tail.next = current
+                smaller_tail = current
+        else:
+            if not greater_head:
+                greater_head = current
+                greater_tail = current
+            else:
+                greater_tail.next = current
+                greater_tail = current
+        current = current.next
+
+    # Recursively sort partitions
+    smaller_sorted = quick_sort(smaller_head)
+    greater_sorted = quick_sort(greater_head)
+
+    # Connect all parts
+    if smaller_tail:
+        smaller_tail.next = pivot
+    else:
+        smaller_head = pivot
+
+    pivot.next = greater_sorted
+
+    return smaller_head if smaller_head else pivot
+
+# Time Complexity: O(n²) worst case, O(n log n) average
+# Space Complexity: O(log n) for recursion stack
+        """, language="python")
+
+    st.header("Cycle Detection Algorithms")
+
+    st.subheader("Floyd's Cycle Detection Algorithm")
+
+    with st.expander("Implementation"):
+        st.code("""
+def detect_cycle_floyd(head):
+    if not head or not head.next:
+        return False
+
+    slow = head
+    fast = head.next
+
+    while fast and fast.next:
+        if slow == fast:
+            return True
+        slow = slow.next
+        fast = fast.next.next
+
+    return False
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+        """, language="python")
+
+    st.subheader("Brent's Cycle Detection Algorithm")
+
+    with st.expander("Implementation"):
+        st.code("""
+def detect_cycle_brent(head):
+    if not head:
+        return False
+
+    slow = head
+    fast = head.next
+    power = 1
+    length = 1
+
+    # Find cycle
+    while fast and fast != slow:
+        if power == length:
+            power *= 2
+            length = 0
+            slow = fast
+
+        fast = fast.next
+        length += 1
+
+    return fast is not None
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+# Often faster than Floyd's algorithm in practice
+        """, language="python")
+
+    st.header("Advanced Operations")
+
+    st.subheader("Reverse in Groups")
+
+    with st.expander("Reverse k nodes at a time"):
+        st.code("""
+def reverse_k_groups(head, k):
+    if not head or k == 1:
+        return head
+
+    # Count total nodes
+    count = 0
+    current = head
+    while current:
+        count += 1
+        current = current.next
+
+    # Create dummy node
+    dummy = Node(0)
+    dummy.next = head
+    prev_group_end = dummy
+
+    while count >= k:
+        current = prev_group_end.next
+        next_group_start = current
+
+        # Reverse k nodes
+        for i in range(k - 1):
+            temp = current.next
+            current.next = temp.next
+            temp.next = prev_group_end.next
+            prev_group_end.next = temp
+
+        prev_group_end = next_group_start
+        count -= k
+
+    return dummy.next
+
+# Example: reverse_k_groups([1,2,3,4,5], 2) -> [2,1,4,3,5]
+        """, language="python")
+
+# Performance Benchmarks section
+def performance_benchmarks():
+    st.title("Performance Benchmarks")
+
+    st.header("Actual Timing Comparisons")
+
+    if st.button("Run Benchmarks"):
+        import time
+
+        # Test data sizes
+        sizes = [100, 1000, 10000]
+
+        results = {
+            'Size': [],
+            'Operation': [],
+            'Linked List (ms)': [],
+            'Array (ms)': []
+        }
+
+        for size in sizes:
+            # Create test data
+            test_data = list(range(size))
+
+            # Linked List Implementation
+            class Node:
+                def __init__(self, data):
+                    self.data = data
+                    self.next = None
+
+            class LinkedList:
+                def __init__(self):
+                    self.head = None
+
+                def insert_at_end(self, data):
+                    if not self.head:
+                        self.head = Node(data)
+                        return
+                    current = self.head
+                    while current.next:
+                        current = current.next
+                    current.next = Node(data)
+
+                def search(self, target):
+                    current = self.head
+                    while current:
+                        if current.data == target:
+                            return True
+                        current = current.next
+                    return False
+
+            # Create structures
+            ll = LinkedList()
+            array = []
+
+            # Insert at end - Linked List
+            start_time = time.time()
+            for item in test_data:
+                ll.insert_at_end(item)
+            ll_insert_time = (time.time() - start_time) * 1000
+
+            # Insert at end - Array
+            start_time = time.time()
+            for item in test_data:
+                array.append(item)
+            array_insert_time = (time.time() - start_time) * 1000
+
+            # Search - Linked List
+            start_time = time.time()
+            for _ in range(100):  # Search 100 times
+                ll.search(size // 2)
+            ll_search_time = (time.time() - start_time) * 1000 / 100
+
+            # Search - Array
+            start_time = time.time()
+            for _ in range(100):  # Search 100 times
+                (size // 2) in array
+            array_search_time = (time.time() - start_time) * 1000 / 100
+
+            # Record results
+            results['Size'].extend([size, size])
+            results['Operation'].extend(['Insert at End', 'Search'])
+            results['Linked List (ms)'].extend([ll_insert_time, ll_search_time])
+            results['Array (ms)'].extend([array_insert_time, array_search_time])
+
+        # Display results
+        df = pd.DataFrame(results)
+        st.dataframe(df, use_container_width=True)
+
+        # Create comparison chart
+        fig = go.Figure()
+
+        for op in ['Insert at End', 'Search']:
+            op_data = df[df['Operation'] == op]
+            fig.add_trace(go.Bar(
+                name=f'Linked List - {op}',
+                x=[f"Size {size}" for size in op_data['Size']],
+                y=op_data['Linked List (ms)'],
+                marker_color='#1e3c72'
+            ))
+            fig.add_trace(go.Bar(
+                name=f'Array - {op}',
+                x=[f"Size {size}" for size in op_data['Size']],
+                y=op_data['Array (ms)'],
+                marker_color='#667eea'
+            ))
+
+        fig.update_layout(
+            title="Performance Benchmarks",
+            barmode='group',
+            yaxis_title="Time (milliseconds)",
+            height=500
+        )
+
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.header("Memory Usage Analysis")
+
+    st.markdown("""
+    **Memory Overhead Comparison:**
+
+    | Data Structure | Element Size | Overhead | Total per Element |
+    |----------------|--------------|----------|-------------------|
+    | Linked List (Python) | 28 bytes | 8 bytes (pointer) | ~36 bytes |
+    | Dynamic Array (Python) | 28 bytes | ~4 bytes (amortized) | ~32 bytes |
+
+    **Note:** Actual memory usage depends on the programming language and implementation.
+    """)
+
 # Main app function
 def main():
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
         "🏠 Welcome",
         "📖 Introduction",
         "🔗 Types",
         "⚙️ Operations",
         "🎮 Playground",
         "📊 Analysis",
-        "💡 Practice"
+        "💡 Practice",
+        "🎨 Advanced Viz",
+        "🧠 Quiz",
+        "⚖️ Comparison"
     ])
 
     with tab1:
