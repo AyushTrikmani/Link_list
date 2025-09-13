@@ -88,121 +88,544 @@ Memory Layout:
 def types_of_linked_lists():
     st.title("Types of Linked Lists")
 
+    st.markdown("""
+    Linked lists come in various forms, each with its own strengths and use cases. Understanding the differences
+    between these types is crucial for choosing the right data structure for your specific needs.
+    """)
+
     st.header("1. Singly Linked List")
+    st.markdown("**Overview:** The most basic form of linked list where each node points only to the next node.")
+
     col1, col2 = st.columns([2, 1])
     with col1:
         st.markdown("""
-        A singly linked list is the simplest type of linked list. Each node contains:
-        - **Data**: The value stored in the node
-        - **Next Pointer**: Reference to the next node in the sequence
+        **Node Structure:**
+        ```python
+        class Node:
+            def __init__(self, data):
+                self.data = data      # The actual data
+                self.next = None      # Pointer to next node
+        ```
 
-        **Characteristics:**
-        - Unidirectional traversal (forward only)
-        - Requires less memory per node (one pointer)
-        - Simple implementation
-        - Cannot traverse backwards efficiently
+        **Detailed Characteristics:**
+        - **Memory Usage:** Minimal (1 pointer + data per node)
+        - **Traversal:** Only forward direction
+        - **Operations:** Simple to implement
+        - **Performance:** O(1) for beginning operations, O(n) for end operations
+        - **Memory Efficiency:** Good for large datasets with sequential access
 
-        **Use Cases:**
-        - Implementing stacks and queues
-        - Undo mechanisms in applications
-        - Hash table collision resolution (separate chaining)
+        **Advantages:**
+        - ✅ Simple implementation and understanding
+        - ✅ Low memory overhead per node
+        - ✅ Efficient for stack operations (LIFO)
+        - ✅ Good cache performance for sequential access
+        - ✅ Easy to implement recursive algorithms
+
+        **Disadvantages:**
+        - ❌ No backward traversal
+        - ❌ O(n) time for random access
+        - ❌ Cannot efficiently delete previous node
+        - ❌ More complex reverse operations
+
+        **Real-World Use Cases:**
+        - **Stack Implementation:** Perfect for undo/redo functionality
+        - **Queue Implementation:** Basic FIFO operations
+        - **Hash Table Chaining:** Collision resolution in hash tables
+        - **Memory Management:** Free memory block tracking
+        - **Symbol Tables:** In compilers and interpreters
+        - **Polynomial Operations:** Representing mathematical polynomials
         """)
+
+        st.subheader("Visual Representation")
+        st.code("""
+Singly Linked List Memory Layout:
++-------------------+     +-------------------+     +-------------------+
+| Data: 10          |     | Data: 20          |     | Data: 30          |
+| Next: 0x200       | --> | Next: 0x300       | --> | Next: None        |
++-------------------+     +-------------------+     +-------------------+
+0x100                   0x200                   0x300
+
+Traversal: 10 -> 20 -> 30 -> NULL
+        """)
+
     with col2:
         st.code("""
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+# Complete Singly Linked List Implementation
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
 
-# Example: 1 -> 2 -> 3 -> None
-head = Node(1)
-head.next = Node(2)
-head.next.next = Node(3)
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+        self.size += 1
+
+    def insert_at_end(self, data):
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+        else:
+            current = self.head
+            while current.next:
+                current = current.next
+            current.next = new_node
+        self.size += 1
+
+    def delete_from_beginning(self):
+        if self.head is None:
+            return None
+        deleted_data = self.head.data
+        self.head = self.head.next
+        self.size -= 1
+        return deleted_data
+
+    def search(self, target):
+        current = self.head
+        position = 0
+        while current:
+            if current.data == target:
+                return position
+            current = current.next
+            position += 1
+        return -1
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+# Example Usage:
+sll = SinglyLinkedList()
+sll.insert_at_end(1)
+sll.insert_at_end(2)
+sll.insert_at_end(3)
+print(sll.traverse())  # [1, 2, 3]
         """, language="python")
 
     st.header("2. Doubly Linked List")
+    st.markdown("**Overview:** Each node has pointers to both previous and next nodes, enabling bidirectional traversal.")
+
     col1, col2 = st.columns([2, 1])
     with col1:
         st.markdown("""
-        A doubly linked list allows bidirectional traversal. Each node contains:
-        - **Data**: The value stored in the node
-        - **Next Pointer**: Reference to the next node
-        - **Previous Pointer**: Reference to the previous node
+        **Node Structure:**
+        ```python
+        class DoublyNode:
+            def __init__(self, data):
+                self.data = data      # The actual data
+                self.next = None      # Pointer to next node
+                self.prev = None      # Pointer to previous node
+        ```
 
-        **Characteristics:**
-        - Bidirectional traversal (forward and backward)
-        - More memory per node (two pointers)
-        - More complex operations
-        - Efficient backward traversal
+        **Detailed Characteristics:**
+        - **Memory Usage:** Higher (2 pointers + data per node)
+        - **Traversal:** Both forward and backward directions
+        - **Operations:** More complex but more flexible
+        - **Performance:** O(1) for beginning and end operations (with tail pointer)
+        - **Memory Efficiency:** Less efficient than singly linked lists
 
-        **Use Cases:**
-        - Browser history (back/forward navigation)
-        - Most Recently Used (MRU) cache
-        - Implementing deques
-        - Text editors (cursor movement)
+        **Advantages:**
+        - ✅ Bidirectional traversal
+        - ✅ Efficient deletion of any node (if reference is known)
+        - ✅ Can implement deque operations efficiently
+        - ✅ Easier to implement complex data structures
+        - ✅ Better for frequent insertions/deletions at both ends
+
+        **Disadvantages:**
+        - ❌ Higher memory overhead
+        - ❌ More complex implementation
+        - ❌ Extra pointer updates required
+        - ❌ Slightly slower operations due to extra bookkeeping
+
+        **Real-World Use Cases:**
+        - **Browser History:** Back and forward navigation
+        - **Text Editors:** Cursor movement and editing
+        - **LRU Cache:** Most Recently Used page replacement
+        - **Undo/Redo Stacks:** Bidirectional operation history
+        - **Music Player:** Previous/next track navigation
+        - **File System Navigation:** Directory traversal
         """)
+
+        st.subheader("Visual Representation")
+        st.code("""
+Doubly Linked List Memory Layout:
++-------------------+     +-------------------+     +-------------------+
+| Prev: None        |     | Prev: 0x100       |     | Prev: 0x200       |
+| Data: 10          |     | Data: 20          |     | Data: 30          |
+| Next: 0x200       | <-- | Next: 0x300       | <-- | Next: None        |
++-------------------+     +-------------------+     +-------------------+
+0x100                   0x200                   0x300
+
+Traversal: NULL <- 10 <-> 20 <-> 30 -> NULL
+        """)
+
     with col2:
         st.code("""
-class DoublyNode:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
-        self.prev = None
+# Complete Doubly Linked List Implementation
+class DoublyLinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None  # Tail pointer for O(1) end operations
+        self.size = 0
 
-# Example: None <- 1 <-> 2 <-> 3 -> None
-head = DoublyNode(1)
-middle = DoublyNode(2)
-tail = DoublyNode(3)
+    def insert_at_beginning(self, data):
+        new_node = DoublyNode(data)
+        if self.head is None:
+            self.head = self.tail = new_node
+        else:
+            new_node.next = self.head
+            self.head.prev = new_node
+            self.head = new_node
+        self.size += 1
 
-head.next = middle
-middle.prev = head
-middle.next = tail
-tail.prev = middle
+    def insert_at_end(self, data):
+        new_node = DoublyNode(data)
+        if self.tail is None:
+            self.head = self.tail = new_node
+        else:
+            new_node.prev = self.tail
+            self.tail.next = new_node
+            self.tail = new_node
+        self.size += 1
+
+    def delete_from_beginning(self):
+        if self.head is None:
+            return None
+        deleted_data = self.head.data
+        if self.head == self.tail:
+            self.head = self.tail = None
+        else:
+            self.head = self.head.next
+            self.head.prev = None
+        self.size -= 1
+        return deleted_data
+
+    def traverse_forward(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+
+    def traverse_backward(self):
+        elements = []
+        current = self.tail
+        while current:
+            elements.append(current.data)
+            current = current.prev
+        return elements
+
+# Example Usage:
+dll = DoublyLinkedList()
+dll.insert_at_end(1)
+dll.insert_at_end(2)
+dll.insert_at_end(3)
+print(dll.traverse_forward())   # [1, 2, 3]
+print(dll.traverse_backward())  # [3, 2, 1]
         """, language="python")
 
     st.header("3. Circular Linked List")
+    st.markdown("**Overview:** The last node points back to the first node, forming a circle.")
+
     col1, col2 = st.columns([2, 1])
     with col1:
         st.markdown("""
-        A circular linked list forms a circle where the last node points back to the first node.
-        Can be singly or doubly linked.
+        **Node Structure (Singly Circular):**
+        ```python
+        class CircularNode:
+            def __init__(self, data):
+                self.data = data
+                self.next = None
+        ```
 
-        **Characteristics:**
-        - No NULL at the end
-        - Can be traversed infinitely in a loop
-        - Useful for circular buffers
-        - Requires careful handling to avoid infinite loops
+        **Detailed Characteristics:**
+        - **Memory Usage:** Same as singly (1 pointer + data per node)
+        - **Traversal:** Can start from any node and traverse infinitely
+        - **Operations:** Need careful handling to avoid infinite loops
+        - **Performance:** O(1) for beginning operations, O(n) for end operations
+        - **Special Property:** No NULL termination
 
-        **Use Cases:**
-        - Round-robin scheduling algorithms
-        - Circular buffers (music playlists)
-        - Implementing circular queues
-        - Multiplayer games (player turns)
+        **Advantages:**
+        - ✅ Memory efficient (same as singly linked)
+        - ✅ Useful for circular operations
+        - ✅ Can represent cyclic data naturally
+        - ✅ Round-robin algorithms work naturally
+        - ✅ No special case for end of list
+
+        **Disadvantages:**
+        - ❌ Easy to create infinite loops
+        - ❌ More complex traversal logic
+        - ❌ Cannot use NULL to detect end
+        - ❌ Harder to detect cycles (ironic!)
+
+        **Real-World Use Cases:**
+        - **Round-Robin Scheduling:** CPU process scheduling
+        - **Circular Buffers:** Audio/video streaming
+        - **Multiplayer Games:** Player turn management
+        - **Music Playlists:** Continuous playback
+        - **Token Ring Networks:** Data transmission
+        - **Time-Sharing Systems:** Resource allocation
         """)
+
+        st.subheader("Visual Representation")
+        st.code("""
+Circular Linked List Memory Layout:
++-------------------+     +-------------------+     +-------------------+
+| Data: 10          |     | Data: 20          |     | Data: 30          |
+| Next: 0x200       | --> | Next: 0x300       | --> | Next: 0x100       |
++-------------------+     +-------------------+     +-------------------+
+0x100                   0x200                   0x300         |
+                                                              |
+                                                              v
+                                                            Back to 0x100
+
+Traversal: 10 -> 20 -> 30 -> 10 -> 20 -> ... (infinite)
+        """)
+
     with col2:
         st.code("""
-# Singly Circular Linked List
-class CircularNode:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+# Complete Circular Linked List Implementation
+class CircularLinkedList:
+    def __init__(self):
+        self.head = None
+        self.size = 0
 
-# Example: 1 -> 2 -> 3 -> 1 (circular)
-head = CircularNode(1)
-head.next = CircularNode(2)
-head.next.next = CircularNode(3)
-head.next.next.next = head  # Points back to head
+    def insert_at_beginning(self, data):
+        new_node = CircularNode(data)
+        if self.head is None:
+            new_node.next = new_node  # Point to itself
+            self.head = new_node
+        else:
+            new_node.next = self.head
+            # Find the last node
+            current = self.head
+            while current.next != self.head:
+                current = current.next
+            current.next = new_node
+            self.head = new_node
+        self.size += 1
+
+    def insert_at_end(self, data):
+        new_node = CircularNode(data)
+        if self.head is None:
+            new_node.next = new_node
+            self.head = new_node
+        else:
+            new_node.next = self.head
+            current = self.head
+            while current.next != self.head:
+                current = current.next
+            current.next = new_node
+        self.size += 1
+
+    def traverse(self, max_elements=10):
+        if self.head is None:
+            return []
+        elements = []
+        current = self.head
+        count = 0
+        while count < max_elements:
+            elements.append(current.data)
+            current = current.next
+            count += 1
+            if current == self.head:
+                break
+        return elements
+
+# Example Usage:
+cll = CircularLinkedList()
+cll.insert_at_end(1)
+cll.insert_at_end(2)
+cll.insert_at_end(3)
+print(cll.traverse())  # [1, 2, 3]
         """, language="python")
 
-    st.header("Comparison Table")
+    st.header("4. Advanced Linked List Variants")
+
+    st.subheader("XOR Linked List")
     st.markdown("""
-    | Feature | Singly Linked | Doubly Linked | Circular Linked |
-    |---------|---------------|---------------|-----------------|
-    | Traversal | Forward only | Bidirectional | Circular |
-    | Memory | 1 pointer | 2 pointers | 1-2 pointers |
-    | Complexity | Simple | Moderate | Moderate |
-    | Use Cases | Stacks, Queues | Deques, Caches | Buffers, Scheduling |
+    **Concept:** Uses bitwise XOR to store both previous and next pointers in a single field, saving memory.
+
+    **How it works:**
+    - Each node stores: `ptr = prev XOR next`
+    - To traverse: `next = ptr XOR prev`
+    - Memory efficient but complex to implement
+
+    **Use Cases:** Memory-constrained environments, competitive programming
     """)
+
+    st.subheader("Skip List")
+    st.markdown("""
+    **Concept:** A probabilistic data structure that allows O(log n) search time.
+
+    **How it works:**
+    - Multiple levels of linked lists
+    - Higher levels skip more nodes
+    - Search starts from top level and works down
+
+    **Use Cases:** Database indexes, Redis sorted sets
+    """)
+
+    st.subheader("Unrolled Linked List")
+    st.markdown("""
+    **Concept:** Each node contains an array of elements instead of a single element.
+
+    **Benefits:**
+    - Better cache performance
+    - Reduced pointer overhead
+    - Faster sequential access
+
+    **Use Cases:** High-performance applications, cache-conscious data structures
+    """)
+
+    st.header("Comprehensive Comparison")
+
+    # Create detailed comparison table
+    comparison_data = {
+        'Aspect': [
+            'Memory per Node',
+            'Traversal Direction',
+            'Beginning Operations',
+            'End Operations',
+            'Random Access',
+            'Implementation Complexity',
+            'Memory Efficiency',
+            'Cache Performance',
+            'Use Case Fit'
+        ],
+        'Singly Linked': [
+            '1 pointer + data',
+            'Forward only',
+            'O(1)',
+            'O(n)',
+            'O(n)',
+            'Simple',
+            'Good',
+            'Good',
+            'Stacks, Queues'
+        ],
+        'Doubly Linked': [
+            '2 pointers + data',
+            'Bidirectional',
+            'O(1)',
+            'O(1)*',
+            'O(n)',
+            'Moderate',
+            'Poor',
+            'Fair',
+            'Deques, Caches'
+        ],
+        'Circular Singly': [
+            '1 pointer + data',
+            'Circular',
+            'O(1)',
+            'O(n)',
+            'O(n)',
+            'Moderate',
+            'Good',
+            'Good',
+            'Round-robin'
+        ],
+        'Circular Doubly': [
+            '2 pointers + data',
+            'Circular Bidirectional',
+            'O(1)',
+            'O(1)',
+            'O(n)',
+            'Complex',
+            'Poor',
+            'Fair',
+            'Complex circular ops'
+        ]
+    }
+
+    import pandas as pd
+    df = pd.DataFrame(comparison_data)
+    st.dataframe(df, use_container_width=True)
+
+    st.markdown("*Note: * Requires tail pointer for O(1) end operations")
+
+    st.header("Common Pitfalls and Best Practices")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Common Mistakes")
+        st.markdown("""
+        - **Null Pointer Dereference:** Always check for None before accessing next/prev
+        - **Infinite Loops:** Especially in circular lists, always have termination conditions
+        - **Memory Leaks:** In languages without GC, remember to free nodes
+        - **Lost References:** When deleting nodes, update all relevant pointers
+        - **Off-by-One Errors:** Careful with indexing and position calculations
+        """)
+
+    with col2:
+        st.subheader("Best Practices")
+        st.markdown("""
+        - **Use Sentinel Nodes:** Dummy head/tail nodes to simplify boundary cases
+        - **Maintain Size Counter:** Keep track of list size for efficient operations
+        - **Tail Pointers:** For doubly linked lists to enable O(1) end operations
+        - **Consistent Naming:** Use clear variable names (head, tail, current, etc.)
+        - **Error Handling:** Always handle edge cases (empty list, single node)
+        """)
+
+    st.header("Performance Considerations")
+
+    st.markdown("""
+    **Memory Overhead Analysis:**
+
+    | Data Structure | Pointers | Overhead (64-bit) | Total per Node |
+    |----------------|----------|-------------------|----------------|
+    | Singly Linked | 1 | 8 bytes | 8 + data bytes |
+    | Doubly Linked | 2 | 16 bytes | 16 + data bytes |
+    | Array Element | 0 | 0 bytes | data bytes only |
+
+    **Cache Performance:**
+    - **Arrays:** Excellent locality of reference
+    - **Linked Lists:** Poor locality, nodes scattered in memory
+    - **Unrolled Lists:** Better locality with multiple elements per node
+
+    **When to Choose Which:**
+    - **Singly Linked:** Memory-critical, forward-only traversal
+    - **Doubly Linked:** Need bidirectional access, frequent end operations
+    - **Circular:** Round-robin, circular buffers, infinite traversal
+    - **Array:** Random access, cache performance critical
+    """)
+
+    st.header("Implementation Tips")
+
+    with st.expander("Singly Linked List Tips"):
+        st.markdown("""
+        1. Always keep a reference to head
+        2. Use a dummy node for operations on empty lists
+        3. For frequent end operations, maintain a tail pointer
+        4. Be careful with pointer updates during deletion
+        5. Use recursion sparingly (watch stack overflow)
+        """)
+
+    with st.expander("Doubly Linked List Tips"):
+        st.markdown("""
+        1. Always update both next and prev pointers
+        2. Maintain both head and tail pointers
+        3. Use symmetry in operations (forward/backward)
+        4. Careful with boundary conditions
+        5. Consider using sentinel nodes
+        """)
+
+    with st.expander("Circular Linked List Tips"):
+        st.markdown("""
+        1. Never use NULL to detect end of list
+        2. Always have a termination condition in loops
+        3. Be careful with empty list handling
+        4. Use size counter to prevent infinite loops
+        5. Consider using a tail pointer for efficiency
+        """)
 
 # Operations and Algorithms section
 def operations_and_algorithms():
