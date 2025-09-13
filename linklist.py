@@ -31,13 +31,21 @@ st.markdown("""
         background: linear-gradient(45deg, #1e3c72, #2a5298);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        background-clip: text;
         text-align: center;
         margin-bottom: 2rem;
         animation: fadeInUp 1s ease-out;
     }
+    
+    [data-theme="dark"] .main-header {
+        background: linear-gradient(45deg, #64b5f6, #42a5f5);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
 
     .section-card {
-        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        background: var(--background-color, rgba(255, 255, 255, 0.95));
         border-radius: 15px;
         padding: 2.5rem;
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
@@ -46,6 +54,12 @@ st.markdown("""
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        backdrop-filter: blur(10px);
+    }
+    
+    [data-theme="dark"] .section-card {
+        background: rgba(30, 30, 30, 0.95);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05);
     }
 
     .section-card:hover {
@@ -152,6 +166,13 @@ st.markdown("""
         margin: 1.5rem 0;
         position: relative;
         animation: pulse 2s infinite;
+        color: #1565c0;
+    }
+    
+    [data-theme="dark"] .highlight-box {
+        background: linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(33, 150, 243, 0.1) 100%);
+        border: 2px solid #42a5f5;
+        color: #90caf9;
     }
 
     .highlight-box::before {
@@ -159,7 +180,7 @@ st.markdown("""
         position: absolute;
         top: -10px;
         left: 20px;
-        background: white;
+        background: var(--background-color, white);
         border-radius: 50%;
         width: 30px;
         height: 30px;
@@ -167,6 +188,11 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    [data-theme="dark"] .highlight-box::before {
+        background: #2c2c2c;
+        box-shadow: 0 2px 10px rgba(255, 255, 255, 0.1);
     }
 
     /* Progress and Metrics */
@@ -396,6 +422,13 @@ st.markdown("""
         text-align: center;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         position: relative;
+        color: #2c3e50;
+    }
+    
+    [data-theme="dark"] .visual-diagram {
+        background: linear-gradient(135deg, #2c2c2c 0%, #1e1e1e 100%);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.05);
+        color: #e0e0e0;
     }
 
     .visual-diagram::before {
@@ -405,6 +438,19 @@ st.markdown("""
         right: 20px;
         font-size: 1.5rem;
         opacity: 0.6;
+    }
+    
+    /* Dark mode compatibility for text colors */
+    [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4, [data-theme="dark"] h5 {
+        color: #e0e0e0 !important;
+    }
+    
+    [data-theme="dark"] p, [data-theme="dark"] li, [data-theme="dark"] span {
+        color: #b0b0b0 !important;
+    }
+    
+    [data-theme="dark"] strong {
+        color: #ffffff !important;
     }
 
     /* Interactive Timeline */
