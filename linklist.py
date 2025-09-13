@@ -1,549 +1,1056 @@
 import streamlit as st
+import matplotlib.pyplot as plt
+import plotly.graph_objects as go
 
-def main():
-    st.title("Linked List Data Structure - GeeksforGeeks")
+# Set page config
+st.set_page_config(page_title="Linked List Data Structures", layout="wide")
 
-    st.header("Introduction")
-    st.write("""
-    A linked list is a linear data structure where each element is a separate object. Each element (we will call it a node) of a list is comprising of two items - the data and a reference to the next node.
+# Sidebar navigation menu
+def sidebar():
+    st.sidebar.title("Navigation")
+    menu = [
+        "Introduction",
+        "Types of Linked Lists",
+        "Operations and Algorithms",
+        "Interactive Playground",
+        "Performance Analysis",
+        "Practice Problems",
+        "References and Resources"
+    ]
+    choice = st.sidebar.radio("Go to", menu)
+    return choice
+
+# Introduction section
+def introduction():
+    st.title("Introduction to Linked Lists")
+
+    st.header("What is a Linked List?")
+    st.markdown("""
+    A linked list is a fundamental data structure in computer science that consists of a sequence of elements called nodes.
+    Each node contains two parts:
+    - **Data**: The actual information stored in the node
+    - **Reference/Pointer**: A link to the next node in the sequence
+
+    Unlike arrays, linked lists do not store elements in contiguous memory locations. Instead, each node points to the next one,
+    forming a chain-like structure.
     """)
 
-    st.header("Why Linked List?")
-    st.write("""
-    Arrays can be used to store linear data of similar types, but arrays have the following limitations:
-    1) The size of the arrays is fixed: So we must know the upper limit on the number of elements in advance. Also, generally, the allocated memory is equal to the upper limit irrespective of the usage.
-    2) Inserting a new element in an array of elements is expensive because the room has to be created for the new elements and to create room existing elements have to be shifted.
+    st.header("Why Use Linked Lists?")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Advantages")
+        st.markdown("""
+        - **Dynamic Size**: Can grow or shrink during runtime
+        - **Efficient Insertions/Deletions**: O(1) time for operations at known positions
+        - **No Memory Waste**: Only allocates memory when needed
+        - **Flexible Structure**: Easy to implement stacks, queues, and other data structures
+        """)
+    with col2:
+        st.subheader("Disadvantages")
+        st.markdown("""
+        - **Random Access**: O(n) time to access elements by index
+        - **Extra Memory**: Each node requires additional space for pointers
+        - **Sequential Access**: Must traverse from beginning for most operations
+        - **Cache Performance**: Poor locality of reference
+        """)
 
-    For example, in a system, if we maintain a sorted list of IDs in an array id[] = [1000, 1010, 1050, 2000, 2040]. And if we want to insert a new ID 1005, then to maintain the sorted order, we have to move all the elements after 1000 (excluding 1000). Deletion is also expensive with arrays until unless some special techniques are used.
-
-    Advantages over arrays:
-    1) Dynamic size
-    2) Ease of insertion/deletion
-
-    Drawbacks:
-    1) Random access is not allowed. We have to access elements sequentially starting from the first node. So we cannot do binary search with linked lists efficiently with its default implementation.
-    2) Extra memory space for a pointer is required with each element of the list.
-    3) Not cache friendly. Since array elements are contiguous locations, there is locality of reference which is not there in case of linked lists.
-    """)
-
-    st.header("Representation")
-    st.write("""
-    A linked list is represented by a pointer to the first node of the linked list. The first node is called the head. If the linked list is empty, then the value of the head is NULL.
-
-    Each node in a list consists of at least two parts:
-    1) data
-    2) Pointer (Or Reference) to the next node
-    """)
-
-    st.subheader("In C")
-    st.code("""
-    struct Node {
-        int data;
-        struct Node* next;
-    };
-    """, language='c')
-
-    st.subheader("In C++")
-    st.code("""
-    class Node {
-    public:
-        int data;
-        Node* next;
-    };
-    """, language='cpp')
-
-    st.subheader("In Java")
-    st.code("""
-    class Node {
-        int data;
-        Node next;
-    }
-    """, language='java')
-
-    st.subheader("In Python")
-    st.code("""
-    class Node:
-        def __init__(self, data):
-            self.data = data
-            self.next = None
-    """, language='python')
-
-    st.subheader("In C#")
-    st.code("""
-    public class Node {
-        public int data;
-        public Node next;
-    }
-    """, language='csharp')
-
-    st.header("Types of Linked Lists")
-    st.write("""
-    1. Singly Linked List
-    2. Doubly Linked List
-    3. Circular Linked List
-    4. Circular Doubly Linked List
-    """)
-
-    st.header("Singly Linked List")
-    st.write("""
-    Traversal of items can be done in the forward direction only.
-    """)
-
-    st.header("Doubly Linked List")
-    st.write("""
-    Traversal of items can be done in both forward and backward directions.
-    """)
-
-    st.header("Circular Linked List")
-    st.write("""
-    The last node contains a pointer which has the address of the first node.
-    """)
-
-    st.header("Operations on Linked Lists")
-    st.write("""
-    1. Insertion
-    2. Deletion
-    3. Traversal
-    4. Searching
-    5. Sorting
-    """)
-
-    st.header("Advantages of Linked List")
-    st.write("""
-    1. Dynamic Data Structure: Linked List being dynamic in size can grow and shrink at runtime by allocating and deallocating memory. So there is no need to give the initial size of the Linked list.
-    2. No memory wastage: In the Linked list, efficient memory utilization can be achieved since the size of the linked list increase or decrease at run time so there is no memory wastage and allocation is done as per the requirement.
-    3. Implementation: Linear data structures like stack and queue can be easily implemented using linked list.
-    4. Insertion and Deletion Operations: Insertion and deletion operations are quite easier in the linked list. There is no need to shift elements after the insertion or deletion of an element only the address present in the next pointer needs to be updated.
-    """)
-
-    st.header("Disadvantages of Linked List")
-    st.write("""
-    1. Memory Usage: More memory is required in the linked list as compared to an array. Because in a linked list, a pointer is also required to store the address of the next element and it requires extra memory for itself.
-    2. Traversal: In a Linked list traversal is more time-consuming as compared to an array. Direct access to an element is not possible in a linked list as in an array by index. For example, to access the 3rd element in an array we can directly access it by arr[2], but in the case of a linked list, we have to traverse the linked list from the beginning to reach the 3rd element.
-    3. Reverse Traversal: In a singly linked list reverse traversal is not possible, but in the case of a doubly linked list, it can be possible as it contains a pointer to the previous node so we can traverse it in the backward direction.
-    """)
-
-    st.header("Applications of Linked List")
-    st.write("""
-    1. Dynamic memory allocation
-    2. Implemented in stack and queue
-    3. In undo functionality of softwares
-    4. Hash tables, Graphs
-    """)
-
-    st.header("Operations on Linked List")
-    st.subheader("Traversal")
-    st.write("Traversal means visiting each node of the linked list at least once to perform some operation.")
-    st.code("""
-    void printList(struct Node* node) {
-        while (node != NULL) {
-            printf("%d ", node->data);
-            node = node->next;
-        }
-    }
-    """, language='c')
-
-    st.subheader("Insertion")
-    st.write("Insertion can be done at the beginning, end, or at a specific position.")
-    st.subheader("Insert at Beginning")
-    st.code("""
-    void insertAtBeginning(struct Node** head_ref, int new_data) {
-        struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
-        new_node->data = new_data;
-        new_node->next = (*head_ref);
-        (*head_ref) = new_node;
-    }
-    """, language='c')
-
-    st.subheader("Insert at End")
-    st.code("""
-    void insertAtEnd(struct Node** head_ref, int new_data) {
-        struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
-        struct Node* last = *head_ref;
-        new_node->data = new_data;
-        new_node->next = NULL;
-        if (*head_ref == NULL) {
-            *head_ref = new_node;
-            return;
-        }
-        while (last->next != NULL) last = last->next;
-        last->next = new_node;
-    }
-    """, language='c')
-
-    st.subheader("Deletion")
-    st.write("Deletion can be done at the beginning, end, or at a specific position.")
-    st.subheader("Delete from Beginning")
-    st.code("""
-    void deleteFromBeginning(struct Node** head_ref) {
-        if (*head_ref == NULL) return;
-        struct Node* temp = *head_ref;
-        *head_ref = (*head_ref)->next;
-        free(temp);
-    }
-    """, language='c')
-
-    st.subheader("Delete from End")
-    st.code("""
-    void deleteFromEnd(struct Node** head_ref) {
-        if (*head_ref == NULL) return;
-        if ((*head_ref)->next == NULL) {
-            free(*head_ref);
-            *head_ref = NULL;
-            return;
-        }
-        struct Node* second_last = *head_ref;
-        while (second_last->next->next != NULL) second_last = second_last->next;
-        free(second_last->next);
-        second_last->next = NULL;
-    }
-    """, language='c')
-
-    st.header("Time Complexities")
-    st.write("Time complexities for common operations in Linked Lists:")
-    import pandas as pd
-    df = pd.DataFrame({
-        'Operation': ['Traversal', 'Insertion at Beginning', 'Insertion at End', 'Insertion at Position', 'Deletion at Beginning', 'Deletion at End', 'Deletion at Position', 'Search'],
-        'Singly Linked List': ['O(n)', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'O(n)', 'O(n)', 'O(n)'],
-        'Doubly Linked List': ['O(n)', 'O(1)', 'O(1)', 'O(n)', 'O(1)', 'O(1)', 'O(n)', 'O(n)']
-    })
-    st.table(df)
-
-    st.header("Complete Implementation in Python")
+    st.header("Basic Node Structure")
     st.code("""
 class Node:
     def __init__(self, data):
         self.data = data
         self.next = None
+    """, language="python")
 
-class SinglyLinkedList:
-    def __init__(self):
-        self.head = None
-
-    def append(self, data):
-        new_node = Node(data)
-        if not self.head:
-            self.head = new_node
-            return
-        last = self.head
-        while last.next:
-            last = last.next
-        last.next = new_node
-
-    def prepend(self, data):
-        new_node = Node(data)
-        new_node.next = self.head
-        self.head = new_node
-
-    def delete(self, key):
-        temp = self.head
-        if temp and temp.data == key:
-            self.head = temp.next
-            temp = None
-            return
-        prev = None
-        while temp and temp.data != key:
-            prev = temp
-            temp = temp.next
-        if temp is None:
-            return
-        prev.next = temp.next
-        temp = None
-
-    def print_list(self):
-        temp = self.head
-        while temp:
-            print(temp.data, end=" -> ")
-            temp = temp.next
-        print("None")
-
-# Example usage
-ll = SinglyLinkedList()
-ll.append(1)
-ll.append(2)
-ll.append(3)
-ll.print_list()  # Output: 1 -> 2 -> 3 -> None
-ll.prepend(0)
-ll.print_list()  # Output: 0 -> 1 -> 2 -> 3 -> None
-ll.delete(2)
-ll.print_list()  # Output: 0 -> 1 -> 3 -> None
-    """, language='python')
-
-    st.header("Examples with Inputs and Outputs")
-    st.subheader("Insertion Example")
-    st.write("Input: Insert 5 at the beginning of list [1, 2, 3]")
-    st.write("Output: [5, 1, 2, 3]")
-
-    st.subheader("Deletion Example")
-    st.write("Input: Delete 2 from list [1, 2, 3, 4]")
-    st.write("Output: [1, 3, 4]")
-
-    st.subheader("Traversal Example")
-    st.write("Input: Traverse list [10, 20, 30]")
-    st.write("Output: 10 20 30")
-
-    st.header("Graphs and Diagrams")
-    st.write("A simple representation of a Singly Linked List:")
-    st.code("""
-Head -> [Data: 1 | Next] -> [Data: 2 | Next] -> [Data: 3 | Next] -> NULL
+    st.header("Real-World Applications")
+    st.markdown("""
+    - **Music Playlists**: Songs linked in sequence
+    - **Browser History**: Web pages linked for back/forward navigation
+    - **Undo Functionality**: Operations stored as linked list
+    - **Hash Tables**: Collision resolution using separate chaining
+    - **Memory Management**: Free memory blocks tracking
+    - **Polynomial Representation**: Terms linked by degree
     """)
 
-    st.write("Doubly Linked List:")
+    st.header("Memory Representation")
+    st.markdown("Visual representation of how linked list nodes are stored in memory:")
+    # Simple diagram using text
     st.code("""
-NULL <- [Prev | Data: 1 | Next] <-> [Prev | Data: 2 | Next] <-> [Prev | Data: 3 | Next] -> NULL
+Memory Layout:
++-------------------+     +-------------------+     +-------------------+
+| Data: 10          |     | Data: 20          |     | Data: 30          |
+| Next: 0x200       | --> | Next: 0x300       | --> | Next: None        |
++-------------------+     +-------------------+     +-------------------+
+0x100                   0x200                   0x300
     """)
 
-    st.header("Doubly Linked List Implementation")
-    st.code("""
+# Types of Linked Lists section
+def types_of_linked_lists():
+    st.title("Types of Linked Lists")
+
+    st.header("1. Singly Linked List")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        A singly linked list is the simplest type of linked list. Each node contains:
+        - **Data**: The value stored in the node
+        - **Next Pointer**: Reference to the next node in the sequence
+
+        **Characteristics:**
+        - Unidirectional traversal (forward only)
+        - Requires less memory per node (one pointer)
+        - Simple implementation
+        - Cannot traverse backwards efficiently
+
+        **Use Cases:**
+        - Implementing stacks and queues
+        - Undo mechanisms in applications
+        - Hash table collision resolution (separate chaining)
+        """)
+    with col2:
+        st.code("""
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+# Example: 1 -> 2 -> 3 -> None
+head = Node(1)
+head.next = Node(2)
+head.next.next = Node(3)
+        """, language="python")
+
+    st.header("2. Doubly Linked List")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        A doubly linked list allows bidirectional traversal. Each node contains:
+        - **Data**: The value stored in the node
+        - **Next Pointer**: Reference to the next node
+        - **Previous Pointer**: Reference to the previous node
+
+        **Characteristics:**
+        - Bidirectional traversal (forward and backward)
+        - More memory per node (two pointers)
+        - More complex operations
+        - Efficient backward traversal
+
+        **Use Cases:**
+        - Browser history (back/forward navigation)
+        - Most Recently Used (MRU) cache
+        - Implementing deques
+        - Text editors (cursor movement)
+        """)
+    with col2:
+        st.code("""
 class DoublyNode:
     def __init__(self, data):
         self.data = data
         self.next = None
         self.prev = None
 
-class DoublyLinkedList:
-    def __init__(self):
-        self.head = None
+# Example: None <- 1 <-> 2 <-> 3 -> None
+head = DoublyNode(1)
+middle = DoublyNode(2)
+tail = DoublyNode(3)
 
-    def append(self, data):
-        new_node = DoublyNode(data)
-        if not self.head:
-            self.head = new_node
-            return
-        last = self.head
-        while last.next:
-            last = last.next
-        last.next = new_node
-        new_node.prev = last
+head.next = middle
+middle.prev = head
+middle.next = tail
+tail.prev = middle
+        """, language="python")
 
-    def prepend(self, data):
-        new_node = DoublyNode(data)
-        new_node.next = self.head
-        if self.head:
-            self.head.prev = new_node
-        self.head = new_node
+    st.header("3. Circular Linked List")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        A circular linked list forms a circle where the last node points back to the first node.
+        Can be singly or doubly linked.
 
-    def delete(self, key):
-        temp = self.head
-        while temp:
-            if temp.data == key:
-                if temp.prev:
-                    temp.prev.next = temp.next
-                if temp.next:
-                    temp.next.prev = temp.prev
-                if temp == self.head:
-                    self.head = temp.next
-                return
-            temp = temp.next
+        **Characteristics:**
+        - No NULL at the end
+        - Can be traversed infinitely in a loop
+        - Useful for circular buffers
+        - Requires careful handling to avoid infinite loops
 
-    def print_list(self):
-        temp = self.head
-        while temp:
-            print(temp.data, end=" <-> ")
-            temp = temp.next
-        print("None")
-
-# Example
-dll = DoublyLinkedList()
-dll.append(1)
-dll.append(2)
-dll.append(3)
-dll.print_list()  # 1 <-> 2 <-> 3 <-> None
-dll.prepend(0)
-dll.print_list()  # 0 <-> 1 <-> 2 <-> 3 <-> None
-dll.delete(2)
-dll.print_list()  # 0 <-> 1 <-> 3 <-> None
-    """, language='python')
-
-    st.header("Circular Linked List Implementation")
-    st.code("""
+        **Use Cases:**
+        - Round-robin scheduling algorithms
+        - Circular buffers (music playlists)
+        - Implementing circular queues
+        - Multiplayer games (player turns)
+        """)
+    with col2:
+        st.code("""
+# Singly Circular Linked List
 class CircularNode:
     def __init__(self, data):
         self.data = data
         self.next = None
 
-class CircularLinkedList:
-    def __init__(self):
-        self.head = None
+# Example: 1 -> 2 -> 3 -> 1 (circular)
+head = CircularNode(1)
+head.next = CircularNode(2)
+head.next.next = CircularNode(3)
+head.next.next.next = head  # Points back to head
+        """, language="python")
 
-    def append(self, data):
-        new_node = CircularNode(data)
-        if not self.head:
-            self.head = new_node
-            new_node.next = self.head
-            return
-        temp = self.head
-        while temp.next != self.head:
-            temp = temp.next
-        temp.next = new_node
-        new_node.next = self.head
+    st.header("Comparison Table")
+    st.markdown("""
+    | Feature | Singly Linked | Doubly Linked | Circular Linked |
+    |---------|---------------|---------------|-----------------|
+    | Traversal | Forward only | Bidirectional | Circular |
+    | Memory | 1 pointer | 2 pointers | 1-2 pointers |
+    | Complexity | Simple | Moderate | Moderate |
+    | Use Cases | Stacks, Queues | Deques, Caches | Buffers, Scheduling |
+    """)
 
-    def print_list(self):
-        if not self.head:
-            return
-        temp = self.head
-        while True:
-            print(temp.data, end=" -> ")
-            temp = temp.next
-            if temp == self.head:
-                break
-        print("(back to head)")
+# Operations and Algorithms section
+def operations_and_algorithms():
+    st.title("Operations and Algorithms")
 
-# Example
-cll = CircularLinkedList()
-cll.append(1)
-cll.append(2)
-cll.append(3)
-cll.print_list()  # 1 -> 2 -> 3 -> (back to head)
-    """, language='python')
+    st.header("1. Insertion Operations")
 
-    st.header("Sorting a Linked List")
-    st.write("Sorting can be done using algorithms like bubble sort, but merge sort is more efficient for linked lists.")
-    st.code("""
-def merge_sort(head):
-    if not head or not head.next:
-        return head
-    middle = get_middle(head)
-    next_to_middle = middle.next
-    middle.next = None
-    left = merge_sort(head)
-    right = merge_sort(next_to_middle)
-    return merge(left, right)
+    st.subheader("Insert at Beginning")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. Create a new node with given data
+        2. Set new node's next to current head
+        3. Update head to point to new node
 
-def get_middle(head):
-    if not head:
-        return head
-    slow = head
-    fast = head
-    while fast.next and fast.next.next:
-        slow = slow.next
-        fast = fast.next.next
-    return slow
+        **Time Complexity:** O(1)
+        **Space Complexity:** O(1)
+        """)
+    with col2:
+        st.code("""
+def insert_at_beginning(head, data):
+    new_node = Node(data)
+    new_node.next = head
+    return new_node  # New head
 
-def merge(left, right):
-    if not left:
-        return right
-    if not right:
-        return left
-    if left.data <= right.data:
-        result = left
-        result.next = merge(left.next, right)
-    else:
-        result = right
-        result.next = merge(left, right.next)
-    return result
-    """, language='python')
+# Example: Insert 0 at beginning of [1,2,3]
+# Result: [0,1,2,3]
+        """, language="python")
 
-    st.header("Searching in Linked List")
-    st.code("""
-def search(head, key):
+    st.subheader("Insert at End")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. Create a new node with given data
+        2. If list is empty, set as head
+        3. Else traverse to last node
+        4. Set last node's next to new node
+
+        **Time Complexity:** O(n)
+        **Space Complexity:** O(1)
+        """)
+    with col2:
+        st.code("""
+def insert_at_end(head, data):
+    new_node = Node(data)
+    if head is None:
+        return new_node
+
+    current = head
+    while current.next:
+        current = current.next
+    current.next = new_node
+    return head
+
+# Example: Insert 4 at end of [1,2,3]
+# Result: [1,2,3,4]
+        """, language="python")
+
+    st.header("2. Deletion Operations")
+
+    st.subheader("Delete from Beginning")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. If list is empty, return None
+        2. Store current head
+        3. Update head to next node
+        4. Return deleted node's data
+
+        **Time Complexity:** O(1)
+        **Space Complexity:** O(1)
+        """)
+    with col2:
+        st.code("""
+def delete_from_beginning(head):
+    if head is None:
+        return None, head
+
+    deleted_data = head.data
+    new_head = head.next
+    return deleted_data, new_head
+
+# Example: Delete from [1,2,3]
+# Result: 1, [2,3]
+        """, language="python")
+
+    st.subheader("Delete by Value")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. If list is empty, return False
+        2. If head contains target, update head
+        3. Traverse list to find target
+        4. Update previous node's next pointer
+        5. Return True if found, False otherwise
+
+        **Time Complexity:** O(n)
+        **Space Complexity:** O(1)
+        """)
+    with col2:
+        st.code("""
+def delete_by_value(head, target):
+    if head is None:
+        return False, head
+
+    if head.data == target:
+        return True, head.next
+
+    current = head
+    while current.next and current.next.data != target:
+        current = current.next
+
+    if current.next:
+        current.next = current.next.next
+        return True, head
+    return False, head
+
+# Example: Delete 2 from [1,2,3]
+# Result: True, [1,3]
+        """, language="python")
+
+    st.header("3. Traversal")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. Start from head node
+        2. While current node is not None:
+           - Process current node's data
+           - Move to next node
+        3. End when current becomes None
+
+        **Time Complexity:** O(n)
+        **Space Complexity:** O(1)
+
+        **Use Cases:**
+        - Printing list elements
+        - Searching for values
+        - Applying operations to all elements
+        """)
+    with col2:
+        st.code("""
+def traverse_and_print(head):
     current = head
     while current:
-        if current.data == key:
-            return True
+        print(current.data, end=" -> ")
         current = current.next
-    return False
-    """, language='python')
+    print("None")
 
-    st.header("Space Complexity")
-    st.write("Space complexity for linked lists is O(n) for storing n elements, plus O(1) for pointers in singly linked lists.")
+# Example traversal of [1,2,3]
+# Output: 1 -> 2 -> 3 -> None
+        """, language="python")
 
-    st.header("Comparison with Arrays")
-    st.write("""
-    - Arrays: Fixed size, random access O(1), insertion/deletion O(n)
-    - Linked Lists: Dynamic size, sequential access O(n), insertion/deletion O(1) at ends
+    st.header("4. Searching")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        st.markdown("""
+        **Algorithm:**
+        1. Start from head node
+        2. Initialize position counter
+        3. While current node is not None:
+           - Check if current data matches target
+           - If match, return position
+           - Increment position, move to next
+        4. Return -1 if not found
+
+        **Time Complexity:** O(n)
+        **Space Complexity:** O(1)
+        """)
+    with col2:
+        st.code("""
+def search_by_value(head, target):
+    current = head
+    position = 0
+
+    while current:
+        if current.data == target:
+            return position
+        current = current.next
+        position += 1
+
+    return -1
+
+# Example: Search for 2 in [1,2,3]
+# Result: 1 (0-based index)
+        """, language="python")
+
+    st.header("5. Time and Space Complexity Analysis")
+    st.markdown("""
+    | Operation | Singly Linked List | Doubly Linked List | Notes |
+    |-----------|-------------------|-------------------|-------|
+    | **Insertion at Beginning** | O(1) | O(1) | Direct head update |
+    | **Insertion at End** | O(n) | O(1)* | *Requires tail pointer |
+    | **Insertion at Position** | O(n) | O(n) | Need to traverse |
+    | **Deletion at Beginning** | O(1) | O(1) | Direct head update |
+    | **Deletion at End** | O(n) | O(1)* | *Requires tail pointer |
+    | **Deletion by Value** | O(n) | O(n) | Linear search required |
+    | **Traversal** | O(n) | O(n) | Visit all nodes |
+    | **Searching** | O(n) | O(n) | Linear search |
+
+    **Space Complexity:** O(n) for all types (proportional to number of elements)
     """)
 
-    st.header("Real-World Applications")
-    st.write("""
-    - Music playlists in media players
-    - Browser history
-    - Undo functionality in text editors
-    - Implementation of graphs and trees
-    """)
+    st.header("Advanced Algorithms")
 
-    st.header("Advanced Topics")
-    st.subheader("Reversing a Linked List")
-    st.write("Reversing can be done iteratively or recursively.")
+    st.subheader("Reverse a Linked List")
     st.code("""
-def reverse_list(head):
+def reverse_linked_list(head):
     prev = None
     current = head
+
     while current:
         next_node = current.next
         current.next = prev
         prev = current
         current = next_node
-    return prev
-    """, language='python')
 
-    st.subheader("Detecting a Loop in Linked List")
-    st.write("Using Floyd's Cycle Detection Algorithm.")
+    return prev
+
+# Example: Reverse [1,2,3] -> [3,2,1]
+    """, language="python")
+
+    st.subheader("Detect Cycle (Floyd's Algorithm)")
     st.code("""
-def detect_loop(head):
+def has_cycle(head):
+    if not head or not head.next:
+        return False
+
     slow = head
-    fast = head
-    while slow and fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
+    fast = head.next
+
+    while fast and fast.next:
         if slow == fast:
             return True
-    return False
-    """, language='python')
+        slow = slow.next
+        fast = fast.next.next
 
-    st.subheader("Finding the Middle of Linked List")
-    st.code("""
-def find_middle(head):
+    return False
+
+# Returns True if cycle exists
+    """, language="python")
+
+# Interactive Playground section
+def interactive_playground():
+    st.title("Interactive Playground")
+
+    if 'linked_list' not in st.session_state:
+        st.session_state.linked_list = []
+
+    st.header("Create Your Linked List")
+    col1, col2 = st.columns([2, 1])
+    with col1:
+        user_input = st.text_input("Enter comma-separated values (e.g., 1, 2, 3, 4)", "")
+        if st.button("Create List", key="create"):
+            if user_input:
+                st.session_state.linked_list = [x.strip() for x in user_input.split(",") if x.strip()]
+                st.success(f"Linked list created with {len(st.session_state.linked_list)} elements!")
+            else:
+                st.warning("Please enter some values.")
+    with col2:
+        if st.button("Clear List", key="clear"):
+            st.session_state.linked_list = []
+            st.info("Linked list cleared!")
+
+    st.header("Current Linked List")
+    if st.session_state.linked_list:
+        st.write("Elements: ", st.session_state.linked_list)
+        st.write(f"Length: {len(st.session_state.linked_list)}")
+
+        # Enhanced visualization
+        fig, ax = plt.subplots(figsize=(max(8, len(st.session_state.linked_list) * 1.2), 2))
+        ax.axis('off')
+
+        for i, val in enumerate(st.session_state.linked_list):
+            # Draw node
+            rect = plt.Rectangle((i*1.5, 0.2), 1.2, 0.6, fill=True, facecolor='lightblue', edgecolor='blue', linewidth=2)
+            ax.add_patch(rect)
+            # Draw data
+            ax.text(i*1.5 + 0.6, 0.5, str(val), ha='center', va='center', fontsize=12, fontweight='bold')
+            # Draw pointer
+            if i < len(st.session_state.linked_list) - 1:
+                ax.arrow(i*1.5 + 1.3, 0.5, 0.15, 0, head_width=0.1, head_length=0.1, fc='red', ec='red')
+                ax.text(i*1.5 + 1.45, 0.7, "next", fontsize=8, color='red')
+
+        # Add NULL at the end
+        ax.text(len(st.session_state.linked_list)*1.5 + 0.3, 0.5, "NULL", fontsize=10, color='gray')
+        ax.arrow(len(st.session_state.linked_list)*1.5 - 0.1, 0.5, 0.4, 0, head_width=0.05, head_length=0.05, fc='gray', ec='gray')
+
+        st.pyplot(fig)
+    else:
+        st.info("No linked list created yet. Use the input above to create one!")
+
+    st.header("Operations on Linked List")
+    if st.session_state.linked_list:
+        col1, col2, col3 = st.columns(3)
+
+        with col1:
+            st.subheader("Insert Element")
+            insert_pos = st.selectbox("Position", ["Beginning", "End", "At Index"])
+            insert_val = st.text_input("Value to insert", key="insert_val")
+
+            if insert_pos == "At Index":
+                insert_idx = st.number_input("Index", min_value=0, max_value=len(st.session_state.linked_list), value=0, key="insert_idx")
+
+            if st.button("Insert", key="insert_btn"):
+                if insert_val:
+                    if insert_pos == "Beginning":
+                        st.session_state.linked_list.insert(0, insert_val)
+                    elif insert_pos == "End":
+                        st.session_state.linked_list.append(insert_val)
+                    else:  # At Index
+                        st.session_state.linked_list.insert(insert_idx, insert_val)
+                    st.success(f"Inserted '{insert_val}' at {insert_pos.lower()}!")
+                    st.rerun()
+                else:
+                    st.warning("Please enter a value to insert.")
+
+        with col2:
+            st.subheader("Delete Element")
+            delete_pos = st.selectbox("Delete from", ["Beginning", "End", "By Value"], key="delete_pos")
+            if delete_pos == "By Value":
+                delete_val = st.text_input("Value to delete", key="delete_val")
+
+            if st.button("Delete", key="delete_btn"):
+                if not st.session_state.linked_list:
+                    st.warning("List is empty!")
+                elif delete_pos == "Beginning":
+                    removed = st.session_state.linked_list.pop(0)
+                    st.success(f"Removed '{removed}' from beginning!")
+                    st.rerun()
+                elif delete_pos == "End":
+                    removed = st.session_state.linked_list.pop()
+                    st.success(f"Removed '{removed}' from end!")
+                    st.rerun()
+                else:  # By Value
+                    if delete_val in st.session_state.linked_list:
+                        st.session_state.linked_list.remove(delete_val)
+                        st.success(f"Removed '{delete_val}' from list!")
+                        st.rerun()
+                    else:
+                        st.warning(f"'{delete_val}' not found in list!")
+
+        with col3:
+            st.subheader("Search Element")
+            search_val = st.text_input("Value to search", key="search_val")
+
+            if st.button("Search", key="search_btn"):
+                if search_val in st.session_state.linked_list:
+                    idx = st.session_state.linked_list.index(search_val)
+                    st.success(f"Found '{search_val}' at index {idx}!")
+                else:
+                    st.warning(f"'{search_val}' not found in list!")
+
+    st.header("Code Implementation")
+    st.markdown("Here's how the operations above are implemented in Python:")
+
+    with st.expander("View Implementation Code"):
+        st.code("""
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def insert_at_beginning(self, data):
+        new_node = Node(data)
+        new_node.next = self.head
+        self.head = new_node
+
+    def insert_at_end(self, data):
+        new_node = Node(data)
+        if self.head is None:
+            self.head = new_node
+            return
+
+        current = self.head
+        while current.next:
+            current = current.next
+        current.next = new_node
+
+    def delete_from_beginning(self):
+        if self.head is None:
+            return None
+
+        deleted_data = self.head.data
+        self.head = self.head.next
+        return deleted_data
+
+    def search(self, target):
+        current = self.head
+        position = 0
+
+        while current:
+            if current.data == target:
+                return position
+            current = current.next
+            position += 1
+
+        return -1
+
+    def traverse(self):
+        elements = []
+        current = self.head
+        while current:
+            elements.append(current.data)
+            current = current.next
+        return elements
+        """, language="python")
+
+# Performance Analysis section
+def performance_analysis():
+    st.title("Performance Analysis")
+
+    st.header("Time Complexity Comparison")
+
+    st.markdown("""
+    Understanding the performance characteristics of different linked list operations is crucial for choosing
+    the right data structure for your use case. Below is a detailed analysis of time complexities.
+    """)
+
+    # Create comprehensive data
+    operations = [
+        'Insert at Beginning',
+        'Insert at End',
+        'Insert at Position',
+        'Delete from Beginning',
+        'Delete from End',
+        'Delete by Value',
+        'Search by Value',
+        'Traversal',
+        'Access by Index'
+    ]
+
+    # Time complexities (1 = O(1), n = O(n))
+    singly_linked = [1, 'n', 'n', 1, 'n', 'n', 'n', 'n', 'n']
+    doubly_linked = [1, 1, 'n', 1, 1, 'n', 'n', 'n', 'n']  # Assuming tail pointer for end operations
+    circular_singly = [1, 'n', 'n', 1, 'n', 'n', 'n', 'n', 'n']
+    array_list = ['n', 1, 'n', 'n', 1, 'n', 'n', 'n', 1]
+
+    # Create DataFrame for better display
+    import pandas as pd
+
+    complexity_data = {
+        'Operation': operations,
+        'Singly Linked List': singly_linked,
+        'Doubly Linked List': doubly_linked,
+        'Circular Linked List': circular_singly,
+        'Dynamic Array': array_list
+    }
+
+    df = pd.DataFrame(complexity_data)
+    st.dataframe(df, use_container_width=True)
+
+    st.markdown("""
+    **Legend:**
+    - **1**: O(1) - Constant time
+    - **n**: O(n) - Linear time
+    """)
+
+    # Interactive chart
+    st.header("Interactive Performance Comparison")
+
+    selected_operations = st.multiselect(
+        "Select operations to compare:",
+        operations,
+        default=['Insert at Beginning', 'Insert at End', 'Search by Value', 'Access by Index']
+    )
+
+    if selected_operations:
+        # Prepare data for plotting
+        plot_data = []
+        structures = ['Singly Linked', 'Doubly Linked', 'Circular Linked', 'Dynamic Array']
+
+        for op in selected_operations:
+            idx = operations.index(op)
+            values = [
+                1 if singly_linked[idx] == 1 else 10,  # Convert to numeric for plotting
+                1 if doubly_linked[idx] == 1 else 10,
+                1 if circular_singly[idx] == 1 else 10,
+                1 if array_list[idx] == 1 else 10
+            ]
+            plot_data.append(go.Bar(name=op, x=structures, y=values))
+
+        fig = go.Figure(data=plot_data)
+        fig.update_layout(
+            barmode='group',
+            title="Time Complexity Comparison (Lower is Better)",
+            yaxis_title="Complexity (1 = O(1), 10 = O(n))",
+            xaxis_title="Data Structure",
+            height=500
+        )
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.header("Space Complexity Analysis")
+
+    space_data = {
+        'Data Structure': ['Singly Linked List', 'Doubly Linked List', 'Circular Linked List', 'Dynamic Array'],
+        'Per Element': ['1 pointer + data', '2 pointers + data', '1 pointer + data', 'data only'],
+        'Overhead': ['High (pointers)', 'Very High (2 pointers)', 'High (pointers)', 'Low (amortized)'],
+        'Memory Efficiency': ['Low', 'Very Low', 'Low', 'High']
+    }
+
+    space_df = pd.DataFrame(space_data)
+    st.dataframe(space_df, use_container_width=True)
+
+    st.header("When to Use Which Linked List?")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Choose Singly Linked List when:")
+        st.markdown("""
+        - ✅ Memory is a concern (only one pointer per node)
+        - ✅ You only need forward traversal
+        - ✅ Implementing stacks or queues
+        - ✅ Simple operations are sufficient
+        - ✅ Working with large datasets where memory matters
+        """)
+
+        st.subheader("Choose Doubly Linked List when:")
+        st.markdown("""
+        - ✅ Need bidirectional traversal
+        - ✅ Frequent insertions/deletions at both ends
+        - ✅ Implementing deques or LRU caches
+        - ✅ Browser history functionality
+        - ✅ Text editor cursor movement
+        """)
+
+    with col2:
+        st.subheader("Choose Circular Linked List when:")
+        st.markdown("""
+        - ✅ Need circular traversal
+        - ✅ Implementing round-robin algorithms
+        - ✅ Circular buffers or playlists
+        - ✅ Multiplayer game turn management
+        - ✅ CPU scheduling algorithms
+        """)
+
+        st.subheader("Choose Dynamic Array instead when:")
+        st.markdown("""
+        - ✅ Need fast random access (O(1))
+        - ✅ Memory efficiency is critical
+        - ✅ Most operations are at the end
+        - ✅ Cache performance matters
+        - ✅ Simple implementation needed
+        """)
+
+    st.header("Cache Performance Considerations")
+
+    st.markdown("""
+    **Linked Lists vs Arrays:**
+
+    | Aspect | Linked List | Array |
+    |--------|-------------|-------|
+    | **Locality of Reference** | Poor (nodes scattered in memory) | Excellent (contiguous memory) |
+    | **Cache Misses** | High (pointer chasing) | Low (sequential access) |
+    | **Prefetching** | Difficult | Easy |
+    | **Memory Access Pattern** | Random | Sequential |
+
+    **Why Arrays are Faster for Traversal:**
+    - CPU cache can prefetch adjacent elements
+    - No pointer dereferencing overhead
+    - Better branch prediction
+    - SIMD operations possible
+    """)
+
+    st.header("Big O Notation Deep Dive")
+
+    st.markdown("""
+    ### Understanding Time Complexity
+
+    **O(1) - Constant Time:**
+    - Operation takes the same time regardless of input size
+    - Examples: Insert at beginning (singly linked), access array element by index
+
+    **O(n) - Linear Time:**
+    - Operation time grows linearly with input size
+    - Examples: Search, traversal, insert at end (singly linked without tail)
+
+    ### Amortized Analysis
+
+    **Dynamic Arrays:**
+    - Most operations are O(1) amortized
+    - Resize operations are O(n) but happen infrequently
+    - Average case performance is better than worst case
+
+    **Linked Lists:**
+    - All operations have consistent worst-case bounds
+    - No amortization needed
+    - Predictable performance
+    """)
+
+    # Performance tips
+    st.header("Performance Optimization Tips")
+
+    with st.expander("Linked List Optimizations"):
+        st.markdown("""
+        1. **Use Tail Pointers:** For doubly linked lists, maintain a tail pointer for O(1) end operations
+        2. **Dummy Nodes:** Use sentinel nodes to simplify boundary condition handling
+        3. **XOR Linked Lists:** Store XOR of previous and next pointers to save memory (advanced)
+        4. **Unrolled Linked Lists:** Store multiple elements per node to improve cache performance
+        5. **Skip Lists:** Add skip pointers for faster search operations (O(log n))
+        """)
+
+    with st.expander("When to Choose Arrays Over Linked Lists"):
+        st.markdown("""
+        1. **Random Access:** Need O(1) access by index
+        2. **Memory Efficiency:** No pointer overhead
+        3. **Cache Performance:** Better locality of reference
+        4. **Simple Operations:** Basic CRUD operations
+        5. **Small Datasets:** Overhead of pointers not worth it
+        """)
+
+    with st.expander("Real-World Performance Considerations"):
+        st.markdown("""
+        1. **Memory Allocation:** Linked list nodes may cause heap fragmentation
+        2. **Garbage Collection:** Reference counting can be expensive
+        3. **Branch Prediction:** Arrays have better branch prediction for loops
+        4. **SIMD Operations:** Arrays can leverage SIMD instructions
+        5. **Page Faults:** Linked lists may cause more page faults with poor allocation
+        """)
+
+# Practice Problems section
+def practice_problems():
+    st.title("Practice Problems")
+
+    st.header("Problem 1: Reverse a Singly Linked List")
+    st.markdown("""
+    **Problem Statement:** Given the head of a singly linked list, reverse the list and return the reversed list.
+
+    **Example:**
+    - Input: head = [1,2,3,4,5]
+    - Output: [5,4,3,2,1]
+    """)
+
+    with st.expander("Solution"):
+        st.code("""
+def reverseList(head):
+    prev = None
+    current = head
+
+    while current:
+        next_temp = current.next  # Store next node
+        current.next = prev      # Reverse the link
+        prev = current           # Move prev to current
+        current = next_temp      # Move to next node
+
+    return prev
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+        """, language="python")
+
+    st.header("Problem 2: Detect Cycle in Linked List")
+    st.markdown("""
+    **Problem Statement:** Given head, the head of a linked list, determine if the linked list has a cycle in it.
+
+    **Example:**
+    - Input: head = [3,2,0,-4], pos = 1 (tail connects to node index 1)
+    - Output: true
+    """)
+
+    with st.expander("Solution (Floyd's Cycle Detection)"):
+        st.code("""
+def hasCycle(head):
+    if not head or not head.next:
+        return False
+
+    slow = head
+    fast = head.next
+
+    while fast and fast.next:
+        if slow == fast:
+            return True
+        slow = slow.next
+        fast = fast.next.next
+
+    return False
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+        """, language="python")
+
+    st.header("Problem 3: Merge Two Sorted Lists")
+    st.markdown("""
+    **Problem Statement:** Merge two sorted linked lists and return it as a sorted list.
+
+    **Example:**
+    - Input: list1 = [1,2,4], list2 = [1,3,4]
+    - Output: [1,1,2,3,4,4]
+    """)
+
+    with st.expander("Solution"):
+        st.code("""
+def mergeTwoLists(list1, list2):
+    # Create a dummy node
+    dummy = Node(0)
+    current = dummy
+
+    # Merge the lists
+    while list1 and list2:
+        if list1.data <= list2.data:
+            current.next = list1
+            list1 = list1.next
+        else:
+            current.next = list2
+            list2 = list2.next
+        current = current.next
+
+    # Attach remaining nodes
+    if list1:
+        current.next = list1
+    if list2:
+        current.next = list2
+
+    return dummy.next
+
+# Time Complexity: O(n + m)
+# Space Complexity: O(1)
+        """, language="python")
+
+    st.header("Problem 4: Remove Nth Node From End")
+    st.markdown("""
+    **Problem Statement:** Given the head of a linked list, remove the nth node from the end of the list and return its head.
+
+    **Example:**
+    - Input: head = [1,2,3,4,5], n = 2
+    - Output: [1,2,3,5]
+    """)
+
+    with st.expander("Solution (Two Pointers)"):
+        st.code("""
+def removeNthFromEnd(head, n):
+    # Create a dummy node
+    dummy = Node(0)
+    dummy.next = head
+
+    # Use two pointers
+    first = dummy
+    second = dummy
+
+    # Move first pointer n+1 steps ahead
+    for i in range(n + 1):
+        first = first.next
+
+    # Move both pointers until first reaches end
+    while first:
+        first = first.next
+        second = second.next
+
+    # Remove the nth node from end
+    second.next = second.next.next
+
+    return dummy.next
+
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+        """, language="python")
+
+    st.header("Problem 5: Find Middle of Linked List")
+    st.markdown("""
+    **Problem Statement:** Given the head of a singly linked list, return the middle node of the linked list.
+
+    **Example:**
+    - Input: head = [1,2,3,4,5]
+    - Output: [3,4,5]
+    """)
+
+    with st.expander("Solution (Fast and Slow Pointers)"):
+        st.code("""
+def middleNode(head):
     slow = head
     fast = head
+
     while fast and fast.next:
         slow = slow.next
         fast = fast.next.next
-    return slow.data
-    """, language='python')
 
-    st.subheader("Removing Duplicates from Sorted Linked List")
-    st.code("""
-def remove_duplicates(head):
-    current = head
-    while current and current.next:
-        if current.data == current.next.data:
-            current.next = current.next.next
-        else:
-            current = current.next
-    return head
-    """, language='python')
+    return slow
 
-    st.subheader("Merging Two Sorted Linked Lists")
-    st.code("""
-def merge_two_lists(l1, l2):
-    if not l1:
-        return l2
-    if not l2:
-        return l1
-    if l1.data < l2.data:
-        l1.next = merge_two_lists(l1.next, l2)
-        return l1
-    else:
-        l2.next = merge_two_lists(l1, l2.next)
-        return l2
-    """, language='python')
+# Time Complexity: O(n)
+# Space Complexity: O(1)
+        """, language="python")
 
-    st.header("Practice Problems")
-    st.write("""
-    Here are some common problems related to Linked Lists:
-    1. Reverse a Linked List
-    2. Detect Loop in Linked List
-    3. Find Middle of Linked List
-    4. Remove Duplicates from Sorted Linked List
-    5. Merge Two Sorted Linked Lists
-    6. Intersection Point of Two Linked Lists
-    7. Palindrome Linked List
-    8. Add Two Numbers Represented by Linked Lists
-    9. Flatten a Multilevel Doubly Linked List
-    10. Rotate List
+    st.header("Additional Practice Problems")
+    st.markdown("""
+    **Easy:**
+    6. Remove duplicates from sorted linked list
+    7. Check if linked list is palindrome
+    8. Find intersection point of two linked lists
+
+    **Medium:**
+    9. Add two numbers represented by linked lists
+    10. Flatten a multilevel doubly linked list
+    11. Sort linked list using merge sort
+
+    **Hard:**
+    12. Reverse nodes in k-group
+    13. Copy list with random pointer
+    14. LRU Cache implementation using doubly linked list
     """)
-    st.write("For solutions and more problems, visit [GeeksforGeeks Linked List Problems](https://www.geeksforgeeks.org/linked-list-set-1-introduction/)")
+
+    st.header("Tips for Solving Linked List Problems")
+    st.markdown("""
+    - **Dummy Node:** Use a dummy node to handle edge cases (empty list, single node)
+    - **Two Pointers:** Fast and slow pointers for cycle detection, finding middle
+    - **Recursion:** Natural fit for linked list problems (be mindful of stack space)
+    - **Edge Cases:** Always consider empty list, single node, two nodes
+    - **Memory Management:** In languages with manual memory management, don't forget to free nodes
+    - **Visualization:** Draw the list and pointers on paper to understand the problem
+    """)
+
+# References and Resources section
+def references_and_resources():
+    st.title("References and Resources")
+
+    st.markdown("""
+    - [GeeksforGeeks - Linked List](https://www.geeksforgeeks.org/data-structures/linked-list/)
+    - [Wikipedia - Linked List](https://en.wikipedia.org/wiki/Linked_list)
+    - [Visualgo - Linked List](https://visualgo.net/en/list)
+    - [Streamlit Documentation](https://docs.streamlit.io/)
+    """)
+
+# Main app function
+def main():
+    choice = sidebar()
+
+    if choice == "Introduction":
+        introduction()
+    elif choice == "Types of Linked Lists":
+        types_of_linked_lists()
+    elif choice == "Operations and Algorithms":
+        operations_and_algorithms()
+    elif choice == "Interactive Playground":
+        interactive_playground()
+    elif choice == "Performance Analysis":
+        performance_analysis()
+    elif choice == "Practice Problems":
+        practice_problems()
+    elif choice == "References and Resources":
+        references_and_resources()
 
 if __name__ == "__main__":
     main()
