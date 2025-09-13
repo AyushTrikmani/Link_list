@@ -18,7 +18,7 @@ st.set_page_config(
     page_title="Linked List Data Structures",
     layout="wide",
     page_icon="🔗",
-    initial_sidebar_state="collapsed"
+    initial_sidebar_state="expanded"
 )
 
 # Enhanced Custom CSS for Modern UI/UX
@@ -3327,22 +3327,32 @@ def main():
     if 'current_tab' not in st.session_state:
         st.session_state.current_tab = 0
 
-    tab_names = [
-        "🏠 Welcome",
-        "📖 Introduction",
-        "🔗 Types",
-        "⚙️ Operations",
-        "🎮 Playground",
-        "📊 Analysis",
-        "💡 Practice",
-        "🎨 Advanced Viz",
-        "🧠 Quiz",
-        "⚖️ Comparison"
-    ]
-
-    # Navigation selectbox
-    selected_tab = st.selectbox("Navigate to:", tab_names, index=st.session_state.current_tab, key="nav_select")
-    st.session_state.current_tab = tab_names.index(selected_tab)
+    # Sidebar navigation
+    with st.sidebar:
+        st.markdown("<h2 style='text-align: center; color: #1e3c72;'>🔗 Navigation</h2>", unsafe_allow_html=True)
+        st.markdown("---")
+        
+        # Navigation buttons
+        nav_options = [
+            ("🏠 Welcome", "Get started with linked lists"),
+            ("📖 Introduction", "Learn the basics"),
+            ("🔗 Types", "Explore different types"),
+            ("⚙️ Operations", "Master operations & algorithms"),
+            ("🎮 Playground", "Interactive practice"),
+            ("📊 Analysis", "Performance comparison"),
+            ("💡 Practice", "Solve problems"),
+            ("🎨 Advanced Viz", "Advanced visualizations"),
+            ("🧠 Quiz", "Test your knowledge"),
+            ("⚖️ Comparison", "Compare data structures")
+        ]
+        
+        for i, (name, desc) in enumerate(nav_options):
+            if st.button(name, key=f"nav_{i}", help=desc, use_container_width=True):
+                st.session_state.current_tab = i
+                st.rerun()
+        
+        st.markdown("---")
+        st.markdown("<p style='text-align: center; color: #666; font-size: 0.8em;'>Select a section above to explore</p>", unsafe_allow_html=True)
 
     # Render the selected tab content
     if st.session_state.current_tab == 0:
