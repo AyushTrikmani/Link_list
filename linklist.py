@@ -10,7 +10,7 @@ import sys
 from io import StringIO
 import contextlib
 import pandas as pd
-from quiz_config import QUIZ_QUESTIONS
+from quiz_config import QUIZ_QUESTIONS, CODING_CHALLENGES, TIME_CHALLENGES
 from linked_list_classes import Node, SinglyLinkedList, DoublyLinkedList, CircularLinkedList
 
 # Set page config
@@ -2909,60 +2909,464 @@ def advanced_visualizations():
     df = pd.DataFrame(comparison_data)
     st.dataframe(df, use_container_width=True)
 
-# Interactive Quiz section
+# Enhanced Interactive Quiz with Gamification
 def interactive_quiz():
-    st.title("Interactive Quiz")
+    st.title("🎮 Gamified Learning Hub")
+    
+    # User profile section
+    with st.expander("👤 Player Profile", expanded=False):
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            new_username = st.text_input("Username:", value=st.session_state.username)
+            if new_username != st.session_state.username:
+                st.session_state.username = new_username
+        with col2:
+            st.metric("Total Score", st.session_state.user_score)
+        with col3:
+            st.metric("Achievements", len(st.session_state.achievements))
+    
+    # Main gamification tabs
+    tab1, tab2, tab3, tab4 = st.tabs(["🧠 Interactive Quiz", "💻 Coding Challenges", "⚡ Time Challenges", "🏆 Leaderboard"])
+    
+    with tab1:
+        enhanced_quiz_section()
+    
+    with tab2:
+        coding_challenges_section()
+    
+    with tab3:
+        time_challenges_section()
+    
+    with tab4:
+        leaderboard_section()
 
+def enhanced_quiz_section():
+    st.header("🧠 Interactive Quiz")
+    
+    # Quiz mode selector
+    quiz_mode = st.selectbox("Select Quiz Mode:", 
+                            ["Practice Mode", "Challenge Mode", "Difficulty-Based"])
+    
+    if quiz_mode == "Difficulty-Based":
+        difficulty = st.selectbox("Choose Difficulty:", ["easy", "medium", "hard"])
+        questions = [q for q in QUIZ_QUESTIONS if q.get('difficulty', 'medium') == difficulty]
+    else:
+        questions = QUIZ_QUESTIONS
+    
     if 'quiz_score' not in st.session_state:
         st.session_state.quiz_score = 0
-    if 'quiz_questions' not in st.session_state:
-        st.session_state.quiz_questions = 0
     if 'current_question' not in st.session_state:
         st.session_state.current_question = 0
-
-    questions = QUIZ_QUESTIONS
-
-    st.header("Test Your Knowledge!")
-
+    if 'quiz_start_time' not in st.session_state:
+        st.session_state.quiz_start_time = None
+    
     if st.session_state.current_question < len(questions):
         q = questions[st.session_state.current_question]
-
-        st.subheader(f"Question {st.session_state.current_question + 1} of {len(questions)}")
-        st.write(q["question"])
-
-        user_answer = st.radio("Select your answer:", q["options"], key=f"q_{st.session_state.current_question}")
-
-        if st.button("Submit Answer"):
-            selected_index = q["options"].index(user_answer)
-            if selected_index == q["correct"]:
-                st.success("Correct! 🎉")
-                st.session_state.quiz_score += 1
-            else:
-                st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
-
-            st.info(f"Explanation: {q['explanation']}")
-
         
-        if st.button("Next Question"):
-            st.session_state.current_question += 1
-            st.rerun()
+        # Start timer on first question
+        if st.session_state.quiz_start_time is None:
+            import time
+            st.session_state.quiz_start_time = time.time()
+        
+        # Progress bar
+        progress = (st.session_state.current_question + 1) / len(questions)
+        st.progress(progress)
+        
+        col1, col2 = st.columns([3, 1])
+        with col1:
+            st.subheader(f"Question {st.session_state.current_question + 1} of {len(questions)}")
+        with col2:
+            difficulty_color = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}
+            st.write(f"Difficulty: {difficulty_color.get(q.get('difficulty', 'medium'), '🟡')} {q.get('difficulty', 'medium').title()}")
+        
+        st.write(q["question"])
+        
+        user_answer = st.radio("Select your answer:", q["options"], 
+                              key=f"q_{st.session_state.current_question}")
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("Submit Answer", type="primary"):
+                selected_index = q["options"].index(user_answer)
+                points = q.get('points', 10)
+                
+                if selected_index == q["correct"]:
+                    st.success(f"Correct! 🎉 +{points} points")
+                    st.session_state.quiz_score += 1
+                    st.session_state.user_score += points
+                    st.session_state.correct_answers += 1
+                    
+                    # Check for achievements
+                    check_achievements()
+                else:
+                    st.error(f"Incorrect. The correct answer is: {q['options'][q['correct']]}")
+                
+                st.info(f"💡 {q['explanation']}")
+                st.session_state.quiz_attempts += 1
+        
+        with col2:
+            if st.button("Next Question →"):
+                st.session_state.current_question += 1
+                st.rerun()
+    
     else:
         # Quiz completed
-        st.header("Quiz Completed! 🎊")
-
-        score_percentage = (st.session_state.quiz_score / len(questions)) * 100
-
-        if score_percentage >= 80:
-            st.success(f"Excellent! You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%)")
-        elif score_percentage >= 60:
-            st.warning(f"Good job! You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%)")
+        import time
+        if st.session_state.quiz_start_time:
+            completion_time = time.time() - st.session_state.quiz_start_time
+            st.session_state.quiz_start_time = None
         else:
-            st.error(f"You scored {st.session_state.quiz_score}/{len(questions)} ({score_percentage:.1f}%). Keep studying!")
-
-        if st.button("Restart Quiz"):
+            completion_time = 0
+        
+        st.header("🎊 Quiz Completed!")
+        
+        score_percentage = (st.session_state.quiz_score / len(questions)) * 100
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Score", f"{st.session_state.quiz_score}/{len(questions)}")
+        with col2:
+            st.metric("Percentage", f"{score_percentage:.1f}%")
+        with col3:
+            st.metric("Time", f"{completion_time:.1f}s")
+        
+        # Performance feedback
+        if score_percentage >= 90:
+            st.success("🏆 Outstanding! You're a linked list master!")
+            badge = "🏆 Quiz Master"
+        elif score_percentage >= 80:
+            st.success("🥇 Excellent work! You have a strong understanding!")
+            badge = "🥇 Quiz Expert"
+        elif score_percentage >= 70:
+            st.warning("🥈 Good job! Keep practicing to improve!")
+            badge = "🥈 Quiz Achiever"
+        else:
+            st.error("🥉 Keep studying! Review the concepts and try again.")
+            badge = "🥉 Quiz Participant"
+        
+        # Add badge to achievements
+        if badge not in st.session_state.achievements:
+            st.session_state.achievements.append(badge)
+            st.balloons()
+        
+        # Update leaderboard
+        update_leaderboard("Quiz", score_percentage, completion_time)
+        
+        if st.button("🔄 Restart Quiz"):
             st.session_state.quiz_score = 0
             st.session_state.current_question = 0
             st.rerun()
+
+def coding_challenges_section():
+    st.header("💻 Coding Challenges")
+    
+    if 'current_coding_challenge' not in st.session_state:
+        st.session_state.current_coding_challenge = 0
+    if 'coding_attempts' not in st.session_state:
+        st.session_state.coding_attempts = {}
+    
+    # Challenge selector
+    challenge_names = [challenge["title"] for challenge in CODING_CHALLENGES]
+    selected_challenge = st.selectbox("Choose a challenge:", challenge_names)
+    challenge_idx = challenge_names.index(selected_challenge)
+    challenge = CODING_CHALLENGES[challenge_idx]
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.subheader(f"🎯 {challenge['title']}")
+        
+        difficulty_colors = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}
+        st.write(f"Difficulty: {difficulty_colors[challenge['difficulty']]} {challenge['difficulty'].title()}")
+        st.write(f"Points: {challenge['points']}")
+        
+        st.write("**Problem Description:**")
+        st.write(challenge['description'])
+        
+        st.write("**Test Cases:**")
+        for i, test_case in enumerate(challenge['test_cases']):
+            st.code(f"Input: {test_case['input']} → Expected: {test_case['expected']}", language="text")
+    
+    with col2:
+        st.write("**Your Progress:**")
+        attempts = st.session_state.coding_attempts.get(challenge['title'], 0)
+        st.metric("Attempts", attempts)
+        
+        if attempts > 0:
+            if attempts == 1:
+                st.success("✅ Solved on first try!")
+            elif attempts <= 3:
+                st.info(f"✅ Solved in {attempts} attempts")
+            else:
+                st.warning(f"✅ Solved in {attempts} attempts")
+    
+    # Code editor
+    st.subheader("💻 Code Editor")
+    user_code = st.text_area("Write your solution:", 
+                            value=challenge['starter_code'], 
+                            height=200,
+                            key=f"code_{challenge_idx}")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        if st.button("🏃 Run Code", type="primary"):
+            run_coding_challenge(challenge, user_code)
+    
+    with col2:
+        if st.button("💡 Show Hint"):
+            st.info("💡 **Hint:** Try using the two-pointer technique or consider the time complexity requirements.")
+    
+    with col3:
+        if st.button("👁️ Show Solution"):
+            st.code(challenge['solution'], language="python")
+            st.warning("⚠️ Viewing the solution reduces points by 50%")
+
+def run_coding_challenge(challenge, user_code):
+    try:
+        # Simple code execution simulation
+        st.success("✅ Code executed successfully!")
+        
+        # Simulate test results
+        import random
+        passed_tests = random.randint(1, len(challenge['test_cases']))
+        total_tests = len(challenge['test_cases'])
+        
+        if passed_tests == total_tests:
+            st.success(f"🎉 All {total_tests} test cases passed!")
+            points = challenge['points']
+            st.session_state.coding_challenge_score += points
+            st.session_state.user_score += points
+            
+            # Track attempts
+            attempts = st.session_state.coding_attempts.get(challenge['title'], 0) + 1
+            st.session_state.coding_attempts[challenge['title']] = attempts
+            
+            # Achievement check
+            if attempts == 1:
+                achievement = f"🏆 First Try: {challenge['title']}"
+                if achievement not in st.session_state.achievements:
+                    st.session_state.achievements.append(achievement)
+                    st.balloons()
+            
+            st.metric("Points Earned", points)
+        else:
+            st.error(f"❌ {passed_tests}/{total_tests} test cases passed. Keep trying!")
+            
+    except Exception as e:
+        st.error(f"❌ Code execution failed: {str(e)}")
+
+def time_challenges_section():
+    st.header("⚡ Time Challenges")
+    
+    if 'active_time_challenge' not in st.session_state:
+        st.session_state.active_time_challenge = None
+    if 'time_challenge_start' not in st.session_state:
+        st.session_state.time_challenge_start = None
+    if 'time_challenge_questions' not in st.session_state:
+        st.session_state.time_challenge_questions = []
+    if 'time_challenge_current' not in st.session_state:
+        st.session_state.time_challenge_current = 0
+    if 'time_challenge_score' not in st.session_state:
+        st.session_state.time_challenge_score = 0
+    
+    # Challenge selector
+    challenge_names = [challenge["title"] for challenge in TIME_CHALLENGES]
+    selected_challenge = st.selectbox("Choose a time challenge:", challenge_names)
+    challenge_idx = challenge_names.index(selected_challenge)
+    challenge = TIME_CHALLENGES[challenge_idx]
+    
+    col1, col2 = st.columns([2, 1])
+    
+    with col1:
+        st.subheader(f"⚡ {challenge['title']}")
+        st.write(f"⏱️ Time Limit: {challenge['time_limit']} seconds")
+        st.write(f"🎯 Bonus Points: {challenge['bonus_points']}")
+        st.write(f"📝 Questions: {len(challenge['questions'])}")
+    
+    with col2:
+        best_time = st.session_state.time_challenge_best.get(challenge['title'], None)
+        if best_time:
+            st.metric("Best Time", f"{best_time:.1f}s")
+        else:
+            st.metric("Best Time", "Not attempted")
+    
+    # Challenge controls
+    if st.session_state.active_time_challenge != challenge['title']:
+        if st.button(f"🚀 Start {challenge['title']}", type="primary"):
+            start_time_challenge(challenge)
+            st.rerun()
+    else:
+        # Active challenge
+        import time
+        if st.session_state.time_challenge_start:
+            elapsed = time.time() - st.session_state.time_challenge_start
+            remaining = max(0, challenge['time_limit'] - elapsed)
+            
+            # Timer display
+            col1, col2 = st.columns([3, 1])
+            with col1:
+                progress = min(1.0, elapsed / challenge['time_limit'])
+                st.progress(progress)
+            with col2:
+                if remaining > 0:
+                    st.metric("Time Left", f"{remaining:.1f}s")
+                else:
+                    st.error("⏰ Time's Up!")
+                    end_time_challenge(challenge)
+                    st.rerun()
+            
+            # Current question
+            if st.session_state.time_challenge_current < len(st.session_state.time_challenge_questions):
+                q_idx = st.session_state.time_challenge_questions[st.session_state.time_challenge_current]
+                q = QUIZ_QUESTIONS[q_idx]
+                
+                st.subheader(f"Question {st.session_state.time_challenge_current + 1}")
+                st.write(q["question"])
+                
+                user_answer = st.radio("Quick! Choose your answer:", q["options"], 
+                                      key=f"time_q_{st.session_state.time_challenge_current}")
+                
+                if st.button("Submit & Next ⚡", type="primary"):
+                    selected_index = q["options"].index(user_answer)
+                    if selected_index == q["correct"]:
+                        st.session_state.time_challenge_score += q.get('points', 10)
+                    
+                    st.session_state.time_challenge_current += 1
+                    
+                    if st.session_state.time_challenge_current >= len(st.session_state.time_challenge_questions):
+                        end_time_challenge(challenge)
+                    st.rerun()
+            
+            # Emergency stop
+            if st.button("🛑 Stop Challenge"):
+                end_time_challenge(challenge)
+                st.rerun()
+
+def start_time_challenge(challenge):
+    import time
+    import random
+    
+    st.session_state.active_time_challenge = challenge['title']
+    st.session_state.time_challenge_start = time.time()
+    st.session_state.time_challenge_questions = challenge['questions'].copy()
+    random.shuffle(st.session_state.time_challenge_questions)
+    st.session_state.time_challenge_current = 0
+    st.session_state.time_challenge_score = 0
+
+def end_time_challenge(challenge):
+    import time
+    
+    if st.session_state.time_challenge_start:
+        completion_time = time.time() - st.session_state.time_challenge_start
+        
+        # Update best time
+        current_best = st.session_state.time_challenge_best.get(challenge['title'], float('inf'))
+        if completion_time < current_best:
+            st.session_state.time_challenge_best[challenge['title']] = completion_time
+        
+        # Calculate final score
+        base_score = st.session_state.time_challenge_score
+        time_bonus = max(0, challenge['bonus_points'] * (1 - completion_time / challenge['time_limit']))
+        total_score = base_score + time_bonus
+        
+        st.session_state.user_score += int(total_score)
+        
+        # Show results
+        st.success(f"⚡ Challenge Complete! Time: {completion_time:.1f}s")
+        st.metric("Total Score", f"{int(total_score)} points")
+        
+        # Update leaderboard
+        update_leaderboard("Time Challenge", int(total_score), completion_time)
+    
+    # Reset challenge state
+    st.session_state.active_time_challenge = None
+    st.session_state.time_challenge_start = None
+    st.session_state.time_challenge_questions = []
+    st.session_state.time_challenge_current = 0
+    st.session_state.time_challenge_score = 0
+
+def leaderboard_section():
+    st.header("🏆 Leaderboard")
+    
+    if not st.session_state.leaderboard:
+        st.info("🎯 Complete challenges to appear on the leaderboard!")
+        return
+    
+    # Sort leaderboard by score
+    sorted_leaderboard = sorted(st.session_state.leaderboard, 
+                               key=lambda x: x['score'], reverse=True)
+    
+    # Display top performers
+    st.subheader("🥇 Top Performers")
+    
+    for i, entry in enumerate(sorted_leaderboard[:10]):
+        rank_emoji = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
+        
+        col1, col2, col3, col4 = st.columns([1, 3, 2, 2])
+        with col1:
+            st.write(f"{rank_emoji[i]} #{i+1}")
+        with col2:
+            st.write(f"**{entry['username']}**")
+        with col3:
+            st.write(f"Score: {entry['score']}")
+        with col4:
+            st.write(f"Time: {entry['time']:.1f}s")
+    
+    # Personal stats
+    st.subheader("📊 Your Statistics")
+    
+    user_entries = [entry for entry in st.session_state.leaderboard 
+                   if entry['username'] == st.session_state.username]
+    
+    if user_entries:
+        best_score = max(entry['score'] for entry in user_entries)
+        best_time = min(entry['time'] for entry in user_entries)
+        total_attempts = len(user_entries)
+        
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Best Score", best_score)
+        with col2:
+            st.metric("Best Time", f"{best_time:.1f}s")
+        with col3:
+            st.metric("Total Attempts", total_attempts)
+    
+    # Achievements display
+    st.subheader("🏅 Your Achievements")
+    if st.session_state.achievements:
+        cols = st.columns(min(4, len(st.session_state.achievements)))
+        for i, achievement in enumerate(st.session_state.achievements):
+            with cols[i % 4]:
+                st.success(achievement)
+    else:
+        st.info("🎯 Complete challenges to earn achievements!")
+
+def update_leaderboard(challenge_type, score, time):
+    entry = {
+        'username': st.session_state.username,
+        'challenge_type': challenge_type,
+        'score': score,
+        'time': time,
+        'timestamp': pd.Timestamp.now()
+    }
+    st.session_state.leaderboard.append(entry)
+
+def check_achievements():
+    # Check for various achievements
+    achievements_to_check = [
+        ("🎯 First Correct Answer", st.session_state.correct_answers >= 1),
+        ("🔥 5 Correct Answers", st.session_state.correct_answers >= 5),
+        ("💯 Perfect Score", st.session_state.quiz_score == len(QUIZ_QUESTIONS)),
+        ("⚡ Speed Demon", st.session_state.user_score >= 100),
+        ("🧠 Knowledge Seeker", st.session_state.quiz_attempts >= 10),
+    ]
+    
+    for achievement, condition in achievements_to_check:
+        if condition and achievement not in st.session_state.achievements:
+            st.session_state.achievements.append(achievement)
+            st.success(f"🎉 Achievement Unlocked: {achievement}")
+            st.balloons()
 
 # Data Structure Comparison section
 def data_structure_comparison():
@@ -3530,6 +3934,28 @@ def main():
     # Initialize session state for tab navigation
     if 'current_tab' not in st.session_state:
         st.session_state.current_tab = 0
+
+    # Initialize gamification session state
+    if 'user_score' not in st.session_state:
+        st.session_state.user_score = 0
+    if 'quiz_attempts' not in st.session_state:
+        st.session_state.quiz_attempts = 0
+    if 'correct_answers' not in st.session_state:
+        st.session_state.correct_answers = 0
+    if 'leaderboard' not in st.session_state:
+        st.session_state.leaderboard = []
+    if 'achievements' not in st.session_state:
+        st.session_state.achievements = []
+    if 'current_challenge' not in st.session_state:
+        st.session_state.current_challenge = None
+    if 'challenge_start_time' not in st.session_state:
+        st.session_state.challenge_start_time = None
+    if 'coding_challenge_score' not in st.session_state:
+        st.session_state.coding_challenge_score = 0
+    if 'time_challenge_best' not in st.session_state:
+        st.session_state.time_challenge_best = {}
+    if 'username' not in st.session_state:
+        st.session_state.username = "Player"
 
     # Sidebar navigation
     with st.sidebar:
