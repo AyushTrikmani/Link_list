@@ -1673,19 +1673,16 @@ print(f"Sum: {calculate_sum_circular(cll.head)}")  # Output: 60
     # Comparison of sum algorithms
     st.subheader("⚡ Sum Algorithm Comparison")
     
-    comparison_data = {
-        'List Type': ['Singly Linked', 'Doubly Linked', 'Circular Linked'],
-        'Time Complexity': ['O(n)', 'O(n)', 'O(n)'],
-        'Space Complexity': ['O(1)', 'O(1)', 'O(1)'],
-        'Special Considerations': [
-            'Simple forward traversal',
-            'Can traverse forward or backward',
-            'Must avoid infinite loops'
-        ]
-    }
+    # Create comparison table manually to avoid pandas issues
+    st.markdown("""
+    | List Type | Time Complexity | Space Complexity | Special Considerations |
+    |-----------|----------------|------------------|------------------------|
+    | Singly Linked | O(n) | O(1) | Simple forward traversal |
+    | Doubly Linked | O(n) | O(1) | Can traverse forward or backward |
+    | Circular Linked | O(n) | O(1) | Must avoid infinite loops |
+    """)
     
-    df = pd.DataFrame(comparison_data)
-    st.dataframe(df, use_container_width=True)
+    st.info("💡 **Key Insight**: All linked list types have the same time complexity O(n) for sum calculation, but differ in implementation details.")
 
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -5722,7 +5719,7 @@ def search_content(query):
         'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare', 'diff'],
         'Testing': ['unit', 'test', 'debug', 'memory', 'profile', 'benchmark'],
         'Interview': ['questions', 'complexity', 'mistakes', 'preparation', 'coding', 'companies', 'tips', 'practice', 'solutions'],
-        'Sum': ['calculate', 'total', 'addition', 'examples', 'practice'],
+        'Sum': ['calculate', 'total', 'addition', 'examples', 'practice', 'algorithm'],
         'Memory': ['garbage', 'collection', 'leak', 'stack', 'heap', 'allocation'],
         'Concurrency': ['thread', 'safe', 'lock', 'atomic', 'race', 'condition'],
         'Specialized': ['skip', 'list', 'self', 'organizing', 'unrolled', 'advanced'],
