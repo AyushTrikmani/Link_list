@@ -1535,6 +1535,157 @@ print(dll.traverse_backward())  # [3, 2, 1]
 
     st.header("3. Circular Linked List")
     st.markdown("**Overview:** The last node points back to the first node, forming a circle.")
+    
+    # Sum calculation examples for understanding
+    st.subheader("📊 Sum Calculation Examples")
+    
+    st.markdown("""
+    **Understanding through Sum Operations:**
+    Let's see how to calculate the sum of all elements in different linked list types.
+    """)
+    
+    tab1, tab2, tab3 = st.tabs(["Singly Linked", "Doubly Linked", "Circular Linked"])
+    
+    with tab1:
+        st.markdown("**Sum in Singly Linked List:**")
+        st.code("""
+# Calculate sum of all elements
+def calculate_sum_singly(head):
+    total = 0
+    current = head
+    
+    while current:
+        total += current.data
+        current = current.next
+    
+    return total
+
+# Example: [10, 20, 30] → Sum = 60
+ll = SinglyLinkedList()
+ll.insert_at_end(10)
+ll.insert_at_end(20) 
+ll.insert_at_end(30)
+print(f"Sum: {calculate_sum_singly(ll.head)}")  # Output: 60
+        """, language="python")
+    
+    with tab2:
+        st.markdown("**Sum in Doubly Linked List:**")
+        st.code("""
+# Calculate sum - can traverse forward or backward
+def calculate_sum_doubly_forward(head):
+    total = 0
+    current = head
+    
+    while current:
+        total += current.data
+        current = current.next
+    
+    return total
+
+def calculate_sum_doubly_backward(tail):
+    total = 0
+    current = tail
+    
+    while current:
+        total += current.data
+        current = current.prev
+    
+    return total
+
+# Example: [10, 20, 30] → Sum = 60 (both directions)
+dll = DoublyLinkedList()
+dll.insert_at_end(10)
+dll.insert_at_end(20)
+dll.insert_at_end(30)
+print(f"Forward Sum: {calculate_sum_doubly_forward(dll.head)}")   # 60
+print(f"Backward Sum: {calculate_sum_doubly_backward(dll.tail)}")  # 60
+        """, language="python")
+    
+    with tab3:
+        st.markdown("**Sum in Circular Linked List:**")
+        st.code("""
+# Calculate sum - must avoid infinite loop!
+def calculate_sum_circular(head):
+    if not head:
+        return 0
+    
+    total = head.data
+    current = head.next
+    
+    # Stop when we reach the starting node again
+    while current != head:
+        total += current.data
+        current = current.next
+    
+    return total
+
+# Alternative with counter for safety
+def calculate_sum_circular_safe(head, size):
+    total = 0
+    current = head
+    count = 0
+    
+    while current and count < size:
+        total += current.data
+        current = current.next
+        count += 1
+    
+    return total
+
+# Example: [10, 20, 30] → Sum = 60
+cll = CircularLinkedList()
+cll.insert_at_end(10)
+cll.insert_at_end(20)
+cll.insert_at_end(30)
+print(f"Sum: {calculate_sum_circular(cll.head)}")  # Output: 60
+        """, language="python")
+    
+    # Interactive sum calculator
+    st.subheader("🧮 Interactive Sum Calculator")
+    
+    calc_type = st.selectbox("Choose list type for sum calculation:", 
+                            ["Singly Linked", "Doubly Linked", "Circular Linked"])
+    
+    calc_input = st.text_input("Enter numbers (comma-separated):", "10, 20, 30, 40")
+    
+    if st.button("Calculate Sum"):
+        try:
+            numbers = [int(x.strip()) for x in calc_input.split(",") if x.strip()]
+            if numbers:
+                total = sum(numbers)
+                st.success(f"📊 **{calc_type} Sum Result:**")
+                st.write(f"Numbers: {numbers}")
+                st.write(f"Sum: {total}")
+                st.write(f"Average: {total/len(numbers):.2f}")
+                st.write(f"Count: {len(numbers)}")
+                
+                # Show step-by-step calculation
+                with st.expander("Step-by-step calculation"):
+                    running_sum = 0
+                    for i, num in enumerate(numbers):
+                        running_sum += num
+                        st.write(f"Step {i+1}: {running_sum-num} + {num} = {running_sum}")
+            else:
+                st.warning("Please enter valid numbers")
+        except ValueError:
+            st.error("Please enter valid integers separated by commas")
+    
+    # Comparison of sum algorithms
+    st.subheader("⚡ Sum Algorithm Comparison")
+    
+    comparison_data = {
+        'List Type': ['Singly Linked', 'Doubly Linked', 'Circular Linked'],
+        'Time Complexity': ['O(n)', 'O(n)', 'O(n)'],
+        'Space Complexity': ['O(1)', 'O(1)', 'O(1)'],
+        'Special Considerations': [
+            'Simple forward traversal',
+            'Can traverse forward or backward',
+            'Must avoid infinite loops'
+        ]
+    }
+    
+    df = pd.DataFrame(comparison_data)
+    st.dataframe(df, use_container_width=True)
 
     col1, col2 = st.columns([2, 1])
     with col1:
@@ -1649,6 +1800,59 @@ cll.insert_at_end(3)
 print(cll.traverse())  # [1, 2, 3]
         """, language="python")
 
+    # Practical sum examples with real scenarios
+    st.subheader("🌟 Real-World Sum Applications")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        **Shopping Cart Total (Singly Linked):**
+        ```python
+        # Each node represents an item with price
+        class CartItem:
+            def __init__(self, name, price):
+                self.name = name
+                self.price = price
+                self.next = None
+        
+        def calculate_cart_total(cart_head):
+            total = 0
+            current = cart_head
+            while current:
+                total += current.price
+                current = current.next
+            return total
+        
+        # Cart: Apple($2) → Banana($1) → Orange($3)
+        # Total: $6
+        ```
+        """)
+    
+    with col2:
+        st.markdown("""
+        **Score History (Doubly Linked):**
+        ```python
+        # Game scores with forward/backward navigation
+        class ScoreNode:
+            def __init__(self, score):
+                self.score = score
+                self.next = None
+                self.prev = None
+        
+        def calculate_total_score(head):
+            total = 0
+            current = head
+            while current:
+                total += current.score
+                current = current.next
+            return total
+        
+        # Scores: 100 ↔ 85 ↔ 92 ↔ 78
+        # Total: 355
+        ```
+        """)
+    
     st.header("4. Advanced Linked List Variants")
 
     st.subheader("XOR Linked List")
@@ -4125,6 +4329,809 @@ public:
 };
     """, language="cpp")
 
+def advanced_problem_patterns():
+    st.title("🧩 Advanced Problem Patterns")
+    save_progress("Patterns")
+    
+    st.header("1. Two-Pointer Technique Variations")
+    st.code("""
+# Fast & Slow Pointer - Cycle Detection
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+
+# Distance Pointers - Remove Nth from End
+def remove_nth_from_end(head, n):
+    dummy = ListNode(0)
+    dummy.next = head
+    first = second = dummy
+    
+    for i in range(n + 1):
+        first = first.next
+    
+    while first:
+        first = first.next
+        second = second.next
+    
+    second.next = second.next.next
+    return dummy.next
+    """, language="python")
+    
+    st.header("2. Sliding Window on Linked Lists")
+    st.code("""
+# Maximum Sum Sublist of Size K
+def max_sum_sublist(head, k):
+    current = head
+    window_sum = 0
+    
+    # First window
+    for i in range(k):
+        window_sum += current.val
+        current = current.next
+    
+    max_sum = window_sum
+    left = head
+    
+    # Slide window
+    while current:
+        window_sum = window_sum - left.val + current.val
+        max_sum = max(max_sum, window_sum)
+        left = left.next
+        current = current.next
+    
+    return max_sum
+    """, language="python")
+    
+    st.header("3. System Design Applications")
+    st.code("""
+# LRU Cache Implementation
+class LRUCache:
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.cache = {}
+        self.head = Node(0, 0)
+        self.tail = Node(0, 0)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    
+    def get(self, key):
+        if key in self.cache:
+            node = self.cache[key]
+            self._remove(node)
+            self._add(node)
+            return node.value
+        return -1
+    
+    def put(self, key, value):
+        if key in self.cache:
+            self._remove(self.cache[key])
+        
+        node = Node(key, value)
+        self._add(node)
+        self.cache[key] = node
+        
+        if len(self.cache) > self.capacity:
+            lru = self.tail.prev
+            self._remove(lru)
+            del self.cache[lru.key]
+    """, language="python")
+
+def interview_preparation():
+    st.title("📝 Interview Preparation")
+    save_progress("Interview")
+    
+    st.markdown("""
+    <div class="section-card">
+    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 1.5rem;">🎯 Master Linked List Interviews</h2>
+    <p style="font-size: 1.1em; text-align: center; color: #666; margin-bottom: 1rem;">
+    Comprehensive preparation guide with top interview questions, complexity analysis, and expert tips.
+    </p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Interview difficulty selector
+    difficulty_filter = st.selectbox("Filter by Difficulty:", ["All", "Easy", "Medium", "Hard"])
+    
+    st.header("🔥 Top 20 Interview Questions")
+    
+    interview_questions = [
+        {"q": "Reverse a singly linked list iteratively and recursively", "difficulty": "Easy", "companies": ["Google", "Amazon", "Microsoft"], "frequency": "Very High"},
+        {"q": "Detect if a linked list has a cycle (Floyd's algorithm)", "difficulty": "Medium", "companies": ["Facebook", "Apple", "Netflix"], "frequency": "Very High"},
+        {"q": "Find the middle element of a linked list", "difficulty": "Easy", "companies": ["Amazon", "Google", "Uber"], "frequency": "High"},
+        {"q": "Merge two sorted linked lists", "difficulty": "Easy", "companies": ["Microsoft", "Amazon", "Apple"], "frequency": "Very High"},
+        {"q": "Remove nth node from end of list", "difficulty": "Medium", "companies": ["Google", "Facebook", "LinkedIn"], "frequency": "High"},
+        {"q": "Check if a linked list is palindrome", "difficulty": "Easy", "companies": ["Amazon", "Microsoft", "Adobe"], "frequency": "Medium"},
+        {"q": "Find intersection point of two linked lists", "difficulty": "Easy", "companies": ["Google", "Amazon", "Bloomberg"], "frequency": "Medium"},
+        {"q": "Remove duplicates from sorted linked list", "difficulty": "Easy", "companies": ["Microsoft", "Apple", "Salesforce"], "frequency": "Medium"},
+        {"q": "Add two numbers represented as linked lists", "difficulty": "Medium", "companies": ["Amazon", "Google", "Facebook"], "frequency": "High"},
+        {"q": "Clone a linked list with random pointers", "difficulty": "Medium", "companies": ["Microsoft", "Amazon", "Google"], "frequency": "Medium"},
+        {"q": "Reverse nodes in k-group", "difficulty": "Hard", "companies": ["Google", "Facebook", "Uber"], "frequency": "Medium"},
+        {"q": "Sort a linked list using merge sort", "difficulty": "Medium", "companies": ["Amazon", "Microsoft", "Apple"], "frequency": "Medium"},
+        {"q": "Flatten a multilevel doubly linked list", "difficulty": "Medium", "companies": ["Google", "Amazon", "LinkedIn"], "frequency": "Low"},
+        {"q": "LRU Cache implementation", "difficulty": "Medium", "companies": ["Amazon", "Google", "Microsoft"], "frequency": "Very High"},
+        {"q": "Design a data structure for LFU cache", "difficulty": "Hard", "companies": ["Google", "Facebook", "Twitter"], "frequency": "Medium"},
+        {"q": "Implement stack using linked list", "difficulty": "Easy", "companies": ["Amazon", "Microsoft", "Oracle"], "frequency": "Medium"},
+        {"q": "Implement queue using linked list", "difficulty": "Easy", "companies": ["Google", "Apple", "Netflix"], "frequency": "Medium"},
+        {"q": "Find if linked list is circular", "difficulty": "Easy", "companies": ["Amazon", "Adobe", "Salesforce"], "frequency": "Low"},
+        {"q": "Rotate linked list by k positions", "difficulty": "Medium", "companies": ["Microsoft", "Google", "Uber"], "frequency": "Medium"},
+        {"q": "Convert binary tree to doubly linked list", "difficulty": "Hard", "companies": ["Google", "Amazon", "Facebook"], "frequency": "Low"}
+    ]
+    
+    filtered_questions = interview_questions if difficulty_filter == "All" else [q for q in interview_questions if q["difficulty"] == difficulty_filter]
+    
+    for i, item in enumerate(filtered_questions, 1):
+        difficulty_color = {"Easy": "#4CAF50", "Medium": "#FF9800", "Hard": "#F44336"}[item["difficulty"]]
+        frequency_color = {"Very High": "#E91E63", "High": "#FF5722", "Medium": "#FF9800", "Low": "#9E9E9E"}[item["frequency"]]
+        
+        st.markdown(f"""
+        <div style="border-left: 4px solid {difficulty_color}; padding: 15px; margin: 10px 0; background: rgba(255,255,255,0.05); border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <strong style="font-size: 1.1em;">{i}. {item['q']}</strong>
+                <div>
+                    <span style="background: {difficulty_color}; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em; margin-right: 5px;">{item['difficulty']}</span>
+                    <span style="background: {frequency_color}; color: white; padding: 3px 8px; border-radius: 12px; font-size: 0.8em;">{item['frequency']}</span>
+                </div>
+            </div>
+            <div style="font-size: 0.9em; color: #666;">
+                <strong>Companies:</strong> {', '.join(item['companies'])}
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.header("⚡ Time/Space Complexity Cheat Sheet")
+    
+    st.markdown("""
+    <div class="section-card">
+    <h3 style="color: #1e3c72; margin-bottom: 1rem;">📊 Quick Reference Table</h3>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    complexity_data = {
+        'Operation': ['Insert Beginning', 'Insert End', 'Insert at Position', 'Delete Beginning', 'Delete End', 'Delete by Value', 'Search', 'Access by Index', 'Traversal'],
+        'Singly Linked': ['O(1)', 'O(n)', 'O(n)', 'O(1)', 'O(n)', 'O(n)', 'O(n)', 'O(n)', 'O(n)'],
+        'Doubly Linked': ['O(1)', 'O(1)*', 'O(n)', 'O(1)', 'O(1)*', 'O(n)', 'O(n)', 'O(n)', 'O(n)'],
+        'Array/List': ['O(n)', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'O(n)', 'O(n)', 'O(1)', 'O(n)'],
+        'Space Complexity': ['O(1)', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'O(1)', 'O(1)']
+    }
+    
+    df = pd.DataFrame(complexity_data)
+    st.dataframe(df, use_container_width=True)
+    st.caption("*With tail pointer maintained")
+    
+    # Advanced complexity analysis
+    st.subheader("🎯 Advanced Complexity Analysis")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        **Memory Overhead:**
+        - Singly Linked: 1 pointer + data per node
+        - Doubly Linked: 2 pointers + data per node
+        - Array: Data only (contiguous)
+        
+        **Cache Performance:**
+        - Arrays: Excellent (sequential access)
+        - Linked Lists: Poor (random memory access)
+        """)
+    
+    with col2:
+        st.markdown("""
+        **When to Use:**
+        - **Linked List**: Frequent insertions/deletions at beginning
+        - **Array**: Random access, cache performance critical
+        - **Doubly Linked**: Bidirectional traversal needed
+        """)
+    
+    st.header("❌ Common Mistakes to Avoid")
+    
+    mistakes_data = [
+        {"mistake": "Not checking for null pointers before dereferencing", "impact": "Runtime Error", "solution": "Always check if (node != null) before accessing node.data or node.next"},
+        {"mistake": "Forgetting to update size counter", "impact": "Incorrect size() method", "solution": "Increment/decrement size in all insert/delete operations"},
+        {"mistake": "Memory leaks in manual memory management", "impact": "Memory exhaustion", "solution": "Always free() allocated nodes in C/C++"},
+        {"mistake": "Off-by-one errors in indexing", "impact": "Wrong element access", "solution": "Carefully handle 0-based vs 1-based indexing"},
+        {"mistake": "Not handling empty list edge cases", "impact": "Null pointer exceptions", "solution": "Check if head == null before operations"},
+        {"mistake": "Infinite loops in circular lists", "impact": "Program hangs", "solution": "Use proper termination conditions or visited tracking"},
+        {"mistake": "Not updating both next and prev in doubly linked lists", "impact": "Broken links", "solution": "Always update both pointers in doubly linked operations"},
+        {"mistake": "Losing reference to head node", "impact": "Memory leak", "solution": "Store head reference before modifications"},
+        {"mistake": "Not considering single node edge cases", "impact": "Incorrect behavior", "solution": "Test with lists of size 0, 1, and 2"},
+        {"mistake": "Incorrect pointer manipulation during deletion", "impact": "Broken list structure", "solution": "Update previous node's next pointer before deleting"}
+    ]
+    
+    for i, mistake in enumerate(mistakes_data, 1):
+        impact_color = {"Runtime Error": "#F44336", "Memory exhaustion": "#E91E63", "Incorrect size() method": "#FF9800", "Wrong element access": "#FF5722", "Null pointer exceptions": "#F44336", "Program hangs": "#9C27B0", "Broken links": "#FF9800", "Memory leak": "#E91E63", "Incorrect behavior": "#FF9800", "Broken list structure": "#F44336"}[mistake["impact"]]
+        
+        st.markdown(f"""
+        <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; margin: 10px 0; background: #fafafa;">
+            <div style="display: flex; align-items: center; margin-bottom: 8px;">
+                <span style="color: #F44336; font-size: 1.2em; margin-right: 8px;">❌</span>
+                <strong style="color: #333;">{i}. {mistake['mistake']}</strong>
+            </div>
+            <div style="margin-left: 30px;">
+                <div style="margin-bottom: 5px;">
+                    <strong>Impact:</strong> <span style="color: {impact_color}; font-weight: bold;">{mistake['impact']}</span>
+                </div>
+                <div>
+                    <strong>Solution:</strong> <span style="color: #4CAF50;">{mistake['solution']}</span>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.header("💻 Essential Code Templates")
+    
+    # Tabbed code examples
+    tab1, tab2, tab3, tab4 = st.tabs(["🔄 Reverse List", "🔍 Cycle Detection", "🎯 Find Middle", "🔗 Merge Lists"])
+    
+    with tab1:
+        st.subheader("Reverse Linked List")
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            st.markdown("**Iterative Approach:**")
+            st.code("""
+def reverse_iterative(head):
+    prev = None
+    current = head
+    
+    while current:
+        next_temp = current.next
+        current.next = prev
+        prev = current
+        current = next_temp
+    
+    return prev
+
+# Time: O(n), Space: O(1)
+            """, language="python")
+        
+        with col2:
+            st.markdown("**Recursive Approach:**")
+            st.code("""
+def reverse_recursive(head):
+    if not head or not head.next:
+        return head
+    
+    new_head = reverse_recursive(head.next)
+    head.next.next = head
+    head.next = None
+    
+    return new_head
+
+# Time: O(n), Space: O(n)
+            """, language="python")
+    
+    with tab2:
+        st.subheader("Cycle Detection (Floyd's Algorithm)")
+        st.code("""
+def has_cycle(head):
+    if not head or not head.next:
+        return False
+    
+    slow = head
+    fast = head.next
+    
+    while fast and fast.next:
+        if slow == fast:
+            return True
+        slow = slow.next
+        fast = fast.next.next
+    
+    return False
+
+def find_cycle_start(head):
+    if not has_cycle(head):
+        return None
+    
+    slow = fast = head
+    
+    # Find meeting point
+    while True:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            break
+    
+    # Find start of cycle
+    slow = head
+    while slow != fast:
+        slow = slow.next
+        fast = fast.next
+    
+    return slow
+
+# Time: O(n), Space: O(1)
+        """, language="python")
+    
+    with tab3:
+        st.subheader("Find Middle Element")
+        st.code("""
+def find_middle(head):
+    if not head:
+        return None
+    
+    slow = fast = head
+    
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    return slow
+
+def find_middle_with_prev(head):
+    if not head:
+        return None, None
+    
+    slow = fast = head
+    prev = None
+    
+    while fast and fast.next:
+        prev = slow
+        slow = slow.next
+        fast = fast.next.next
+    
+    return slow, prev
+
+# Time: O(n), Space: O(1)
+# Returns middle node (for odd length)
+# Returns second middle (for even length)
+        """, language="python")
+    
+    with tab4:
+        st.subheader("Merge Two Sorted Lists")
+        st.code("""
+def merge_two_lists(l1, l2):
+    dummy = ListNode(0)
+    current = dummy
+    
+    while l1 and l2:
+        if l1.val <= l2.val:
+            current.next = l1
+            l1 = l1.next
+        else:
+            current.next = l2
+            l2 = l2.next
+        current = current.next
+    
+    # Attach remaining nodes
+    current.next = l1 or l2
+    
+    return dummy.next
+
+def merge_k_lists(lists):
+    if not lists:
+        return None
+    
+    while len(lists) > 1:
+        merged_lists = []
+        
+        for i in range(0, len(lists), 2):
+            l1 = lists[i]
+            l2 = lists[i + 1] if i + 1 < len(lists) else None
+            merged_lists.append(merge_two_lists(l1, l2))
+        
+        lists = merged_lists
+    
+    return lists[0]
+
+# Time: O(n + m), Space: O(1)
+        """, language="python")
+    
+    st.header("🎯 Interview Tips & Strategies")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        **Before Coding:**
+        - ✅ Clarify input constraints
+        - ✅ Ask about edge cases
+        - ✅ Discuss time/space requirements
+        - ✅ Confirm expected behavior
+        
+        **During Implementation:**
+        - ✅ Use dummy nodes for simplicity
+        - ✅ Draw diagrams on whiteboard
+        - ✅ Handle null pointers carefully
+        - ✅ Test with small examples
+        """)
+    
+    with col2:
+        st.markdown("""
+        **Common Patterns:**
+        - 🔄 Two pointers (fast/slow)
+        - 🎯 Dummy head node
+        - 📝 Recursive solutions
+        - 🔗 Multiple pass algorithms
+        
+        **Testing Strategy:**
+        - 🧪 Empty list (null)
+        - 🧪 Single node
+        - 🧪 Two nodes
+        - 🧪 Odd/even length lists
+        """)
+    
+    # Interactive practice section
+    st.header("🏋️ Practice Session")
+    
+    if st.button("🎯 Start Practice Interview"):
+        practice_question = random.choice(filtered_questions)
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px; padding: 2rem; margin: 1rem 0;">
+            <h3>🎯 Practice Question</h3>
+            <p style="font-size: 1.2em; margin: 1rem 0;"><strong>{practice_question['q']}</strong></p>
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;">Difficulty: {practice_question['difficulty']}</span>
+                <span style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;">Frequency: {practice_question['frequency']}</span>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9em;">💡 Take 5 minutes to think through the approach before coding!</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    # Company-specific preparation
+    st.header("🏢 Company-Specific Preparation")
+    
+    company_focus = {
+        "Google": ["Algorithm optimization", "Clean code", "Edge case handling", "Time/space analysis"],
+        "Amazon": ["Leadership principles", "Scalability", "Customer obsession", "Operational excellence"],
+        "Microsoft": ["Problem-solving approach", "Collaboration", "Technical depth", "System design"],
+        "Facebook/Meta": ["Move fast mentality", "Impact focus", "Technical rigor", "Product thinking"],
+        "Apple": ["Attention to detail", "User experience", "Performance optimization", "Quality focus"]
+    }
+    
+    selected_company = st.selectbox("Select Company:", list(company_focus.keys()))
+    
+    st.markdown(f"""
+    **{selected_company} Interview Focus:**
+    """)
+    
+    for focus_area in company_focus[selected_company]:
+        st.markdown(f"- 🎯 {focus_area}")
+    
+    # Practice Problems Section
+    st.header("📝 Practice Problems with Solutions")
+    
+    practice_problems = [
+        {
+            "title": "Add Two Numbers",
+            "difficulty": "Medium",
+            "description": "You are given two non-empty linked lists representing two non-negative integers. Add the two numbers and return the sum as a linked list.",
+            "example": "Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)\nOutput: 7 -> 0 -> 8\nExplanation: 342 + 465 = 807",
+            "solution": """def addTwoNumbers(l1, l2):
+    dummy = ListNode(0)
+    current = dummy
+    carry = 0
+    
+    while l1 or l2 or carry:
+        val1 = l1.val if l1 else 0
+        val2 = l2.val if l2 else 0
+        
+        total = val1 + val2 + carry
+        carry = total // 10
+        current.next = ListNode(total % 10)
+        
+        current = current.next
+        l1 = l1.next if l1 else None
+        l2 = l2.next if l2 else None
+    
+    return dummy.next"""
+        },
+        {
+            "title": "Remove Nth Node From End",
+            "difficulty": "Medium",
+            "description": "Given the head of a linked list, remove the nth node from the end of the list and return its head.",
+            "example": "Input: head = [1,2,3,4,5], n = 2\nOutput: [1,2,3,5]",
+            "solution": """def removeNthFromEnd(head, n):
+    dummy = ListNode(0)
+    dummy.next = head
+    first = second = dummy
+    
+    # Move first n+1 steps ahead
+    for i in range(n + 1):
+        first = first.next
+    
+    # Move both until first reaches end
+    while first:
+        first = first.next
+        second = second.next
+    
+    # Remove nth node
+    second.next = second.next.next
+    return dummy.next"""
+        },
+        {
+            "title": "Palindrome Linked List",
+            "difficulty": "Easy",
+            "description": "Given the head of a singly linked list, return true if it is a palindrome.",
+            "example": "Input: head = [1,2,2,1]\nOutput: true",
+            "solution": """def isPalindrome(head):
+    # Find middle
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    
+    # Reverse second half
+    prev = None
+    while slow:
+        next_temp = slow.next
+        slow.next = prev
+        prev = slow
+        slow = next_temp
+    
+    # Compare halves
+    while prev:
+        if head.val != prev.val:
+            return False
+        head = head.next
+        prev = prev.next
+    
+    return True"""
+        },
+        {
+            "title": "Intersection of Two Linked Lists",
+            "difficulty": "Easy",
+            "description": "Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect.",
+            "example": "Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5]\nOutput: Reference to node with value = 8",
+            "solution": """def getIntersectionNode(headA, headB):
+    if not headA or not headB:
+        return None
+    
+    pA, pB = headA, headB
+    
+    while pA != pB:
+        pA = pA.next if pA else headB
+        pB = pB.next if pB else headA
+    
+    return pA"""
+        },
+        {
+            "title": "Copy List with Random Pointer",
+            "difficulty": "Medium",
+            "description": "A linked list is given such that each node contains an additional random pointer. Return a deep copy of the list.",
+            "example": "Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]\nOutput: [[7,null],[13,0],[11,4],[10,2],[1,0]]",
+            "solution": """def copyRandomList(head):
+    if not head:
+        return None
+    
+    # Create new nodes
+    current = head
+    while current:
+        new_node = Node(current.val)
+        new_node.next = current.next
+        current.next = new_node
+        current = new_node.next
+    
+    # Set random pointers
+    current = head
+    while current:
+        if current.random:
+            current.next.random = current.random.next
+        current = current.next.next
+    
+    # Separate lists
+    dummy = Node(0)
+    copy_current = dummy
+    current = head
+    
+    while current:
+        copy_current.next = current.next
+        current.next = current.next.next
+        copy_current = copy_current.next
+        current = current.next
+    
+    return dummy.next"""
+        }
+    ]
+    
+    for i, problem in enumerate(practice_problems, 1):
+        difficulty_color = {"Easy": "#4CAF50", "Medium": "#FF9800", "Hard": "#F44336"}[problem["difficulty"]]
+        
+        with st.expander(f"{i}. {problem['title']} ({problem['difficulty']})"):
+            st.markdown(f"**Problem:** {problem['description']}")
+            st.markdown(f"**Example:**\n```\n{problem['example']}\n```")
+            st.code(problem['solution'], language="python")
+    
+    # Final preparation checklist
+    st.header("✅ Final Preparation Checklist")
+    
+    checklist_items = [
+        "Master the top 10 most frequent questions",
+        "Practice coding without IDE/autocomplete",
+        "Time yourself on each problem (20-30 minutes)",
+        "Explain your approach out loud",
+        "Handle all edge cases systematically",
+        "Optimize for both time and space complexity",
+        "Review company-specific interview formats",
+        "Prepare questions to ask the interviewer",
+        "Practice on whiteboard or paper",
+        "Mock interview with peers or mentors"
+    ]
+    
+    for item in checklist_items:
+        st.markdown(f"☐ {item}")
+    
+    st.success("🚀 You're ready to ace your linked list interviews! Good luck!")
+
+def testing_and_debugging():
+    st.title("🧪 Testing & Debugging")
+    save_progress("Testing")
+    
+    st.header("1. Unit Testing Strategies")
+    
+    st.code("""
+# Using pytest for linked list testing
+import pytest
+from linked_list import LinkedList, Node
+
+class TestLinkedList:
+    def setup_method(self):
+        self.ll = LinkedList()
+    
+    def test_empty_list(self):
+        assert self.ll.size == 0
+        assert self.ll.head is None
+    
+    def test_insert_single_element(self):
+        self.ll.insert_at_beginning(10)
+        assert self.ll.size == 1
+        assert self.ll.head.data == 10
+    
+    def test_edge_cases(self):
+        assert self.ll.delete_from_beginning() is None
+        assert self.ll.search(10) == -1
+    """, language="python")
+    
+    st.header("2. Memory Debugging Tools")
+    
+    st.code("""
+# Python memory profiling
+from memory_profiler import profile
+
+@profile
+def test_memory_usage():
+    ll = LinkedList()
+    for i in range(10000):
+        ll.insert_at_end(i)
+    while ll.size > 0:
+        ll.delete_from_beginning()
+    return ll
+
+# Run with: python -m memory_profiler test_memory.py
+    """, language="python")
+    
+    st.header("3. Performance Profiling")
+    
+    st.code("""
+# Profile linked list operations
+import cProfile
+import pstats
+
+def profile_operations():
+    ll = LinkedList()
+    for i in range(10000):
+        ll.insert_at_end(i)
+    for i in range(100):
+        ll.search(i * 100)
+
+if __name__ == "__main__":
+    cProfile.run('profile_operations()', 'results.prof')
+    stats = pstats.Stats('results.prof')
+    stats.sort_stats('cumulative')
+    stats.print_stats(10)
+    """, language="python")
+    
+    if st.button("🐛 Run Debug Session"):
+        st.success("🎉 Debug session completed successfully!")
+
+def integration_topics():
+    st.title("🔗 Integration Topics")
+    save_progress("Integration")
+    
+    st.header("1. Linked Lists in Databases")
+    st.code("""
+# Database Buffer Pool with LRU
+class BufferPool:
+    def __init__(self, size):
+        self.size = size
+        self.pages = {}
+        self.head = PageNode(None, None)
+        self.tail = PageNode(None, None)
+        self.head.next = self.tail
+        self.tail.prev = self.head
+    
+    def get_page(self, page_id):
+        if page_id in self.pages:
+            node = self.pages[page_id]
+            self._move_to_front(node)
+            return node.data
+        
+        page_data = self._load_from_disk(page_id)
+        
+        if len(self.pages) >= self.size:
+            lru_node = self.tail.prev
+            self._remove_node(lru_node)
+            del self.pages[lru_node.page_id]
+        
+        new_node = PageNode(page_id, page_data)
+        self._add_to_front(new_node)
+        self.pages[page_id] = new_node
+        
+        return page_data
+    """, language="python")
+    
+    st.header("2. File System Implementations")
+    st.code("""
+# File Allocation Table
+class FileAllocationTable:
+    def __init__(self, total_clusters):
+        self.total_clusters = total_clusters
+        self.fat = [0] * total_clusters
+        self.free_clusters = list(range(1, total_clusters))
+    
+    def allocate_file(self, file_size_clusters):
+        if len(self.free_clusters) < file_size_clusters:
+            return None
+        
+        allocated = []
+        for i in range(file_size_clusters):
+            cluster = self.free_clusters.pop(0)
+            allocated.append(cluster)
+            
+            if i == file_size_clusters - 1:
+                self.fat[cluster] = -1
+            else:
+                self.fat[cluster] = self.free_clusters[0]
+        
+        return allocated[0]
+    """, language="python")
+    
+    st.header("3. Network Packet Handling")
+    st.code("""
+# Network Packet Queue with Priority
+class PacketQueue:
+    def __init__(self):
+        self.high_priority = None
+        self.normal_priority = None
+        self.low_priority = None
+    
+    def enqueue(self, packet):
+        new_node = PacketNode(packet)
+        
+        if packet.priority == 'high':
+            new_node.next = self.high_priority
+            self.high_priority = new_node
+        elif packet.priority == 'normal':
+            new_node.next = self.normal_priority
+            self.normal_priority = new_node
+        else:
+            new_node.next = self.low_priority
+            self.low_priority = new_node
+    
+    def dequeue(self):
+        if self.high_priority:
+            packet = self.high_priority.packet
+            self.high_priority = self.high_priority.next
+            return packet
+        
+        if self.normal_priority:
+            packet = self.normal_priority.packet
+            self.normal_priority = self.normal_priority.next
+            return packet
+        
+        if self.low_priority:
+            packet = self.low_priority.packet
+            self.low_priority = self.low_priority.next
+            return packet
+        
+        return None
+    """, language="python")
+
 def data_structure_comparison():
     st.title("Data Structure Comparison")
     save_progress("Comparison")
@@ -4713,10 +5720,15 @@ def search_content(query):
         'Practice': ['problems', 'solutions', 'algorithms', 'coding', 'exercise'],
         'Quiz': ['questions', 'test', 'knowledge', 'game', 'challenge'],
         'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare', 'diff'],
+        'Testing': ['unit', 'test', 'debug', 'memory', 'profile', 'benchmark'],
+        'Interview': ['questions', 'complexity', 'mistakes', 'preparation', 'coding', 'companies', 'tips', 'practice', 'solutions'],
+        'Sum': ['calculate', 'total', 'addition', 'examples', 'practice'],
         'Memory': ['garbage', 'collection', 'leak', 'stack', 'heap', 'allocation'],
         'Concurrency': ['thread', 'safe', 'lock', 'atomic', 'race', 'condition'],
         'Specialized': ['skip', 'list', 'self', 'organizing', 'unrolled', 'advanced'],
-        'Optimizations': ['compiler', 'cache', 'language', 'performance', 'optimization']
+        'Optimizations': ['compiler', 'cache', 'language', 'performance', 'optimization'],
+        'Patterns': ['two', 'pointer', 'sliding', 'window', 'system', 'design'],
+        'Integration': ['database', 'file', 'system', 'network', 'packet', 'handling']
     }
     
     if query:
@@ -4962,7 +5974,7 @@ def main():
                         completed = result in st.session_state.completed_sections
                         status = "✓" if completed else "○"
                         if st.button(f"{status} {result}", key=f"search_result_{result}_{i}"):
-                            section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
+                            section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9, 'Patterns': 14, 'Integration': 15}
                             if result in section_map:
                                 st.session_state.current_tab = section_map[result]
                                 st.rerun()
@@ -5001,13 +6013,17 @@ def main():
             ("🎮 Playground", "Interactive practice"),
             ("📊 Analysis", "Performance comparison"),
             ("💡 Practice", "Solve problems"),
+            ("🧪 Testing & Debugging", "Unit testing and debugging strategies"),
+            ("📝 Interview Prep", "Top interview questions and tips"),
             ("🎨 Advanced Viz", "Advanced visualizations"),
             ("🧠 Quiz", "Test your knowledge"),
             ("⚖️ Comparison", "Compare data structures"),
             ("💾 Memory Mgmt", "Memory management topics"),
             ("🔒 Concurrency", "Thread-safe implementations"),
             ("🎆 Specialized", "Advanced linked list variants"),
-            ("🚀 Optimizations", "Real-world implementation details")
+            ("🚀 Optimizations", "Real-world implementation details"),
+            ("🧩 Patterns", "Advanced problem patterns"),
+            ("🔗 Integration", "Real-world integrations")
         ]
         
         for i, (name, desc) in enumerate(nav_options):
@@ -5036,7 +6052,7 @@ def main():
             st.markdown("**📌 Bookmarks**")
             for bookmark in st.session_state.bookmarks[:3]:
                 if st.button(f"📖 {bookmark}", key=f"bookmark_{bookmark}"):
-                    section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
+                    section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9, 'Patterns': 14, 'Integration': 15}
                     if bookmark in section_map:
                         st.session_state.current_tab = section_map[bookmark]
                         st.rerun()
@@ -5076,19 +6092,27 @@ def main():
     elif st.session_state.current_tab == 6:
         practice_problems()
     elif st.session_state.current_tab == 7:
-        advanced_visualizations()
+        testing_and_debugging()
     elif st.session_state.current_tab == 8:
-        interactive_quiz()
+        interview_preparation()
     elif st.session_state.current_tab == 9:
-        data_structure_comparison()
+        advanced_visualizations()
     elif st.session_state.current_tab == 10:
-        memory_management()
+        interactive_quiz()
     elif st.session_state.current_tab == 11:
-        concurrent_linked_lists()
+        data_structure_comparison()
     elif st.session_state.current_tab == 12:
-        specialized_linked_lists()
+        memory_management()
     elif st.session_state.current_tab == 13:
+        concurrent_linked_lists()
+    elif st.session_state.current_tab == 14:
+        specialized_linked_lists()
+    elif st.session_state.current_tab == 15:
         real_world_optimizations()
+    elif st.session_state.current_tab == 16:
+        advanced_problem_patterns()
+    elif st.session_state.current_tab == 17:
+        integration_topics()
     
     # Close theme wrapper
     st.markdown('</div>', unsafe_allow_html=True)
