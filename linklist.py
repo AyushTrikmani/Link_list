@@ -887,12 +887,12 @@ st.markdown("""
 
 # Enhanced Welcome/Dashboard section with modern UI/UX
 def welcome_dashboard():
-    st.markdown('<h1 class="main-header">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header" style="margin-top: 0; padding-top: 1rem;">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
 
     st.markdown("""
-    <div class="section-card">
+    <div class="section-card" style="margin-top: 0.5rem;">
     <h2 style="color: #1e3c72; text-align: center; margin-bottom: 1rem;">Welcome to Your Interactive Learning Journey!</h2>
-    <p style="font-size: 1.2em; text-align: center; color: #666; margin-bottom: 2rem;">
+    <p style="font-size: 1.2em; text-align: center; color: #666; margin-bottom: 1rem;">
     Master linked lists through interactive visualizations, hands-on practice, and comprehensive analysis.
     </p>
     </div>
@@ -905,11 +905,6 @@ def welcome_dashboard():
             st.session_state.current_tab = 1  # Navigate to Introduction
             st.session_state.scroll_to_top = True  # Flag to scroll to top
             st.rerun()
-    
-    st.markdown("""
-    <div class="section-card">
-    </div>
-    """, unsafe_allow_html=True)
 
     # Interactive Feature cards with enhanced animations
     col1, col2, col3, col4 = st.columns(4)
@@ -959,7 +954,7 @@ def welcome_dashboard():
         """, unsafe_allow_html=True)
 
     # Enhanced Quick stats with metric cards
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
     st.subheader("🚀 Quick Start Guide")
 
     col1, col2, col3 = st.columns(3)
@@ -993,7 +988,7 @@ def welcome_dashboard():
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Enhanced Progress indicator with visual progress bar
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="section-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
     st.subheader("📈 Learning Progress")
 
     # Progress visualization
@@ -4257,19 +4252,30 @@ def theme_toggle():
         st.markdown("""
         <style>
             .stApp {
-                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-                color: #e0e0e0;
+                background: #1a1a1a !important;
+                color: #e0e0e0 !important;
+            }
+            
+            .main .block-container {
+                background: #1a1a1a !important;
+            }
+            
+            .stApp > div {
+                background: #1a1a1a !important;
+            }
+            
+            div[data-testid="stSidebar"] {
+                background: #2d2d2d !important;
             }
             
             .section-card {
-                background: rgba(45, 45, 45, 0.95) !important;
+                background: #2d2d2d !important;
                 border-left: 6px solid #64b5f6 !important;
-                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05) !important;
+                color: #e0e0e0 !important;
             }
             
             .feature-card {
                 background: linear-gradient(135deg, #424242 0%, #616161 100%) !important;
-                box-shadow: 0 8px 20px rgba(66, 66, 66, 0.3) !important;
             }
             
             .interactive-card {
@@ -4277,12 +4283,13 @@ def theme_toggle():
             }
             
             .code-block {
-                background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%) !important;
+                background: #1e1e1e !important;
                 border-left: 4px solid #64b5f6 !important;
+                color: #e0e0e0 !important;
             }
             
             .visual-diagram {
-                background: linear-gradient(135deg, #2c2c2c 0%, #1e1e1e 100%) !important;
+                background: #2c2c2c !important;
                 color: #e0e0e0 !important;
             }
             
@@ -4293,13 +4300,25 @@ def theme_toggle():
             .quiz-container {
                 background: linear-gradient(135deg, #37474f 0%, #455a64 100%) !important;
             }
+            
+            .stMarkdown {
+                color: #e0e0e0 !important;
+            }
+            
+            .stDataFrame {
+                background: #2d2d2d !important;
+            }
+            
+            .stPlotlyChart {
+                background: #2d2d2d !important;
+            }
         </style>
         """, unsafe_allow_html=True)
     else:
         st.markdown("""
         <style>
             .stApp {
-                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
             }
         </style>
         """, unsafe_allow_html=True)
