@@ -4242,6 +4242,68 @@ def performance_benchmarks():
     **Note:** Actual memory usage depends on the programming language and implementation.
     """)
 
+# Theme Toggle Feature
+def theme_toggle():
+    """Add dark/light theme toggle functionality"""
+    if 'dark_mode' not in st.session_state:
+        st.session_state.dark_mode = False
+    
+    # Apply theme
+    theme_class = "dark" if st.session_state.dark_mode else "light"
+    st.markdown(f'<div data-theme="{theme_class}" style="min-height: 100vh;">', unsafe_allow_html=True)
+    
+    # Dynamic theme CSS
+    if st.session_state.dark_mode:
+        st.markdown("""
+        <style>
+            .stApp {
+                background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+                color: #e0e0e0;
+            }
+            
+            .section-card {
+                background: rgba(45, 45, 45, 0.95) !important;
+                border-left: 6px solid #64b5f6 !important;
+                box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05) !important;
+            }
+            
+            .feature-card {
+                background: linear-gradient(135deg, #424242 0%, #616161 100%) !important;
+                box-shadow: 0 8px 20px rgba(66, 66, 66, 0.3) !important;
+            }
+            
+            .interactive-card {
+                background: linear-gradient(135deg, #37474f 0%, #455a64 100%) !important;
+            }
+            
+            .code-block {
+                background: linear-gradient(135deg, #1e1e1e 0%, #2d2d2d 100%) !important;
+                border-left: 4px solid #64b5f6 !important;
+            }
+            
+            .visual-diagram {
+                background: linear-gradient(135deg, #2c2c2c 0%, #1e1e1e 100%) !important;
+                color: #e0e0e0 !important;
+            }
+            
+            .metric-card {
+                background: linear-gradient(135deg, #37474f 0%, #455a64 100%) !important;
+            }
+            
+            .quiz-container {
+                background: linear-gradient(135deg, #37474f 0%, #455a64 100%) !important;
+            }
+        </style>
+        """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <style>
+            .stApp {
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            }
+        </style>
+        """, unsafe_allow_html=True)
+
 # Main app function
 def main():
     # Initialize session state for tab navigation
@@ -4269,11 +4331,38 @@ def main():
         st.session_state.time_challenge_best = {}
     if 'username' not in st.session_state:
         st.session_state.username = "Player"
+    
+    # Apply theme toggle
+    theme_toggle()
 
     # Sidebar navigation
     with st.sidebar:
-        st.markdown("<h2 style='text-align: center; color: #1e3c72;'>🔗 Navigation</h2>", unsafe_allow_html=True)
+        # Header with theme-aware color
+        header_color = "#64b5f6" if st.session_state.get('dark_mode', False) else "#1e3c72"
+        st.markdown(f"<h2 style='text-align: center; color: {header_color};'>🔗 Navigation</h2>", unsafe_allow_html=True)
+        
+        # Theme toggle
         st.markdown("---")
+        theme_col1, theme_col2 = st.columns([1, 2])
+        with theme_col1:
+            theme_icon = "🌙" if not st.session_state.get('dark_mode', False) else "☀️"
+            st.markdown(f"<div style='font-size: 1.5em; text-align: center;'>{theme_icon}</div>", unsafe_allow_html=True)
+        with theme_col2:
+            if st.button("Dark Mode" if not st.session_state.get('dark_mode', False) else "Light Mode", key="theme_toggle"):
+                st.session_state.dark_mode = not st.session_state.get('dark_mode', False)
+                st.rerun()
+        
+        st.markdown("---")
+        
+        # User stats display
+        if st.session_state.user_score > 0:
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, {'#37474f' if st.session_state.get('dark_mode', False) else '#e3f2fd'} 0%, {'#455a64' if st.session_state.get('dark_mode', False) else '#bbdefb'} 100%); 
+                        border-radius: 10px; padding: 10px; margin: 10px 0; text-align: center;">
+                <div style="font-size: 0.9em; opacity: 0.8;">Your Score</div>
+                <div style="font-size: 1.5em; font-weight: bold; color: {'#64b5f6' if st.session_state.get('dark_mode', False) else '#1e3c72'};">{st.session_state.user_score}</div>
+            </div>
+            """, unsafe_allow_html=True)
         
         # Navigation buttons
         nav_options = [
@@ -4290,13 +4379,26 @@ def main():
         ]
         
         for i, (name, desc) in enumerate(nav_options):
-            if st.button(name, key=f"nav_{i}", help=desc, use_container_width=True):
+            # Highlight current tab
+            button_type = "primary" if st.session_state.current_tab == i else "secondary"
+            if st.button(name, key=f"nav_{i}", help=desc, use_container_width=True, type=button_type):
                 st.session_state.current_tab = i
                 st.session_state.scroll_to_top = True  # Flag to scroll to top
                 st.rerun()
         
         st.markdown("---")
-        st.markdown("<p style='text-align: center; color: #666; font-size: 0.8em;'>Select a section above to explore</p>", unsafe_allow_html=True)
+        
+        # Progress indicator
+        if st.session_state.get('achievements'):
+            st.markdown(f"""
+            <div style="text-align: center; margin: 10px 0;">
+                <div style="font-size: 0.9em; opacity: 0.8;">Achievements</div>
+                <div style="font-size: 1.2em;">🏆 {len(st.session_state.achievements)}</div>
+            </div>
+            """)
+        
+        footer_color = "#b0b0b0" if st.session_state.get('dark_mode', False) else "#666"
+        st.markdown(f"<p style='text-align: center; color: {footer_color}; font-size: 0.8em;'>Select a section above to explore</p>", unsafe_allow_html=True)
 
     # Add scroll to top functionality
     if st.session_state.get('scroll_to_top', False):
@@ -4327,6 +4429,9 @@ def main():
         interactive_quiz()
     elif st.session_state.current_tab == 9:
         data_structure_comparison()
+    
+    # Close theme wrapper
+    st.markdown('</div>', unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
