@@ -12,6 +12,7 @@ import contextlib
 import pandas as pd
 import time
 import random
+import math
 try:
     from quiz_config import QUIZ_QUESTIONS, CODING_CHALLENGES, TIME_CHALLENGES
 except ImportError:
@@ -958,6 +959,61 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Session state initialization
+if 'username' not in st.session_state:
+    st.session_state.username = "Guest"
+if 'user_score' not in st.session_state:
+    st.session_state.user_score = 0
+if 'achievements' not in st.session_state:
+    st.session_state.achievements = []
+if 'bookmarks' not in st.session_state:
+    st.session_state.bookmarks = []
+if 'notes' not in st.session_state:
+    st.session_state.notes = {}
+if 'progress' not in st.session_state:
+    st.session_state.progress = {}
+if 'leaderboard' not in st.session_state:
+    st.session_state.leaderboard = []
+if 'quiz_attempts' not in st.session_state:
+    st.session_state.quiz_attempts = 0
+if 'correct_answers' not in st.session_state:
+    st.session_state.correct_answers = 0
+if 'coding_challenge_score' not in st.session_state:
+    st.session_state.coding_challenge_score = 0
+if 'time_challenge_best' not in st.session_state:
+    st.session_state.time_challenge_best = {}
+
+# Helper functions
+def save_progress(section):
+    st.session_state.progress[section] = True
+
+def add_bookmark(section):
+    if section not in st.session_state.bookmarks:
+        st.session_state.bookmarks.append(section)
+
+def save_note(section, note):
+    st.session_state.notes[section] = {
+        'text': note,
+        'timestamp': pd.Timestamp.now()
+    }
+
+def step_by_step_insert(elements, value, position):
+    steps = [
+        f"Step 1: Create new node with value {value}",
+        f"Step 2: Set up pointers for insertion at position {position}",
+        f"Step 3: Update existing node connections",
+        f"Step 4: Insert complete! New list: {elements[:position] + [value] + elements[position:]}"
+    ]
+    return steps
+
+def export_code(code, filename):
+    st.download_button(
+        label="📥 Download Code",
+        data=code,
+        file_name=filename,
+        mime="text/plain"
+    )
+
 # Enhanced Welcome/Dashboard section with modern UI/UX
 def welcome_dashboard():
     st.markdown('<h1 class="main-header" style="margin-top: 0; padding-top: 1rem;">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
@@ -1061,6 +1117,114 @@ def welcome_dashboard():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+    # Add comprehensive CSS for modern UI/UX
+    st.markdown("""
+    <style>
+    /* Sidebar Enhancements */
+    .css-1d391kg {
+        background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+        border-right: 1px solid var(--border-color);
+    }
+    
+    /* Streamlit component styling */
+    .stSelectbox > div > div {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+    }
+    
+    .stTextInput > div > div > input {
+        background: var(--bg-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-primary);
+        padding: 12px 16px;
+    }
+    
+    .stButton > button {
+        background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 12px 24px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+    }
+    
+    /* Message styling */
+    .stSuccess {
+        background: linear-gradient(135deg, var(--success-color) 0%, #16a085 100%);
+        color: white;
+        border-radius: 12px;
+        border: none;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+    }
+    
+    .stError {
+        background: linear-gradient(135deg, var(--danger-color) 0%, #c0392b 100%);
+        color: white;
+        border-radius: 12px;
+        border: none;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+    
+    .stWarning {
+        background: linear-gradient(135deg, var(--warning-color) 0%, #d68910 100%);
+        color: white;
+        border-radius: 12px;
+        border: none;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+    }
+    
+    .stInfo {
+        background: linear-gradient(135deg, var(--info-color) 0%, #2980b9 100%);
+        color: white;
+        border-radius: 12px;
+        border: none;
+        padding: 1rem;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+    
+    /* Dark mode text visibility */
+    @media (prefers-color-scheme: dark) {
+        .stMarkdown, .stText, p, span, div {
+            color: var(--text-primary) !important;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-primary) !important;
+        }
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2rem;
+        }
+        
+        .section-card {
+            padding: 1rem;
+            margin: 0.5rem 0;
+        }
+        
+        .feature-card {
+            padding: 1rem;
+            margin: 0.25rem;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     # Enhanced Progress indicator with visual progress bar
     st.markdown('<div class="section-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
     st.subheader("📈 Learning Progress")
@@ -1127,6 +1291,89 @@ def welcome_dashboard():
     """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# Main navigation
+def main():
+    st.markdown('<div id="main-content"></div>', unsafe_allow_html=True)
+    
+    # Sidebar navigation with modern styling
+    st.sidebar.markdown("""
+    <div style="text-align: center; padding: 1rem; margin-bottom: 2rem;">
+        <h2 style="color: var(--primary-color); margin: 0;">🔗 Navigation</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0.5rem 0;">Interactive Learning Hub</p>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Navigation menu
+    menu_options = [
+        "🏠 Welcome",
+        "📖 Introduction", 
+        "🔗 Types of Lists",
+        "⚙️ Operations",
+        "🎮 Interactive Playground",
+        "📊 Performance Analysis",
+        "💡 Practice Problems",
+        "🎯 Gamified Quiz",
+        "🎨 Advanced Visualizations",
+        "📝 Interview Prep",
+        "📚 References"
+    ]
+    
+    selected = st.sidebar.selectbox(
+        "Choose a section:",
+        menu_options,
+        key="main_nav"
+    )
+    
+    # User profile in sidebar
+    with st.sidebar.expander("👤 Profile", expanded=False):
+        st.write(f"**User:** {st.session_state.username}")
+        st.write(f"**Score:** {st.session_state.user_score}")
+        st.write(f"**Achievements:** {len(st.session_state.achievements)}")
+        
+        if st.session_state.achievements:
+            st.write("**Latest Achievement:**")
+            st.write(st.session_state.achievements[-1])
+    
+    # Progress tracker
+    with st.sidebar.expander("📈 Progress", expanded=False):
+        total_sections = len(menu_options) - 1  # Exclude welcome
+        completed = len(st.session_state.progress)
+        progress_pct = (completed / total_sections) * 100 if total_sections > 0 else 0
+        
+        st.progress(progress_pct / 100)
+        st.write(f"{completed}/{total_sections} sections completed")
+        st.write(f"{progress_pct:.1f}% progress")
+    
+    # Bookmarks
+    if st.session_state.bookmarks:
+        with st.sidebar.expander("📌 Bookmarks", expanded=False):
+            for bookmark in st.session_state.bookmarks:
+                st.write(f"• {bookmark}")
+    
+    # Route to appropriate section
+    if selected == "🏠 Welcome":
+        welcome_dashboard()
+    elif selected == "📖 Introduction":
+        introduction()
+    elif selected == "🔗 Types of Lists":
+        types_of_linked_lists()
+    elif selected == "⚙️ Operations":
+        operations_and_algorithms()
+    elif selected == "🎮 Interactive Playground":
+        interactive_playground()
+    elif selected == "📊 Performance Analysis":
+        performance_analysis()
+    elif selected == "💡 Practice Problems":
+        practice_problems()
+    elif selected == "🎯 Gamified Quiz":
+        interactive_quiz()
+    elif selected == "🎨 Advanced Visualizations":
+        advanced_visualizations()
+    elif selected == "📝 Interview Prep":
+        interview_preparation()
+    elif selected == "📚 References":
+        references_and_resources()
 
 # Enhanced Introduction section with modern UI/UX
 def introduction():
@@ -6187,5 +6434,9 @@ def main():
     # Close theme wrapper
     st.markdown('</div>', unsafe_allow_html=True)
 
+# Run the main application
 if __name__ == "__main__":
+    main()
+else:
+    # For Streamlit Cloud deployment
     main()
