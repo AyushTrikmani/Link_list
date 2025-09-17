@@ -1059,6 +1059,33 @@ def welcome_dashboard():
 def introduction():
     st.markdown('<h1 class="main-header">📖 Introduction to Linked Lists</h1>', unsafe_allow_html=True)
     save_progress("Introduction")
+    
+    # Section tools
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        is_bookmarked = "Introduction" in st.session_state.bookmarks
+        if st.button("📌 Unbookmark" if is_bookmarked else "📌 Bookmark", key="bookmark_intro"):
+            if is_bookmarked:
+                st.session_state.bookmarks.remove("Introduction")
+            else:
+                add_bookmark("Introduction")
+            st.rerun()
+    with col2:
+        if st.button("📝 Add Note", key="note_intro"):
+            st.session_state.show_note_intro = True
+    
+    if st.session_state.get('show_note_intro', False):
+        note_text = st.text_input("Your note:", key="intro_note_input")
+        if st.button("Save", key="save_intro_note"):
+            if note_text:
+                save_note("Introduction", note_text)
+                st.session_state.show_note_intro = False
+                st.rerun()
+    
+    # Show existing note
+    if "Introduction" in st.session_state.notes:
+        with st.expander("📝 Your Note"):
+            st.write(st.session_state.notes["Introduction"]['text'])
 
     # Interactive concept overview
     st.markdown("""
@@ -2053,6 +2080,26 @@ def has_cycle(head):
 def interactive_playground():
     st.title("Interactive Playground")
     save_progress("Playground")
+    
+    # Quick tools
+    col1, col2 = st.columns([1, 1])
+    with col1:
+        if st.button("🎲 Random Data", key="random_data"):
+            if hasattr(st.session_state, 'linked_list') and st.session_state.linked_list:
+                import random
+                random_values = [random.randint(1, 100) for _ in range(3)]
+                for val in random_values:
+                    st.session_state.linked_list.insert_at_end(val)
+                st.success(f"🎲 Added: {random_values}")
+                st.rerun()
+            else:
+                st.warning("Create a list first!")
+    with col2:
+        is_bookmarked = "Playground" in st.session_state.bookmarks
+        if st.button("📌 Bookmark" if not is_bookmarked else "📌 Bookmarked", key="bookmark_playground"):
+            if not is_bookmarked:
+                add_bookmark("Playground")
+            st.rerun()
 
     # Linked list classes are now imported from linked_list_classes module
 
@@ -3728,6 +3775,150 @@ def check_achievements():
             st.balloons()
 
 # Data Structure Comparison section
+def memory_management():
+    st.title("💾 Memory Management")
+    save_progress("Memory Mgmt")
+    
+    st.header("1. Garbage Collection")
+    st.markdown("""
+    **Automatic Memory Management:**
+    - Python, Java, C# automatically free unused nodes
+    - Circular references can cause memory leaks
+    - GC overhead affects performance
+    """)
+    
+    st.code("""
+# Python - Automatic GC
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+# Memory freed automatically
+node = Node(10)
+node = None  # Node eligible for GC
+    """, language="python")
+    
+    st.header("2. Memory Leak Prevention")
+    st.markdown("""
+    **Common Leak Scenarios:**
+    - Circular references
+    - Lost head pointer
+    - Exception during insertion
+    - Incomplete deletion
+    """)
+    
+    st.code("""
+// C - Manual memory management
+#include <stdlib.h>
+
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+void deleteList(Node* head) {
+    while (head) {
+        Node* temp = head;
+        head = head->next;
+        free(temp);  // Must manually free
+    }
+}
+    """, language="c")
+    
+    st.header("3. Stack vs Heap Allocation")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.subheader("Stack")
+        st.markdown("""
+        - Fast allocation
+        - Limited size
+        - Automatic cleanup
+        - LIFO order
+        """)
+    
+    with col2:
+        st.subheader("Heap")
+        st.markdown("""
+        - Slower allocation
+        - Large size
+        - Manual/GC cleanup
+        - Random access
+        """)
+
+def concurrent_linked_lists():
+    st.title("🔒 Concurrent Linked Lists")
+    save_progress("Concurrency")
+    
+    st.header("1. Race Conditions")
+    st.markdown("""
+    **Race conditions** occur when multiple threads access shared data simultaneously.
+    """)
+    
+    st.code("""
+# Unsafe linked list operations
+class UnsafeLinkedList:
+    def __init__(self):
+        self.head = None
+    
+    def insert(self, data):
+        new_node = Node(data)
+        new_node.next = self.head  # Race condition!
+        self.head = new_node       # Race condition!
+    """, language="python")
+    
+    st.header("2. Lock-Free Implementations")
+    st.markdown("""
+    **Compare-and-Swap (CAS)** operations enable lock-free programming.
+    """)
+    
+    st.code("""
+# Lock-free insertion using CAS
+class LockFreeLinkedList:
+    def __init__(self):
+        self.head = None
+    
+    def insert(self, data):
+        new_node = Node(data)
+        
+        while True:
+            current_head = self.head
+            new_node.next = current_head
+            
+            # Atomic compare-and-swap
+            if self._cas(self.head, current_head, new_node):
+                break  # Success!
+    """, language="python")
+    
+    st.header("3. Atomic Operations")
+    st.markdown("""
+    **Types of Atomic Operations:**
+    - Compare-and-Swap (CAS)
+    - Fetch-and-Add
+    - Load-Link/Store-Conditional
+    - Memory Barriers
+    """)
+    
+    st.code("""
+// Java - Using AtomicReference
+import java.util.concurrent.atomic.AtomicReference;
+
+class LockFreeStack<T> {
+    private final AtomicReference<Node<T>> head = new AtomicReference<>();
+    
+    public void push(T item) {
+        Node<T> newNode = new Node<>(item);
+        Node<T> currentHead;
+        
+        do {
+            currentHead = head.get();
+            newNode.next = currentHead;
+        } while (!head.compareAndSet(currentHead, newNode));
+    }
+}
+    """, language="java")
+
 def data_structure_comparison():
     st.title("Data Structure Comparison")
     save_progress("Comparison")
@@ -4315,7 +4506,9 @@ def search_content(query):
         'Analysis': ['performance', 'complexity', 'time', 'space', 'benchmark', 'compare'],
         'Practice': ['problems', 'solutions', 'algorithms', 'coding', 'exercise'],
         'Quiz': ['questions', 'test', 'knowledge', 'game', 'challenge'],
-        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare', 'diff']
+        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare', 'diff'],
+        'Memory': ['garbage', 'collection', 'leak', 'stack', 'heap', 'allocation'],
+        'Concurrency': ['thread', 'safe', 'lock', 'atomic', 'race', 'condition']
     }
     
     if query:
@@ -4334,14 +4527,13 @@ def search_content(query):
 def get_search_suggestions(query):
     """Get search suggestions based on input"""
     all_terms = ['Introduction', 'Types', 'Operations', 'Playground', 'Analysis', 'Practice', 'Quiz', 'Comparison', 'complexity', 'performance', 'insert', 'delete', 'node', 'pointer', 'linked', 'list', 'array', 'memory']
-    if query and len(query) >= 1:
-        query = query.lower().strip()
-        # First try starts with, then contains
-        starts_with = [term for term in all_terms if term.lower().startswith(query) and term.lower() != query]
-        contains = [term for term in all_terms if query in term.lower() and term.lower() != query and term not in starts_with]
-        suggestions = starts_with + contains
-        return suggestions[:4]  # Show 4 suggestions
-    return []
+    
+    query_lower = query.lower()
+    # First try starts with, then contains
+    starts_with = [term for term in all_terms if term.lower().startswith(query_lower)]
+    contains = [term for term in all_terms if query_lower in term.lower() and term not in starts_with]
+    suggestions = starts_with + contains
+    return suggestions[:4]
 
 # Code Export Feature
 def export_code(code_content, filename="linked_list_code.py"):
@@ -4372,6 +4564,20 @@ def step_by_step_insert(elements, new_value, position):
             "Step 4: Insertion complete!"
         ]
     return steps
+
+# New Features
+def add_bookmark(section_name):
+    if section_name not in st.session_state.bookmarks:
+        st.session_state.bookmarks.append(section_name)
+        st.success(f"📌 Bookmarked {section_name}!")
+
+def save_note(section_name, note_text):
+    st.session_state.notes[section_name] = {'text': note_text, 'timestamp': pd.Timestamp.now()}
+    st.success("📝 Note saved!")
+
+def get_study_time():
+    st.session_state.study_time += 0.1  # Increment study time
+    return st.session_state.study_time
 
 # Mobile Responsive CSS
 def mobile_responsive_css():
@@ -4501,6 +4707,12 @@ def main():
         st.session_state.time_challenge_best = {}
     if 'username' not in st.session_state:
         st.session_state.username = "Player"
+    if 'bookmarks' not in st.session_state:
+        st.session_state.bookmarks = []
+    if 'notes' not in st.session_state:
+        st.session_state.notes = {}
+    if 'study_time' not in st.session_state:
+        st.session_state.study_time = 0
     if 'progress_data' not in st.session_state:
         st.session_state.progress_data = {}
     if 'completed_sections' not in st.session_state:
@@ -4523,29 +4735,31 @@ def main():
         st.markdown("---")
         search_query = st.text_input("🔍 Search", placeholder="Search topics...", key="search_input")
         
-        if search_query and len(search_query.strip()) > 0:
-            # Show suggestions
-            suggestions = get_search_suggestions(search_query)
-            if suggestions:
-                st.write("**Suggestions:**")
-                for suggestion in suggestions:
-                    if st.button(f"💡 {suggestion}", key=f"suggest_{suggestion}"):
-                        st.rerun()
-            
-            # Show results
-            results = search_content(search_query)
-            if results:
-                st.write("**Found in:**")
-                for result in results:
-                    completed = result in st.session_state.completed_sections
-                    status = "✓" if completed else "○"
-                    if st.button(f"{status} {result}", key=f"search_{result}"):
-                        section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
-                        if result in section_map:
-                            st.session_state.current_tab = section_map[result]
+        if search_query:
+            query = search_query.strip()
+            if len(query) > 0:
+                # Show suggestions
+                suggestions = get_search_suggestions(query)
+                if suggestions:
+                    st.write("**Suggestions:**")
+                    for i, suggestion in enumerate(suggestions):
+                        if st.button(f"💡 {suggestion}", key=f"suggest_{suggestion}_{i}"):
                             st.rerun()
-            else:
-                st.write("No results found")
+                
+                # Show results
+                results = search_content(query)
+                if results:
+                    st.write("**Found in:**")
+                    for i, result in enumerate(results):
+                        completed = result in st.session_state.completed_sections
+                        status = "✓" if completed else "○"
+                        if st.button(f"{status} {result}", key=f"search_result_{result}_{i}"):
+                            section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
+                            if result in section_map:
+                                st.session_state.current_tab = section_map[result]
+                                st.rerun()
+                else:
+                    st.write("No results found")
         
         # Theme toggle
         st.markdown("---")
@@ -4581,7 +4795,9 @@ def main():
             ("💡 Practice", "Solve problems"),
             ("🎨 Advanced Viz", "Advanced visualizations"),
             ("🧠 Quiz", "Test your knowledge"),
-            ("⚖️ Comparison", "Compare data structures")
+            ("⚖️ Comparison", "Compare data structures"),
+            ("💾 Memory Mgmt", "Memory management topics"),
+            ("🔒 Concurrency", "Thread-safe implementations")
         ]
         
         for i, (name, desc) in enumerate(nav_options):
@@ -4604,6 +4820,16 @@ def main():
             </div>
         </div>
         """, unsafe_allow_html=True)
+        
+        # Bookmarks section
+        if st.session_state.bookmarks:
+            st.markdown("**📌 Bookmarks**")
+            for bookmark in st.session_state.bookmarks[:3]:
+                if st.button(f"📖 {bookmark}", key=f"bookmark_{bookmark}"):
+                    section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
+                    if bookmark in section_map:
+                        st.session_state.current_tab = section_map[bookmark]
+                        st.rerun()
         
         if st.session_state.get('achievements'):
             st.markdown(f"""
@@ -4645,6 +4871,10 @@ def main():
         interactive_quiz()
     elif st.session_state.current_tab == 9:
         data_structure_comparison()
+    elif st.session_state.current_tab == 10:
+        memory_management()
+    elif st.session_state.current_tab == 11:
+        concurrent_linked_lists()
     
     # Close theme wrapper
     st.markdown('</div>', unsafe_allow_html=True)
