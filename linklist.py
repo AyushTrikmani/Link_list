@@ -4334,8 +4334,9 @@ def search_content():
 def get_search_suggestions():
     """Get search suggestions based on input"""
     all_terms = ['Introduction', 'Types', 'Operations', 'Playground', 'Analysis', 'Practice', 'Quiz', 'Comparison', 'complexity', 'performance', 'insert', 'delete', 'node', 'pointer']
-    if st.session_state.search_query:
-        query = st.session_state.search_query.lower()
+    query = st.session_state.get('search_query', '')
+    if query:
+        query = query.lower()
         suggestions = [term for term in all_terms if term.lower().startswith(query) and term.lower() != query]
         return suggestions[:3]  # Limit to 3 suggestions
     return []
@@ -4522,6 +4523,8 @@ def main():
         search_query = st.text_input("🔍 Search", placeholder="Search topics...", key="search_input")
         
         if search_query:
+            st.session_state.search_query = search_query
+            
             # Show suggestions
             suggestions = get_search_suggestions()
             if suggestions:
