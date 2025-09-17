@@ -1016,7 +1016,7 @@ def export_code(code, filename):
 
 # Enhanced Welcome/Dashboard section with modern UI/UX
 def welcome_dashboard():
-    st.markdown('<h1 class="main-header" style="margin-top: 0; padding-top: 1rem;">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header" style="margin-top: 0; padding-top: 0;">🔗 Linked List Data Structures</h1>', unsafe_allow_html=True)
     save_progress("Welcome")
 
     st.markdown("""
@@ -1206,6 +1206,17 @@ def welcome_dashboard():
         }
     }
     
+    /* Remove top padding/margin */
+    .main .block-container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+    
+    .main-header {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+    }
+    
     /* Mobile responsiveness */
     @media (max-width: 768px) {
         .main-header {
@@ -1294,7 +1305,7 @@ def welcome_dashboard():
 
 # Main navigation
 def main():
-    st.markdown('<div id="main-content"></div>', unsafe_allow_html=True)
+    st.markdown('<style>.main .block-container { padding-top: 0 !important; }</style>', unsafe_allow_html=True)
     
     # Sidebar navigation with modern styling
     st.sidebar.markdown("""
@@ -1377,7 +1388,7 @@ def main():
 
 # Enhanced Introduction section with modern UI/UX
 def introduction():
-    st.markdown('<h1 class="main-header">📖 Introduction to Linked Lists</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header" style="margin-top: 0;">📖 Introduction to Linked Lists</h1>', unsafe_allow_html=True)
     save_progress("Introduction")
     
     # Section tools
