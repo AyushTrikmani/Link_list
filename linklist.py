@@ -4306,7 +4306,7 @@ def get_progress_percentage():
 
 # Search Feature
 def search_content():
-    """Global search functionality"""
+    """Global search functionality with suggestions"""
     search_data = {
         'Introduction': ['linked list', 'node', 'pointer', 'memory', 'data structure'],
         'Types': ['singly', 'doubly', 'circular', 'XOR', 'skip list'],
@@ -4315,16 +4315,29 @@ def search_content():
         'Analysis': ['performance', 'complexity', 'O(n)', 'O(1)', 'benchmark'],
         'Practice': ['problems', 'solutions', 'algorithms', 'coding'],
         'Quiz': ['questions', 'test', 'knowledge', 'gamification'],
-        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency']
+        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare']
     }
     
     if st.session_state.search_query:
         query = st.session_state.search_query.lower()
         results = []
         for section, keywords in search_data.items():
-            if any(query in keyword for keyword in keywords) or query in section.lower():
+            # Check section name starts with query
+            if section.lower().startswith(query):
+                results.append(section)
+            # Check keywords contain query
+            elif any(query in keyword for keyword in keywords):
                 results.append(section)
         return results
+    return []
+
+def get_search_suggestions():
+    """Get search suggestions based on input"""
+    all_terms = ['Introduction', 'Types', 'Operations', 'Playground', 'Analysis', 'Practice', 'Quiz', 'Comparison', 'complexity', 'performance', 'insert', 'delete', 'node', 'pointer']
+    if st.session_state.search_query:
+        query = st.session_state.search_query.lower()
+        suggestions = [term for term in all_terms if term.lower().startswith(query) and term.lower() != query]
+        return suggestions[:3]  # Limit to 3 suggestions
     return []
 
 # Code Export Feature
@@ -4504,22 +4517,34 @@ def main():
         header_color = "#64b5f6" if st.session_state.get('dark_mode', False) else "#1e3c72"
         st.markdown(f"<h2 style='text-align: center; color: {header_color};'>🔗 Navigation</h2>", unsafe_allow_html=True)
         
-        # Global Search
+        # Global Search with suggestions
         st.markdown("---")
         search_query = st.text_input("🔍 Search", placeholder="Search topics...", key="search_input")
-        if search_query != st.session_state.search_query:
-            st.session_state.search_query = search_query
-            if search_query:
-                results = search_content()
-                if results:
-                    st.write("**Found in:**")
-                    for result in results:
-                        if st.button(f"→ {result}", key=f"search_{result}"):
-                            # Navigate to section
-                            section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8}
-                            if result in section_map:
-                                st.session_state.current_tab = section_map[result]
-                                st.rerun()
+        
+        if search_query:
+            # Show suggestions
+            suggestions = get_search_suggestions()
+            if suggestions:
+                st.write("**Suggestions:**")
+                for suggestion in suggestions:
+                    if st.button(f"💡 {suggestion}", key=f"suggest_{suggestion}"):
+                        st.session_state.search_query = suggestion
+                        st.rerun()
+            
+            # Show results
+            results = search_content()
+            if results:
+                st.write("**Found in:**")
+                for result in results:
+                    completed = result in st.session_state.completed_sections
+                    status = "✓" if completed else "○"
+                    if st.button(f"{status} {result}", key=f"search_{result}"):
+                        section_map = {'Introduction': 1, 'Types': 2, 'Operations': 3, 'Playground': 4, 'Analysis': 5, 'Practice': 6, 'Quiz': 8, 'Comparison': 9}
+                        if result in section_map:
+                            st.session_state.current_tab = section_map[result]
+                            st.rerun()
+            elif len(search_query) > 2:
+                st.write("No results found")
         
         # Theme toggle
         st.markdown("---")
@@ -4573,11 +4598,11 @@ def main():
         st.markdown(f"""
         <div style="margin: 10px 0;">
             <div style="font-size: 0.9em; opacity: 0.8; text-align: center;">Progress: {progress_pct:.0f}%</div>
-            <div style="background: #ddd; border-radius: 10px; height: 8px; margin: 5px 0;">
+            <div style="background: {'#555' if st.session_state.get('dark_mode', False) else '#ddd'}; border-radius: 10px; height: 8px; margin: 5px 0;">
                 <div style="background: {'#64b5f6' if st.session_state.get('dark_mode', False) else '#1e3c72'}; height: 8px; border-radius: 10px; width: {progress_pct}%;"></div>
             </div>
         </div>
-        """)
+        """, unsafe_allow_html=True)
         
         if st.session_state.get('achievements'):
             st.markdown(f"""
@@ -4585,7 +4610,7 @@ def main():
                 <div style="font-size: 0.9em; opacity: 0.8;">Achievements</div>
                 <div style="font-size: 1.2em;">🏆 {len(st.session_state.achievements)}</div>
             </div>
-            """)
+            """, unsafe_allow_html=True)
         
         footer_color = "#b0b0b0" if st.session_state.get('dark_mode', False) else "#666"
         st.markdown(f"<p style='text-align: center; color: {footer_color}; font-size: 0.8em;'>Select a section above to explore</p>", unsafe_allow_html=True)
