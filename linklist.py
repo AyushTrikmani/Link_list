@@ -196,13 +196,227 @@ st.markdown("""
     /* Import Google Fonts */
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
     
-    /* CSS Variables for Theme Colors */
-    :root {
-        --primary-color: #6366f1;
-        --primary-hover: #4f46e5;
-        --secondary-color: #10b981;
-        --accent-color: #f59e0b;
-        --danger-color: #ef4444;
+    /* Remove default padding */
+    .main .block-container {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        max-width: 100% !important;
+    }
+    
+    /* Global App Styling */
+    .stApp {
+        background: #f8fafc;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+        .stApp {
+            background: #0f172a;
+            color: #e2e8f0;
+        }
+    }
+    
+    /* Headers */
+    .main-header {
+        font-size: 3rem;
+        font-weight: 700;
+        color: #1e293b;
+        text-align: center;
+        margin: 0 0 2rem 0;
+        padding: 0;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .main-header {
+            color: #f1f5f9;
+        }
+    }
+    
+    /* Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 1.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .section-card {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+    }
+    
+    .feature-card {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 0.75rem;
+        text-align: center;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-2px);
+    }
+    
+    /* Timeline */
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #6366f1;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-left: 30px;
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -22px;
+        top: 8px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #6366f1;
+    }
+    
+    .timeline-content {
+        background: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #6366f1;
+        color: #1e293b;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .timeline-content {
+            background: #334155;
+            color: #e2e8f0;
+        }
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        transition: all 0.2s;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+    
+    /* Metrics */
+    .metric-card {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        margin: 0.75rem;
+    }
+    
+    /* Visual diagram */
+    .visual-diagram {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin: 1.5rem 0;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e2e8f0;
+        color: #1e293b;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .visual-diagram {
+            background: #334155;
+            border-color: #475569;
+            color: #e2e8f0;
+        }
+    }
+    
+    /* Progress bar */
+    .progress-container {
+        background: #f1f5f9;
+        border-radius: 25px;
+        padding: 3px;
+        margin: 1rem 0;
+    }
+    
+    .progress-bar {
+        background: linear-gradient(90deg, #6366f1, #8b5cf6);
+        height: 20px;
+        border-radius: 22px;
+        transition: width 1s ease-in-out;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .progress-container {
+            background: #475569;
+        }
+    }
+    
+    /* Text colors */
+    h1, h2, h3, h4, h5, h6 {
+        color: #1e293b;
+    }
+    
+    p, span, div {
+        color: #475569;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        h1, h2, h3, h4, h5, h6 {
+            color: #f1f5f9;
+        }
+        
+        p, span, div {
+            color: #cbd5e1;
+        }
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 2rem;
+        }
+        
+        .section-card {
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .feature-card {
+            padding: 1rem;
+            margin: 0.5rem;
+        }
+    }: #ef4444;
         --warning-color: #f97316;
         --info-color: #3b82f6;
         --success-color: #22c55e;
@@ -1116,8 +1330,6 @@ def welcome_dashboard():
         """, unsafe_allow_html=True)
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-    # Add comprehensive CSS for modern UI/UX
     st.markdown("""
     <style>
     /* Sidebar Enhancements */
