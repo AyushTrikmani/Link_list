@@ -192,17 +192,90 @@ st.set_page_config(
 # Enhanced Custom CSS for Modern UI/UX
 st.markdown("""
 <style>
-    /* Modern Typography and Layout */
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    
+    /* CSS Variables for Theme Colors */
+    :root {
+        --primary-color: #6366f1;
+        --primary-hover: #4f46e5;
+        --secondary-color: #10b981;
+        --accent-color: #f59e0b;
+        --danger-color: #ef4444;
+        --warning-color: #f97316;
+        --info-color: #3b82f6;
+        --success-color: #22c55e;
+        
+        /* Light Mode Colors */
+        --bg-primary: #ffffff;
+        --bg-secondary: #f8fafc;
+        --bg-tertiary: #f1f5f9;
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+        --text-muted: #94a3b8;
+        --border-color: #e2e8f0;
+        --shadow-light: rgba(0, 0, 0, 0.05);
+        --shadow-medium: rgba(0, 0, 0, 0.1);
+        --shadow-heavy: rgba(0, 0, 0, 0.15);
+    }
+    
+    /* Dark Mode Colors */
+    [data-theme="dark"] {
+        --bg-primary: #0f172a;
+        --bg-secondary: #1e293b;
+        --bg-tertiary: #334155;
+        --text-primary: #f1f5f9;
+        --text-secondary: #cbd5e1;
+        --text-muted: #94a3b8;
+        --border-color: #475569;
+        --shadow-light: rgba(0, 0, 0, 0.2);
+        --shadow-medium: rgba(0, 0, 0, 0.3);
+        --shadow-heavy: rgba(0, 0, 0, 0.4);
+    }
+    
+    /* Auto-detect system theme */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --border-color: #475569;
+            --shadow-light: rgba(0, 0, 0, 0.2);
+            --shadow-medium: rgba(0, 0, 0, 0.3);
+            --shadow-heavy: rgba(0, 0, 0, 0.4);
+        }
+    }
+    
+    /* Global Styles */
+    .stApp {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+    }
+    
+    /* Main Header */
     .main-header {
-        font-size: 3rem;
-        font-weight: bold;
-        background: linear-gradient(45deg, #1e3c72, #2a5298);
+        font-size: 3.5rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
         text-align: center;
         margin-bottom: 2rem;
         animation: fadeInUp 1s ease-out;
+        letter-spacing: -0.02em;
+    }
+    
+    .subtitle {
+        font-size: 1.25rem;
+        color: var(--text-secondary);
+        text-align: center;
+        margin-bottom: 3rem;
+        font-weight: 400;
     }
     
     [data-theme="dark"] .main-header {
