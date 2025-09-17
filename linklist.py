@@ -4305,40 +4305,42 @@ def get_progress_percentage():
     return (len(st.session_state.completed_sections) / total_sections) * 100
 
 # Search Feature
-def search_content():
+def search_content(query):
     """Global search functionality with suggestions"""
     search_data = {
-        'Introduction': ['linked list', 'node', 'pointer', 'memory', 'data structure'],
-        'Types': ['singly', 'doubly', 'circular', 'XOR', 'skip list'],
-        'Operations': ['insert', 'delete', 'search', 'traverse', 'reverse'],
-        'Playground': ['interactive', 'visualization', 'create', 'modify'],
-        'Analysis': ['performance', 'complexity', 'O(n)', 'O(1)', 'benchmark'],
-        'Practice': ['problems', 'solutions', 'algorithms', 'coding'],
-        'Quiz': ['questions', 'test', 'knowledge', 'gamification'],
-        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare']
+        'Introduction': ['linked', 'list', 'node', 'pointer', 'memory', 'data', 'structure', 'intro'],
+        'Types': ['singly', 'doubly', 'circular', 'XOR', 'skip', 'list', 'type'],
+        'Operations': ['insert', 'delete', 'search', 'traverse', 'reverse', 'operation', 'algo'],
+        'Playground': ['interactive', 'visualization', 'create', 'modify', 'play', 'demo'],
+        'Analysis': ['performance', 'complexity', 'time', 'space', 'benchmark', 'compare'],
+        'Practice': ['problems', 'solutions', 'algorithms', 'coding', 'exercise'],
+        'Quiz': ['questions', 'test', 'knowledge', 'game', 'challenge'],
+        'Comparison': ['array', 'vs', 'memory', 'cache', 'efficiency', 'compare', 'diff']
     }
     
-    if st.session_state.search_query:
-        query = st.session_state.search_query.lower()
+    if query:
+        query = query.lower().strip()
         results = []
         for section, keywords in search_data.items():
-            # Check section name starts with query
-            if section.lower().startswith(query):
+            # Check section name contains query
+            if query in section.lower():
                 results.append(section)
             # Check keywords contain query
             elif any(query in keyword for keyword in keywords):
                 results.append(section)
-        return results
+        return list(set(results))  # Remove duplicates
     return []
 
-def get_search_suggestions():
+def get_search_suggestions(query):
     """Get search suggestions based on input"""
-    all_terms = ['Introduction', 'Types', 'Operations', 'Playground', 'Analysis', 'Practice', 'Quiz', 'Comparison', 'complexity', 'performance', 'insert', 'delete', 'node', 'pointer']
-    query = st.session_state.get('search_query', '')
-    if query:
-        query = query.lower()
-        suggestions = [term for term in all_terms if term.lower().startswith(query) and term.lower() != query]
-        return suggestions[:3]  # Limit to 3 suggestions
+    all_terms = ['Introduction', 'Types', 'Operations', 'Playground', 'Analysis', 'Practice', 'Quiz', 'Comparison', 'complexity', 'performance', 'insert', 'delete', 'node', 'pointer', 'linked', 'list', 'array', 'memory']
+    if query and len(query) >= 1:
+        query = query.lower().strip()
+        # First try starts with, then contains
+        starts_with = [term for term in all_terms if term.lower().startswith(query) and term.lower() != query]
+        contains = [term for term in all_terms if query in term.lower() and term.lower() != query and term not in starts_with]
+        suggestions = starts_with + contains
+        return suggestions[:4]  # Show 4 suggestions
     return []
 
 # Code Export Feature
@@ -4503,8 +4505,7 @@ def main():
         st.session_state.progress_data = {}
     if 'completed_sections' not in st.session_state:
         st.session_state.completed_sections = set()
-    if 'search_query' not in st.session_state:
-        st.session_state.search_query = ""
+
     
     # Apply theme toggle
     theme_toggle()
@@ -4522,20 +4523,17 @@ def main():
         st.markdown("---")
         search_query = st.text_input("🔍 Search", placeholder="Search topics...", key="search_input")
         
-        if search_query:
-            st.session_state.search_query = search_query
-            
+        if search_query and len(search_query.strip()) > 0:
             # Show suggestions
-            suggestions = get_search_suggestions()
+            suggestions = get_search_suggestions(search_query)
             if suggestions:
                 st.write("**Suggestions:**")
                 for suggestion in suggestions:
                     if st.button(f"💡 {suggestion}", key=f"suggest_{suggestion}"):
-                        st.session_state.search_query = suggestion
                         st.rerun()
             
             # Show results
-            results = search_content()
+            results = search_content(search_query)
             if results:
                 st.write("**Found in:**")
                 for result in results:
@@ -4546,7 +4544,7 @@ def main():
                         if result in section_map:
                             st.session_state.current_tab = section_map[result]
                             st.rerun()
-            elif len(search_query) > 2:
+            else:
                 st.write("No results found")
         
         # Theme toggle
