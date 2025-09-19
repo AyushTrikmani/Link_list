@@ -191,211 +191,392 @@ st.set_page_config(
 )
 
 # Enhanced Custom CSS for Modern UI/UX
-st.markdown("""
+st.markdown(r"""
 <style>
-    /* Import Google Fonts */
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    /* Import Modern Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+    
+    /* Root Variables for Design System */
+    :root {
+        /* Soft Modern Color Palette */
+        --primary-50: #f0f9ff;
+        --primary-100: #e0f2fe;
+        --primary-200: #bae6fd;
+        --primary-300: #7dd3fc;
+        --primary-400: #38bdf8;
+        --primary-500: #0ea5e9;
+        --primary-600: #0284c7;
+        --primary-700: #0369a1;
+        --primary-800: #075985;
+        --primary-900: #0c4a6e;
+        
+        --secondary-50: #fdf4ff;
+        --secondary-100: #fae8ff;
+        --secondary-200: #f5d0fe;
+        --secondary-300: #f0abfc;
+        --secondary-400: #e879f9;
+        --secondary-500: #d946ef;
+        --secondary-600: #c026d3;
+        --secondary-700: #a21caf;
+        --secondary-800: #86198f;
+        --secondary-900: #701a75;
+        
+        --neutral-50: #fafafa;
+        --neutral-100: #f5f5f5;
+        --neutral-200: #e5e5e5;
+        --neutral-300: #d4d4d4;
+        --neutral-400: #a3a3a3;
+        --neutral-500: #737373;
+        --neutral-600: #525252;
+        --neutral-700: #404040;
+        --neutral-800: #262626;
+        --neutral-900: #171717;
+        
+        --success-50: #f0fdf4;
+        --success-100: #dcfce7;
+        --success-200: #bbf7d0;
+        --success-300: #86efac;
+        --success-400: #4ade80;
+        --success-500: #22c55e;
+        --success-600: #16a34a;
+        
+        --warning-50: #fffbeb;
+        --warning-100: #fef3c7;
+        --warning-200: #fde68a;
+        --warning-300: #fcd34d;
+        --warning-400: #fbbf24;
+        --warning-500: #f59e0b;
+        --warning-600: #d97706;
+        
+        --error-50: #fef2f2;
+        --error-100: #fee2e2;
+        --error-200: #fecaca;
+        --error-300: #fca5a5;
+        --error-400: #f87171;
+        --error-500: #ef4444;
+        --error-600: #dc2626;
+        
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        
+        /* Border Radius */
+        --radius-sm: 8px;
+        --radius-md: 12px;
+        --radius-lg: 16px;
+        --radius-xl: 20px;
+        --radius-2xl: 24px;
+        --radius-full: 9999px;
+        
+        /* Transitions */
+        --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+        --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    /* Base Styles */
+    .stApp {
+        background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        color: var(--neutral-700);
+        line-height: 1.6;
+    }
+    
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+        .stApp {
+            background: linear-gradient(135deg, #0c0a09 0%, #171717 100%);
+            color: var(--neutral-200);
+        }
+    }
     
     /* Remove default padding */
     .main .block-container {
-        padding-top: 0 !important;
-        margin-top: 0 !important;
+        padding-top: 1rem !important;
+        padding-bottom: 2rem !important;
         max-width: 100% !important;
     }
     
-    .stApp {
-        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-        font-family: 'Inter', sans-serif;
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Space Grotesk', Inter, sans-serif;
+        font-weight: 600;
+        color: var(--neutral-800);
+        letter-spacing: -0.025em;
+        margin-bottom: 1rem;
     }
     
-    @media (prefers-color-scheme: dark) {
-        .stApp {
-            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 100%);
-        }
-    }
-    
-    .main-header {
+    h1 {
         font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary-600) 0%, var(--secondary-600) 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        text-align: center;
-        margin: 0 0 2rem 0;
-        padding: 1rem 0;
+        background-clip: text;
     }
     
-    .section-card {
-        background: rgba(255, 255, 255, 0.25);
-        backdrop-filter: blur(10px);
-        border-radius: 20px;
-        padding: 2rem;
-        margin: 1.5rem 0;
-        border: 1px solid rgba(255, 255, 255, 0.18);
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-        transition: all 0.3s ease;
-    }
-    
-    .section-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 45px 0 rgba(31, 38, 135, 0.5);
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .section-card {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-        }
-    }
-    
-    .feature-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin: 0.75rem;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        transition: all 0.3s ease;
-    }
-    
-    .feature-card:hover {
-        transform: translateY(-8px) scale(1.02);
-        box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
-    }
-    
-    .stButton > button {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 0.75rem 2rem;
+    h2 {
+        font-size: 2.25rem;
         font-weight: 600;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
     }
     
-    .stButton > button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
-    }
-    
-    .stTextInput > div > div > input {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(102, 126, 234, 0.3);
-        border-radius: 12px;
-        padding: 0.75rem 1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .stTextInput > div > div > input:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .stTextInput > div > div > input {
-            background: rgba(255, 255, 255, 0.1);
-            color: #e2e8f0;
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-    }
-    
-    .stSelectbox > div > div {
-        background: rgba(255, 255, 255, 0.9);
-        backdrop-filter: blur(10px);
-        border: 2px solid rgba(102, 126, 234, 0.3);
-        border-radius: 12px;
-    }
-    
-    @media (prefers-color-scheme: dark) {
-        .stSelectbox > div > div {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(139, 92, 246, 0.3);
-        }
-    }
-    
-    h1, h2, h3, h4, h5, h6 {
-        color: #2d3748;
+    h3 {
+        font-size: 1.875rem;
         font-weight: 600;
     }
     
     p, li, span {
-        color: #4a5568;
-        line-height: 1.6;
+        color: var(--neutral-600);
+        line-height: 1.7;
     }
     
+    /* Dark mode text colors */
     @media (prefers-color-scheme: dark) {
         h1, h2, h3, h4, h5, h6 {
-            color: #f7fafc;
+            color: var(--neutral-100);
         }
         
         p, li, span {
-            color: #e2e8f0;
+            color: var(--neutral-300);
         }
     }
     
-    @media (max-width: 768px) {
-        .main-header {
-            font-size: 2rem;
-        }
-        
+    /* Glassmorphism Cards */
+    .section-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        margin: 2rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-lg);
+        transition: all var(--transition-normal);
+    }
+    
+    .section-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    @media (prefers-color-scheme: dark) {
         .section-card {
-            padding: 1.5rem;
-            margin: 1rem 0;
-        }
-        
-        .feature-card {
-            padding: 1rem;
-            margin: 0.5rem;
+            background: rgba(23, 23, 23, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--neutral-200);
         }
     }
     
-    .stSuccess {
-        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-        border-radius: 12px;
+    /* Feature Cards */
+    .feature-card {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(217, 70, 239, 0.1) 100%);
+        border: 1px solid rgba(14, 165, 233, 0.2);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 1rem;
+        text-align: center;
+        transition: all var(--transition-normal);
+        backdrop-filter: blur(10px);
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-6px) scale(1.02);
+        border-color: rgba(14, 165, 233, 0.4);
+        box-shadow: var(--shadow-xl);
+    }
+    
+    /* Modern Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, var(--primary-500) 0%, var(--secondary-500) 100%);
+        color: white;
         border: none;
+        border-radius: var(--radius-lg);
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all var(--transition-normal);
+        box-shadow: var(--shadow-md);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .stButton > button:active {
+        transform: translateY(0);
+    }
+    
+    .stButton > button::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .stButton > button:hover::before {
+        left: 100%;
+    }
+    
+    /* Form Inputs */
+    .stTextInput > div > div > input,
+    .stNumberInput > div > div > input {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(14, 165, 233, 0.2);
+        border-radius: var(--radius-lg);
+        padding: 1rem 1.25rem;
+        font-size: 1rem;
+        transition: all var(--transition-fast);
+        box-shadow: var(--shadow-sm);
+    }
+    
+    .stTextInput > div > div > input:focus,
+    .stNumberInput > div > div > input:focus {
+        border-color: var(--primary-400);
+        box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1), var(--shadow-md);
+        outline: none;
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .stTextInput > div > div > input,
+        .stNumberInput > div > div > input {
+            background: rgba(23, 23, 23, 0.8);
+            border-color: rgba(14, 165, 233, 0.3);
+            color: var(--neutral-200);
+        }
+    }
+    
+    /* Select Boxes */
+    .stSelectbox > div > div {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(14, 165, 233, 0.2);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-fast);
+    }
+    
+    .stSelectbox > div > div:hover {
+        border-color: var(--primary-400);
+        box-shadow: var(--shadow-md);
+    }
+    
+    @media (prefers-color-scheme: dark) {
+        .stSelectbox > div > div {
+            background: rgba(23, 23, 23, 0.8);
+            border-color: rgba(14, 165, 233, 0.3);
+        }
+    }
+    
+    /* Status Messages */
+    .stSuccess {
+        background: linear-gradient(135deg, var(--success-400) 0%, var(--success-500) 100%);
+        border-radius: var(--radius-lg);
+        border: none;
+        box-shadow: var(--shadow-md);
+        color: white;
+        font-weight: 500;
     }
     
     .stError {
-        background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
-        border-radius: 12px;
+        background: linear-gradient(135deg, var(--error-400) 0%, var(--error-500) 100%);
+        border-radius: var(--radius-lg);
         border: none;
+        box-shadow: var(--shadow-md);
+        color: white;
+        font-weight: 500;
     }
     
     .stWarning {
-        background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-        border-radius: 12px;
+        background: linear-gradient(135deg, var(--warning-400) 0%, var(--warning-500) 100%);
+        border-radius: var(--radius-lg);
         border: none;
+        box-shadow: var(--shadow-md);
+        color: white;
+        font-weight: 500;
     }
     
     .stInfo {
-        background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
-        border-radius: 12px;
+        background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 100%);
+        border-radius: var(--radius-lg);
         border: none;
-    } .stApp {
-        background: #f8fafc;
-        font-family: 'Inter', sans-serif;
+        box-shadow: var(--shadow-md);
+        color: white;
+        font-weight: 500;
     }
     
-    /* Dark mode */
+    /* Sidebar Styling */
+    .css-1d391kg {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(20px);
+        border-right: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
     @media (prefers-color-scheme: dark) {
-        .stApp {
-            background: #0f172a;
-            color: #e2e8f0;
+        .css-1d391kg {
+            background: rgba(23, 23, 23, 0.9);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
     }
     
-    /* Headers */
-    .main-header {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #1e293b;
-        text-align: center;
-        margin: 0 0 2rem 0;
-        padding: 0;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 2.25rem;
+        }
+        
+        h2 {
+            font-size: 1.875rem;
+        }
+        
+        .section-card {
+            padding: 1.75rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature-card {
+            padding: 1.5rem;
+            margin: 0.75rem;
+        }
+        
+        .stButton > button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+        }
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .animate-fadeInUp {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    
+    .animate-float {
+        animation: float 3s ease-in-out infinite;
     }
     
     @media (prefers-color-scheme: dark) {
@@ -1405,98 +1586,102 @@ def welcome_dashboard():
     save_progress("Welcome")
 
     st.markdown("""
-    <div class="section-card" style="margin-top: 0.5rem;">
-    <h2 style="color: #1e3c72; text-align: center; margin-bottom: 1rem;">Welcome to Your Interactive Learning Journey!</h2>
-    <p style="font-size: 1.2em; text-align: center; color: #666; margin-bottom: 1rem;">
+    <div class="section-card" style="margin-top: 0.5rem; background: linear-gradient(135deg, var(--primary-50) 0%, var(--secondary-50) 100%); border: 1px solid rgba(14, 165, 233, 0.1); box-shadow: var(--shadow-lg);">
+    <h2 style="color: var(--text-primary); text-align: center; margin-bottom: 1rem; font-weight: 700;">Welcome to Your Interactive Learning Journey!</h2>
+    <p style="font-size: 1.2em; text-align: center; color: var(--text-secondary); margin-bottom: 1rem; font-weight: 400;">
     Master linked lists through interactive visualizations, hands-on practice, and comprehensive analysis.
     </p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Add Start Learning button
+    # Add Start Learning button with modern styling
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
-        if st.button("🚀 Start Learning", key="start_learning", use_container_width=True):
+        if st.button("🚀 Start Learning", key="start_learning", use_container_width=True, help="Begin your linked list learning journey"):
             st.session_state.current_tab = 1  # Navigate to Introduction
             st.session_state.scroll_to_top = True  # Flag to scroll to top
             st.rerun()
 
-    # Interactive Feature cards with enhanced animations
+    # Interactive Feature cards with modern soft UI design
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
         st.markdown("""
-        <div class="feature-card" style="animation-delay: 0.1s;">
-        <h3>📚 Learn</h3>
-        <p>Comprehensive guide to singly, doubly, and circular linked lists</p>
-        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
-        <span class="success-checkmark"></span> Interactive Examples
+        <div class="feature-card" style="animation-delay: 0.1s; background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-lg); transition: all var(--transition-normal); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📚</div>
+        <h3 style="margin: 0 0 0.5rem 0; font-weight: 700;">Learn</h3>
+        <p style="margin: 0 0 1rem 0; opacity: 0.9; font-weight: 400;">Comprehensive guide to singly, doubly, and circular linked lists</p>
+        <div style="background: rgba(255,255,255,0.2); border-radius: var(--radius-full); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+            Interactive Examples
         </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div class="feature-card" style="animation-delay: 0.2s;">
-        <h3>🎮 Practice</h3>
-        <p>Interactive playground with real-time operations</p>
-        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
-        <span class="success-checkmark"></span> Live Visualization
+        <div class="feature-card" style="animation-delay: 0.2s; background: linear-gradient(135deg, var(--secondary-400) 0%, var(--secondary-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-lg); transition: all var(--transition-normal); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🎮</div>
+        <h3 style="margin: 0 0 0.5rem 0; font-weight: 700;">Practice</h3>
+        <p style="margin: 0 0 1rem 0; opacity: 0.9; font-weight: 400;">Interactive playground with real-time operations</p>
+        <div style="background: rgba(255,255,255,0.2); border-radius: var(--radius-full); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+            Live Visualization
         </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div class="feature-card" style="animation-delay: 0.3s;">
-        <h3>📊 Analyze</h3>
-        <p>Performance comparisons and optimization tips</p>
-        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
-        <span class="success-checkmark"></span> Big O Analysis
+        <div class="feature-card" style="animation-delay: 0.3s; background: linear-gradient(135deg, var(--accent-400) 0%, var(--accent-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-lg); transition: all var(--transition-normal); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
+        <h3 style="margin: 0 0 0.5rem 0; font-weight: 700;">Analyze</h3>
+        <p style="margin: 0 0 1rem 0; opacity: 0.9; font-weight: 400;">Performance comparisons and optimization tips</p>
+        <div style="background: rgba(255,255,255,0.2); border-radius: var(--radius-full); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+            Big O Analysis
         </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col4:
         st.markdown("""
-        <div class="feature-card" style="animation-delay: 0.4s;">
-        <h3>💡 Solve</h3>
-        <p>Practice problems with detailed solutions</p>
-        <div style="margin-top: 1rem; font-size: 0.9em; opacity: 0.8;">
-        <span class="success-checkmark"></span> Step-by-Step Solutions
+        <div class="feature-card" style="animation-delay: 0.4s; background: linear-gradient(135deg, var(--success-400) 0%, var(--success-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-lg); transition: all var(--transition-normal); cursor: pointer; border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">💡</div>
+        <h3 style="margin: 0 0 0.5rem 0; font-weight: 700;">Solve</h3>
+        <p style="margin: 0 0 1rem 0; opacity: 0.9; font-weight: 400;">Practice problems with detailed solutions</p>
+        <div style="background: rgba(255,255,255,0.2); border-radius: var(--radius-full); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500;">
+            Step-by-Step Solutions
         </div>
         </div>
         """, unsafe_allow_html=True)
 
-    # Enhanced Quick stats with metric cards
-    st.markdown('<div class="section-card" style="margin-top: 1rem;">', unsafe_allow_html=True)
+    # Enhanced Quick stats with modern metric cards
+    st.markdown('<div class="section-card" style="margin-top: 1rem; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(14, 165, 233, 0.1); box-shadow: var(--shadow-lg);">', unsafe_allow_html=True)
     st.subheader("🚀 Quick Start Guide")
 
     col1, col2, col3 = st.columns(3)
     with col1:
         st.markdown("""
-        <div class="metric-card">
-        <div class="metric-value">3</div>
-        <div class="metric-label">Data Structures</div>
-        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">Singly, Doubly, Circular</div>
+        <div class="metric-card" style="background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-md); transition: all var(--transition-normal); border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">3</div>
+        <div style="font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Data Structures</div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Singly, Doubly, Circular</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col2:
         st.markdown("""
-        <div class="metric-card">
-        <div class="metric-value">8+</div>
-        <div class="metric-label">Operations</div>
-        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">Insert, Delete, Search, Traverse</div>
+        <div class="metric-card" style="background: linear-gradient(135deg, var(--secondary-400) 0%, var(--secondary-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-md); transition: all var(--transition-normal); border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">8+</div>
+        <div style="font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Operations</div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">Insert, Delete, Search, Traverse</div>
         </div>
         """, unsafe_allow_html=True)
 
     with col3:
         st.markdown("""
-        <div class="metric-card">
-        <div class="metric-value">10+</div>
-        <div class="metric-label">Practice Problems</div>
-        <div style="font-size: 0.8em; opacity: 0.7; margin-top: 0.5rem;">With Detailed Solutions</div>
+        <div class="metric-card" style="background: linear-gradient(135deg, var(--accent-400) 0%, var(--accent-500) 100%); color: white; border-radius: var(--radius-xl); padding: 2rem; text-align: center; box-shadow: var(--shadow-md); transition: all var(--transition-normal); border: 1px solid rgba(255,255,255,0.2);">
+        <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 0.5rem;">10+</div>
+        <div style="font-weight: 600; margin-bottom: 0.5rem; font-size: 1.1rem;">Practice Problems</div>
+        <div style="font-size: 0.875rem; opacity: 0.9;">With Detailed Solutions</div>
         </div>
         """, unsafe_allow_html=True)
 
@@ -1690,15 +1875,16 @@ def welcome_dashboard():
 def main():
     st.markdown('<style>.main .block-container { padding-top: 0 !important; }</style>', unsafe_allow_html=True)
     
-    # Sidebar navigation with modern styling
+    # Sidebar navigation with modern soft UI styling
     st.sidebar.markdown("""
-    <div style="text-align: center; padding: 1rem; margin-bottom: 2rem;">
-        <h2 style="color: var(--primary-color); margin: 0;">🔗 Navigation</h2>
-        <p style="color: var(--text-secondary); font-size: 0.9em; margin: 0.5rem 0;">Interactive Learning Hub</p>
+    <div style="text-align: center; padding: 2rem 1rem; margin-bottom: 2rem; background: linear-gradient(135deg, var(--primary-400) 0%, var(--secondary-400) 100%); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg);">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔗</div>
+        <h2 style="color: white; margin: 0; font-weight: 700; font-size: 1.25rem;">Linked Lists</h2>
+        <p style="color: rgba(255,255,255,0.9); font-size: 0.875rem; margin: 0.5rem 0; font-weight: 400;">Interactive Learning Hub</p>
     </div>
     """, unsafe_allow_html=True)
     
-    # Navigation menu
+    # Navigation menu with modern soft UI styling
     menu_options = [
         "🏠 Welcome",
         "📖 Introduction", 
@@ -1713,37 +1899,88 @@ def main():
         "📚 References"
     ]
     
+    # Custom styled selectbox container
+    st.sidebar.markdown("""
+    <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: var(--radius-lg); padding: 1rem; margin-bottom: 2rem; border: 1px solid rgba(14, 165, 233, 0.1);">
+        <label style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.5rem; display: block;">Navigation Menu</label>
+    </div>
+    """, unsafe_allow_html=True)
+    
     selected = st.sidebar.selectbox(
-        "Choose a section:",
+        "",
         menu_options,
-        key="main_nav"
+        key="main_nav",
+        help="Select a learning section to explore"
     )
     
-    # User profile in sidebar
+    # User profile in sidebar with modern soft UI cards
     with st.sidebar.expander("👤 Profile", expanded=False):
-        st.write(f"**User:** {st.session_state.username}")
-        st.write(f"**Score:** {st.session_state.user_score}")
-        st.write(f"**Achievements:** {len(st.session_state.achievements)}")
+        st.markdown(f"""
+        <div style="background: linear-gradient(135deg, var(--primary-400) 0%, var(--primary-500) 100%); color: white; padding: 1.5rem; border-radius: var(--radius-lg); margin-bottom: 1rem; box-shadow: var(--shadow-md);">
+            <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">👤</div>
+            <div style="font-weight: 600; margin-bottom: 0.25rem;">{st.session_state.username}</div>
+            <div style="font-size: 0.875rem; opacity: 0.9;">Learner</div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Stats in a modern card
+        st.markdown(f"""
+        <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: var(--radius-lg); padding: 1rem; border: 1px solid rgba(14, 165, 233, 0.1); margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="color: var(--text-secondary);">Score</span>
+                <span style="font-weight: 700; color: var(--primary-500);">{st.session_state.user_score}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: var(--text-secondary);">Achievements</span>
+                <span style="font-weight: 700; color: var(--success-500);">{len(st.session_state.achievements)}</span>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
         
         if st.session_state.achievements:
-            st.write("**Latest Achievement:**")
-            st.write(st.session_state.achievements[-1])
+            st.markdown("""
+            <div style="background: linear-gradient(135deg, var(--success-400) 0%, var(--success-500) 100%); color: white; padding: 1rem; border-radius: var(--radius-lg); box-shadow: var(--shadow-sm);">
+                <div style="font-weight: 600; margin-bottom: 0.5rem;">🎉 Latest Achievement</div>
+                <div style="font-size: 0.875rem;">""" + st.session_state.achievements[-1] + """</div>
+            </div>
+            """, unsafe_allow_html=True)
     
-    # Progress tracker
+    # Progress tracker with modern design
     with st.sidebar.expander("📈 Progress", expanded=False):
         total_sections = len(menu_options) - 1  # Exclude welcome
         completed = len(st.session_state.progress)
         progress_pct = (completed / total_sections) * 100 if total_sections > 0 else 0
         
-        st.progress(progress_pct / 100)
-        st.write(f"{completed}/{total_sections} sections completed")
-        st.write(f"{progress_pct:.1f}% progress")
+        # Modern progress card
+        st.markdown(f"""
+        <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: var(--radius-lg); padding: 1.5rem; border: 1px solid rgba(14, 165, 233, 0.1); margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <span style="color: var(--text-secondary); font-weight: 500;">Overall Progress</span>
+                <span style="font-weight: 700; color: var(--primary-500);">{progress_pct:.1f}%</span>
+            </div>
+            <div style="background: var(--neutral-200); border-radius: var(--radius-full); height: 8px; margin-bottom: 1rem;">
+                <div style="background: linear-gradient(90deg, var(--primary-400), var(--secondary-400)); border-radius: var(--radius-full); height: 100%; width: {progress_pct}%; transition: width 0.5s ease;"></div>
+            </div>
+            <div style="text-align: center; color: var(--text-secondary); font-size: 0.875rem;">
+                {completed} of {total_sections} sections completed
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     
-    # Bookmarks
+    # Bookmarks with modern design
     if st.session_state.bookmarks:
         with st.sidebar.expander("📌 Bookmarks", expanded=False):
+            st.markdown("""
+            <div style="background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); border-radius: var(--radius-lg); padding: 1rem; border: 1px solid rgba(14, 165, 233, 0.1);">
+            """, unsafe_allow_html=True)
             for bookmark in st.session_state.bookmarks:
-                st.write(f"• {bookmark}")
+                st.markdown(f"""
+                <div style="display: flex; align-items: center; padding: 0.5rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.5); border-radius: var(--radius-md); border-left: 3px solid var(--primary-400);">
+                    <span style="margin-right: 0.5rem;">📌</span>
+                    <span style="font-weight: 500; color: var(--text-primary);">{bookmark}</span>
+                </div>
+                """, unsafe_allow_html=True)
+            st.markdown("</div>", unsafe_allow_html=True)
     
     # Route to appropriate section
     if selected == "🏠 Welcome":
@@ -3946,15 +4183,39 @@ def references_and_resources():
 
 # Advanced Visualizations section
 def advanced_visualizations():
-    st.title("Advanced Visualizations")
+    st.markdown("""
+    <div class="section-card">
+        <h1 style="background: linear-gradient(135deg, var(--primary-600) 0%, var(--secondary-600) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            Advanced Visualizations
+        </h1>
+        <p style="color: var(--neutral-600); font-size: 1.1rem;">
+            Explore 3D visualizations of different linked list types with modern interactive graphics
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     save_progress("Advanced Viz")
 
+    # Modern selector container
+    st.markdown("""
+    <div style="
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+    """, unsafe_allow_html=True)
+    
     # List type selector for visualization
     viz_type = st.selectbox(
         "Select visualization type:",
         ["Singly Linked List", "Doubly Linked List", "Circular Linked List"],
         help="Choose which type of linked list to visualize"
     )
+    
+    st.markdown("</div>", unsafe_allow_html=True)
     
     # Get data based on selection or session state
     if 'linked_list' in st.session_state and st.session_state.linked_list.size > 0:
@@ -3965,7 +4226,13 @@ def advanced_visualizations():
     else:
         elements = [10, 20, 30, 40, 50]
 
-    st.header(f"3D {viz_type} Visualization")
+    st.markdown(f"""
+    <div class="section-card">
+        <h2 style="color: var(--primary-700); margin-bottom: 1.5rem;">
+            3D {viz_type} Visualization
+        </h2>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Create 3D visualization based on type
     fig = go.Figure()
@@ -4086,37 +4353,107 @@ def advanced_visualizations():
     fig.update_layout(
         title=dict(
             text=f"3D {viz_type} Visualization",
-            font=dict(size=18, color='#2C3E50')
+            font=dict(size=20, color='var(--primary-700)', family='Space Grotesk')
         ),
         scene=dict(
             xaxis_title="X Position",
             yaxis_title="Y Position",
             zaxis_title="Z Position",
             camera=dict(eye=dict(x=1.5, y=1.5, z=1.5)),
-            bgcolor='rgba(0,0,0,0)'
+            bgcolor='rgba(0,0,0,0)',
+            xaxis=dict(
+                gridcolor='rgba(14, 165, 233, 0.1)',
+                title_font=dict(color='var(--primary-600)')
+            ),
+            yaxis=dict(
+                gridcolor='rgba(14, 165, 233, 0.1)',
+                title_font=dict(color='var(--primary-600)')
+            ),
+            zaxis=dict(
+                gridcolor='rgba(14, 165, 233, 0.1)',
+                title_font=dict(color='var(--primary-600)')
+            )
         ),
-        height=600,
+        height=650,
         plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)'
+        paper_bgcolor='rgba(0,0,0,0)',
+        margin=dict(l=0, r=0, t=80, b=0)
     )
     
     st.plotly_chart(fig, use_container_width=True)
     
+    # Modern info cards with soft UI design
+    st.markdown("""
+    <div style="
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+    """, unsafe_allow_html=True)
+    
     # Add description based on type
     if viz_type == "Singly Linked List":
-        st.info("🔗 **Singly Linked List**: Nodes connected in one direction with forward pointers only.")
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 1.5rem;">🔗</span>
+            <div>
+                <strong style="color: var(--primary-700);">Singly Linked List</strong>
+                <p style="margin: 0; color: var(--neutral-600);">Nodes connected in one direction with forward pointers only.</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     elif viz_type == "Doubly Linked List":
-        st.info("↔️ **Doubly Linked List**: Nodes with bidirectional connections - red arrows show 'next' pointers, teal arrows show 'prev' pointers.")
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 1.5rem;">↔️</span>
+            <div>
+                <strong style="color: var(--primary-700);">Doubly Linked List</strong>
+                <p style="margin: 0; color: var(--neutral-600);">Nodes with bidirectional connections - red arrows show 'next' pointers, teal arrows show 'prev' pointers.</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
     else:
-        st.info("🔄 **Circular Linked List**: Nodes arranged in a circle where the last node points back to the first node.")
+        st.markdown("""
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 1.5rem;">🔄</span>
+            <div>
+                <strong style="color: var(--primary-700);">Circular Linked List</strong>
+                <p style="margin: 0; color: var(--neutral-600);">Nodes arranged in a circle where the last node points back to the first node.</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.header("Memory Layout Comparison")
+    st.markdown("""
+    <div class="section-card">
+        <h2 style="color: var(--primary-700); margin-bottom: 1.5rem;">Memory Layout Comparison</h2>
+        <p style="color: var(--neutral-600); margin-bottom: 2rem;">
+            Understanding how linked list nodes are stored in memory with modern visual representations
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
     
     # Use elements from the selected visualization type
     demo_elements = elements[:4]  # Limit to 4 for better display
     
     # Memory layout visualization based on selected type
-    st.subheader(f"Memory Structure: {viz_type}")
+    st.markdown(f"""
+    <div style="
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+        <h3 style="color: var(--primary-700); margin-bottom: 1.5rem;">Memory Structure: {viz_type}</h3>
+    """, unsafe_allow_html=True)
     
     if viz_type == "Singly Linked List":
         cols = st.columns(len(demo_elements) + 1)
@@ -4125,26 +4462,35 @@ def advanced_visualizations():
             with cols[i]:
                 st.markdown(f"""
                 <div style="
-                    border: 3px solid #4A90E2;
-                    border-radius: 15px;
-                    padding: 15px;
-                    margin: 5px;
-                    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+                    background: linear-gradient(135deg, var(--primary-500) 0%, var(--primary-600) 100%);
+                    border-radius: var(--radius-lg);
+                    padding: 1.5rem;
+                    margin: 0.5rem;
                     text-align: center;
                     color: white;
-                ">
-                    <div style="font-weight: bold;">Node {i}</div>
-                    <div style="font-size: 1.3em; margin: 8px 0;">{val}</div>
-                    <div style="font-size: 0.7em;">Next: 0x{(i+1)*100:03X}</div>
-                    <div style="margin-top: 8px;">→</div>
+                    box-shadow: var(--shadow-md);
+                    transition: all var(--transition-normal);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-xl)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-md)'">
+                    <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem;">Node {i}</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; margin: 1rem 0;">{val}</div>
+                    <div style="font-size: 0.8rem; opacity: 0.9; margin-bottom: 1rem;">Next: 0x{(i+1)*100:03X}</div>
+                    <div style="font-size: 1.2rem;">→</div>
                 </div>
                 """, unsafe_allow_html=True)
         
         with cols[-1]:
             st.markdown("""
             <div style="
-                border: 3px solid #95A5A6;
-                border-radius: 15px;
+                background: linear-gradient(135deg, var(--error-500) 0%, var(--error-600) 100%);
+                border-radius: var(--radius-lg);
+                padding: 1.5rem;
+                margin: 0.5rem;
+                text-align: center;
+                color: white;
+                box-shadow: var(--shadow-md);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            ">
                 padding: 15px;
                 margin: 5px;
                 background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%);
@@ -4218,7 +4564,13 @@ def advanced_visualizations():
 
 # Enhanced Interactive Quiz with Gamification
 def interactive_quiz():
-    st.title("🎮 Gamified Learning Hub")
+    st.markdown('''
+    <div class="section-card">
+        <h1 class="gradient-text" style="text-align: center; margin-bottom: 2rem;">
+            🎮 Gamified Learning Hub
+        </h1>
+    </div>
+    ''', unsafe_allow_html=True)
     save_progress("Quiz")
     
     # User profile section
@@ -4249,15 +4601,25 @@ def interactive_quiz():
         leaderboard_section()
 
 def enhanced_quiz_section():
-    st.markdown('<div class="quiz-container">', unsafe_allow_html=True)
-    st.markdown('<h2 style="text-align: center; margin-bottom: 1rem;">🧠 Interactive Quiz</h2>', unsafe_allow_html=True)
+    st.markdown('''
+    <div class="section-card" style="margin-bottom: 2rem;">
+        <h2 class="gradient-text" style="text-align: center; margin-bottom: 1rem;">
+            🧠 Interactive Quiz
+        </h2>
+    </div>
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 1.5rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+    ''', unsafe_allow_html=True)
     
     # Quiz mode selector
+    st.markdown('<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">', unsafe_allow_html=True)
     quiz_mode = st.selectbox("Select Quiz Mode:", 
                             ["Practice Mode", "Challenge Mode", "Difficulty-Based"])
+    st.markdown('</div>', unsafe_allow_html=True)
     
     if quiz_mode == "Difficulty-Based":
+        st.markdown('<div style="display: flex; gap: 1rem; margin-bottom: 1rem;">', unsafe_allow_html=True)
         difficulty = st.selectbox("Choose Difficulty:", ["easy", "medium", "hard"])
+        st.markdown('</div>', unsafe_allow_html=True)
         questions = [q for q in QUIZ_QUESTIONS if q.get('difficulty', 'medium') == difficulty]
         if not questions:
             st.warning(f"No {difficulty} questions available. Showing all questions instead.")
@@ -4282,37 +4644,54 @@ def enhanced_quiz_section():
         
         # Progress bar
         progress = (st.session_state.current_question + 1) / len(questions)
-        st.progress(progress)
         
-        # Progress bar
+        # Modern progress bar
         progress_html = f"""
-        <div class="quiz-progress">
-            <div class="quiz-progress-fill" style="width: {progress * 100}%;"></div>
+        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 20px; height: 12px; margin: 1.5rem 0; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(90deg, var(--primary-blue), var(--primary-purple)); width: {progress * 100}%; height: 100%; border-radius: 20px; transition: width 0.3s ease;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 2rem;">
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">Question {st.session_state.current_question + 1} of {len(questions)}</span>
+            <span style="color: var(--text-secondary); font-size: 0.9rem;">{int(progress * 100)}% Complete</span>
         </div>
         """
         st.markdown(progress_html, unsafe_allow_html=True)
         
-        col1, col2 = st.columns([3, 1])
-        with col1:
-            st.markdown(f'<div class="quiz-question"><h3>Question {st.session_state.current_question + 1} of {len(questions)}</h3></div>', unsafe_allow_html=True)
-        with col2:
-            difficulty = q.get('difficulty', 'medium')
-            badge_class = f"difficulty-{difficulty}"
-            st.markdown(f'<span class="difficulty-badge {badge_class}">{difficulty.upper()}</span>', unsafe_allow_html=True)
+        # Question card
+        difficulty = q.get('difficulty', 'medium')
+        difficulty_colors = {"easy": "#4CAF50", "medium": "#FF9800", "hard": "#F44336"}
+        difficulty_color = difficulty_colors.get(difficulty, "#FF9800")
         
-        st.markdown(f'<div class="quiz-question"><h4>{q["question"]}</h4></div>', unsafe_allow_html=True)
+        question_html = f"""
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; margin: 1.5rem 0; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="color: var(--text-primary); margin: 0; font-size: 1.2rem;">Question {st.session_state.current_question + 1}</h3>
+                <span style="background: {difficulty_color}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">{difficulty.upper()}</span>
+            </div>
+            <h4 style="color: var(--text-primary); margin-bottom: 1.5rem; line-height: 1.5;">{q["question"]}</h4>
+        </div>
+        """
+        st.markdown(question_html, unsafe_allow_html=True)
         
+        # Answer options
         user_answer = st.radio("Select your answer:", q["options"], 
-                              key=f"q_{st.session_state.current_question}")
+                              key=f"q_{st.session_state.current_question}",
+                              label_visibility="collapsed")
         
+        # Action buttons
         col1, col2 = st.columns(2)
         with col1:
-            if st.button("Submit Answer", type="primary"):
+            if st.button("🎯 Submit Answer", type="primary", use_container_width=True):
                 selected_index = q["options"].index(user_answer)
                 points = q.get('points', 10)
                 
                 if selected_index == q["correct"]:
-                    st.markdown(f'<div class="quiz-score">✅ Correct! 🎉 +{points} points</div>', unsafe_allow_html=True)
+                    success_html = f"""
+                    <div style="background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%); color: white; border-radius: 15px; padding: 1rem; margin: 1rem 0; text-align: center; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+                        <h4 style="margin: 0;">✅ Correct! 🎉 +{points} points</h4>
+                    </div>
+                    """
+                    st.markdown(success_html, unsafe_allow_html=True)
                     st.session_state.quiz_score += 1
                     st.session_state.user_score += points
                     st.session_state.correct_answers += 1
@@ -4320,13 +4699,25 @@ def enhanced_quiz_section():
                     # Check for achievements
                     check_achievements()
                 else:
-                    st.markdown(f'<div style="background: linear-gradient(135deg, #F44336 0%, #E57373 100%); color: white; border-radius: 15px; padding: 1rem; margin: 1rem 0;">❌ Incorrect. The correct answer is: {q["options"][q["correct"]]}</div>', unsafe_allow_html=True)
+                    error_html = f"""
+                    <div style="background: linear-gradient(135deg, #F44336 0%, #EF5350 100%); color: white; border-radius: 15px; padding: 1rem; margin: 1rem 0; text-align: center; box-shadow: 0 4px 15px rgba(244, 67, 54, 0.3);">
+                        <h4 style="margin: 0;">❌ Incorrect</h4>
+                        <p style="margin: 0.5rem 0 0 0;">The correct answer is: {q["options"][q["correct"]]}</p>
+                    </div>
+                    """
+                    st.markdown(error_html, unsafe_allow_html=True)
                 
-                st.markdown(f'<div class="quiz-explanation">💡 {q["explanation"]}</div>', unsafe_allow_html=True)
+                # Explanation
+                explanation_html = f"""
+                <div style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid var(--warning-yellow); border-radius: 10px; padding: 1rem; margin: 1rem 0;">
+                    <p style="color: var(--warning-yellow); margin: 0; font-weight: 500;">💡 {q["explanation"]}</p>
+                </div>
+                """
+                st.markdown(explanation_html, unsafe_allow_html=True)
                 st.session_state.quiz_attempts += 1
         
         with col2:
-            if st.button("Next Question →"):
+            if st.button("➡️ Next Question", use_container_width=True):
                 st.session_state.current_question += 1
                 st.rerun()
     
@@ -4339,31 +4730,60 @@ def enhanced_quiz_section():
         else:
             completion_time = 0
         
-        st.header("🎊 Quiz Completed!")
-        
+        # Quiz completion card
         score_percentage = (st.session_state.quiz_score / len(questions)) * 100
         
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Score", f"{st.session_state.quiz_score}/{len(questions)}")
-        with col2:
-            st.metric("Percentage", f"{score_percentage:.1f}%")
-        with col3:
-            st.metric("Time", f"{completion_time:.1f}s")
+        completion_html = f"""
+        <div style="background: linear-gradient(135deg, rgba(106, 27, 154, 0.1) 0%, rgba(81, 45, 168, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; margin: 2rem 0; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <h1 style="color: var(--text-primary); margin-bottom: 1rem; font-size: 2.5rem;">🎊 Quiz Completed!</h1>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0;">
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1rem;">
+                    <h3 style="color: var(--primary-blue); margin: 0; font-size: 1.8rem;">{st.session_state.quiz_score}/{len(questions)}</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Score</p>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1rem;">
+                    <h3 style="color: var(--success-green); margin: 0; font-size: 1.8rem;">{score_percentage:.1f}%</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Percentage</p>
+                </div>
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 15px; padding: 1rem;">
+                    <h3 style="color: var(--warning-yellow); margin: 0; font-size: 1.8rem;">{completion_time:.1f}s</h3>
+                    <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0; font-size: 0.9rem;">Time</p>
+                </div>
+            </div>
+        """
+        st.markdown(completion_html, unsafe_allow_html=True)
         
         # Performance feedback
         if score_percentage >= 90:
-            st.success("🏆 Outstanding! You're a linked list master!")
+            feedback_html = """
+            <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(102, 187, 106, 0.1) 100%); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; text-align: center; border: 1px solid rgba(76, 175, 80, 0.3);">
+                <h3 style="color: var(--success-green); margin: 0;">🏆 Outstanding! You're a linked list master!</h3>
+            </div>
+            """
             badge = "🏆 Quiz Master"
         elif score_percentage >= 80:
-            st.success("🥇 Excellent work! You have a strong understanding!")
+            feedback_html = """
+            <div style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1) 0%, rgba(66, 165, 245, 0.1) 100%); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; text-align: center; border: 1px solid rgba(33, 150, 243, 0.3);">
+                <h3 style="color: var(--primary-blue); margin: 0;">🥇 Excellent work! You have a strong understanding!</h3>
+            </div>
+            """
             badge = "🥇 Quiz Expert"
         elif score_percentage >= 70:
-            st.warning("🥈 Good job! Keep practicing to improve!")
+            feedback_html = """
+            <div style="background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 193, 7, 0.1) 100%); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; text-align: center; border: 1px solid rgba(255, 152, 0, 0.3);">
+                <h3 style="color: var(--warning-yellow); margin: 0;">🥈 Good job! Keep practicing to improve!</h3>
+            </div>
+            """
             badge = "🥈 Quiz Achiever"
         else:
-            st.error("🥉 Keep studying! Review the concepts and try again.")
+            feedback_html = """
+            <div style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(239, 83, 80, 0.1) 100%); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; text-align: center; border: 1px solid rgba(244, 67, 54, 0.3);">
+                <h3 style="color: var(--error-red); margin: 0;">🥉 Keep studying! Review the concepts and try again.</h3>
+            </div>
+            """
             badge = "🥉 Quiz Participant"
+        
+        st.markdown(feedback_html, unsafe_allow_html=True)
         
         # Add badge to achievements
         if badge not in st.session_state.achievements:
@@ -4373,7 +4793,15 @@ def enhanced_quiz_section():
         # Update leaderboard
         update_leaderboard("Quiz", score_percentage, completion_time)
         
-        if st.button("🔄 Restart Quiz"):
+        # Restart button
+        restart_html = """
+        <div style="text-align: center; margin-top: 2rem;">
+            <button style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%); color: white; border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(106, 27, 154, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(106, 27, 154, 0.3)';">
+                🔄 Restart Quiz
+            </button>
+        </div>
+        """
+        if st.button("🔄 Restart Quiz", use_container_width=True):
             st.session_state.quiz_score = 0
             st.session_state.current_question = 0
             st.rerun()
@@ -4381,7 +4809,14 @@ def enhanced_quiz_section():
     st.markdown('</div>', unsafe_allow_html=True)
 
 def coding_challenges_section():
-    st.header("💻 Coding Challenges")
+    st.markdown('''
+    <div class="section-card" style="margin-bottom: 2rem;">
+        <h2 class="gradient-text" style="text-align: center; margin-bottom: 1rem;">
+            💻 Coding Challenges
+        </h2>
+    </div>
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; margin-bottom: 2rem; border: 1px solid rgba(255, 255, 255, 0.1);">
+    ''', unsafe_allow_html=True)
     
     if 'current_coding_challenge' not in st.session_state:
         st.session_state.current_coding_challenge = 0
@@ -4389,66 +4824,129 @@ def coding_challenges_section():
         st.session_state.coding_attempts = {}
     
     # Challenge selector
+    st.markdown('<div style="margin-bottom: 2rem;">', unsafe_allow_html=True)
     challenge_names = [challenge["title"] for challenge in CODING_CHALLENGES]
     selected_challenge = st.selectbox("Choose a challenge:", challenge_names)
+    st.markdown('</div>', unsafe_allow_html=True)
+    
     challenge_idx = challenge_names.index(selected_challenge)
     challenge = CODING_CHALLENGES[challenge_idx]
     
-    col1, col2 = st.columns([2, 1])
+    # Challenge info card
+    difficulty_colors = {"easy": "#4CAF50", "medium": "#FF9800", "hard": "#F44336"}
+    difficulty_color = difficulty_colors.get(challenge['difficulty'], "#FF9800")
     
-    with col1:
-        st.subheader(f"🎯 {challenge['title']}")
-        
-        difficulty_colors = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}
-        st.write(f"Difficulty: {difficulty_colors[challenge['difficulty']]} {challenge['difficulty'].title()}")
-        st.write(f"Points: {challenge['points']}")
-        
-        st.write("**Problem Description:**")
-        st.write(challenge['description'])
-        
-        st.write("**Test Cases:**")
-        for i, test_case in enumerate(challenge['test_cases']):
-            st.code(f"Input: {test_case['input']} → Expected: {test_case['expected']}", language="text")
+    challenge_html = f"""
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; margin: 1.5rem 0; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="color: var(--text-primary); margin: 0; font-size: 1.5rem;">🎯 {challenge['title']}</h3>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span style="background: {difficulty_color}; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">{challenge['difficulty'].upper()}</span>
+                <span style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">{challenge['points']} Points</span>
+            </div>
+        </div>
+        <div style="margin-bottom: 2rem;">
+            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📝 Problem Description</h4>
+            <p style="color: var(--text-secondary); line-height: 1.6;">{challenge['description']}</p>
+        </div>
+        <div>
+            <h4 style="color: var(--text-primary); margin-bottom: 1rem;">🧪 Test Cases</h4>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+    """
     
-    with col2:
-        st.write("**Your Progress:**")
-        attempts = st.session_state.coding_attempts.get(challenge['title'], 0)
-        st.metric("Attempts", attempts)
-        
-        if attempts > 0:
-            if attempts == 1:
-                st.success("✅ Solved on first try!")
-            elif attempts <= 3:
-                st.info(f"✅ Solved in {attempts} attempts")
-            else:
-                st.warning(f"✅ Solved in {attempts} attempts")
+    for i, test_case in enumerate(challenge['test_cases']):
+        challenge_html += f"""
+                <div style="background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 0.8rem; border-left: 4px solid var(--primary-blue);">
+                    <code style="color: var(--text-secondary); font-size: 0.9rem;">Input: {test_case['input']} → Expected: {test_case['expected']}</code>
+                </div>
+        """
+    
+    challenge_html += """
+            </div>
+        </div>
+    </div>
+    """
+    st.markdown(challenge_html, unsafe_allow_html=True)
+    
+    # Progress card
+    attempts = st.session_state.coding_attempts.get(challenge['title'], 0)
+    progress_html = f"""
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h4 style="color: var(--text-primary); margin-bottom: 1rem;">📊 Your Progress</h4>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="color: var(--primary-blue); margin: 0; font-size: 1.5rem;">{attempts}</h3>
+                <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">Attempts</p>
+            </div>
+            <div style="text-align: right;">
+    """
+    
+    if attempts > 0:
+        if attempts == 1:
+            progress_html += '<span style="color: var(--success-green); font-weight: 600;">✅ Solved on first try!</span>'
+        elif attempts <= 3:
+            progress_html += f'<span style="color: var(--primary-blue); font-weight: 600;">✅ Solved in {attempts} attempts</span>'
+        else:
+            progress_html += f'<span style="color: var(--warning-yellow); font-weight: 600;">✅ Solved in {attempts} attempts</span>'
+    else:
+        progress_html += '<span style="color: var(--text-secondary);">Not attempted yet</span>'
+    
+    progress_html += """
+            </div>
+        </div>
+    </div>
+    """
+    st.markdown(progress_html, unsafe_allow_html=True)
     
     # Code editor
-    st.subheader("💻 Code Editor")
+    st.markdown('<h4 style="color: var(--text-primary); margin: 2rem 0 1rem 0;">💻 Code Editor</h4>', unsafe_allow_html=True)
     user_code = st.text_area("Write your solution:", 
                             value=challenge['starter_code'], 
-                            height=200,
-                            key=f"code_{challenge_idx}")
+                            height=300,
+                            key=f"code_{challenge_idx}",
+                            label_visibility="collapsed")
     
+    # Action buttons
+    st.markdown('<div style="display: flex; gap: 1rem; margin: 2rem 0;">', unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("🏃 Run Code", type="primary"):
+        if st.button("🏃 Run Code", type="primary", use_container_width=True):
             run_coding_challenge(challenge, user_code)
     
     with col2:
-        if st.button("💡 Show Hint"):
-            st.info("💡 **Hint:** Try using the two-pointer technique or consider the time complexity requirements.")
+        if st.button("💡 Show Hint", use_container_width=True):
+            hint_html = """
+            <div style="background: rgba(255, 193, 7, 0.1); border-left: 4px solid var(--warning-yellow); border-radius: 10px; padding: 1rem; margin: 1rem 0;">
+                <p style="color: var(--warning-yellow); margin: 0; font-weight: 500;">💡 <strong>Hint:</strong> Try using the two-pointer technique or consider the time complexity requirements.</p>
+            </div>
+            """
+            st.markdown(hint_html, unsafe_allow_html=True)
     
     with col3:
-        if st.button("👁️ Show Solution"):
-            st.code(challenge['solution'], language="python")
-            st.warning("⚠️ Viewing the solution reduces points by 50%")
+        if st.button("👁️ Show Solution", use_container_width=True):
+            solution_html = f"""
+            <div style="background: rgba(0, 0, 0, 0.2); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                <h4 style="color: var(--text-primary); margin-bottom: 1rem;">Solution</h4>
+                <pre style="background: rgba(0, 0, 0, 0.3); border-radius: 10px; padding: 1rem; overflow-x: auto;"><code style="color: var(--text-secondary);">{challenge['solution']}</code></pre>
+                <div style="background: rgba(255, 152, 0, 0.1); border-left: 4px solid var(--warning-yellow); border-radius: 5px; padding: 0.8rem; margin-top: 1rem;">
+                    <p style="color: var(--warning-yellow); margin: 0; font-size: 0.9rem;">⚠️ Viewing the solution reduces points by 50%</p>
+                </div>
+            </div>
+            """
+            st.markdown(solution_html, unsafe_allow_html=True)
+    
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def run_coding_challenge(challenge, user_code):
     try:
-        # Simple code execution simulation
-        st.success("✅ Code executed successfully!")
+        # Modern execution result
+        execution_html = """
+        <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(102, 187, 106, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(76, 175, 80, 0.3); text-align: center;">
+            <h4 style="color: var(--success-green); margin: 0;">✅ Code executed successfully!</h4>
+        </div>
+        """
+        st.markdown(execution_html, unsafe_allow_html=True)
         
         # Simulate test results
         import random
@@ -4456,7 +4954,13 @@ def run_coding_challenge(challenge, user_code):
         total_tests = len(challenge['test_cases'])
         
         if passed_tests == total_tests:
-            st.success(f"🎉 All {total_tests} test cases passed!")
+            success_html = f"""
+            <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(102, 187, 106, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(76, 175, 80, 0.3); text-align: center;">
+                <h4 style="color: var(--success-green); margin: 0;">🎉 All {total_tests} test cases passed!</h4>
+            </div>
+            """
+            st.markdown(success_html, unsafe_allow_html=True)
+            
             points = challenge['points']
             st.session_state.coding_challenge_score += points
             st.session_state.user_score += points
@@ -4472,15 +4976,38 @@ def run_coding_challenge(challenge, user_code):
                     st.session_state.achievements.append(achievement)
                     st.balloons()
             
-            st.metric("Points Earned", points)
+            # Points earned display
+            points_html = f"""
+            <div style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%); border-radius: 15px; padding: 1rem; margin: 1rem 0; text-align: center; box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);">
+                <h4 style="color: white; margin: 0;">Points Earned: {points}</h4>
+            </div>
+            """
+            st.markdown(points_html, unsafe_allow_html=True)
         else:
-            st.error(f"❌ {passed_tests}/{total_tests} test cases passed. Keep trying!")
+            error_html = f"""
+            <div style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(239, 83, 80, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(244, 67, 54, 0.3); text-align: center;">
+                <h4 style="color: var(--error-red); margin: 0;">❌ {passed_tests}/{total_tests} test cases passed. Keep trying!</h4>
+            </div>
+            """
+            st.markdown(error_html, unsafe_allow_html=True)
             
     except Exception as e:
-        st.error(f"❌ Code execution failed: {str(e)}")
+        error_html = f"""
+        <div style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(239, 83, 80, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(244, 67, 54, 0.3);">
+            <h4 style="color: var(--error-red); margin: 0;">❌ Code execution failed</h4>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0;">{str(e)}</p>
+        </div>
+        """
+        st.markdown(error_html, unsafe_allow_html=True)
 
 def time_challenges_section():
-    st.header("⚡ Time Challenges")
+    st.markdown('''
+    <div class="section-card">
+        <h2 style="background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; margin-bottom: 2rem;">
+            ⚡ Time Challenges
+        </h2>
+    </div>
+    ''', unsafe_allow_html=True)
     
     if 'active_time_challenge' not in st.session_state:
         st.session_state.active_time_challenge = None
@@ -4499,23 +5026,40 @@ def time_challenges_section():
     challenge_idx = challenge_names.index(selected_challenge)
     challenge = TIME_CHALLENGES[challenge_idx]
     
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        st.subheader(f"⚡ {challenge['title']}")
-        st.write(f"⏱️ Time Limit: {challenge['time_limit']} seconds")
-        st.write(f"🎯 Bonus Points: {challenge['bonus_points']}")
-        st.write(f"📝 Questions: {len(challenge['questions'])}")
-    
-    with col2:
-        best_time = st.session_state.time_challenge_best.get(challenge['title'], None)
-        if best_time:
-            st.metric("Best Time", f"{best_time:.1f}s")
-        else:
-            st.metric("Best Time", "Not attempted")
+    # Challenge info card
+    challenge_info_html = f'''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0;">⚡ {challenge['title']}</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">⏱️ Time Limit: {challenge['time_limit']}s</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">🎯 Bonus: {challenge['bonus_points']} pts</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">📝 {len(challenge['questions'])} questions</span>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <div style="color: var(--text-secondary); font-size: 0.8rem;">Best Time</div>
+                <div style="color: var(--primary-blue); font-size: 1.2rem; font-weight: bold;">
+                    {st.session_state.time_challenge_best.get(challenge['title'], 'Not attempted') if st.session_state.time_challenge_best.get(challenge['title']) else 'Not attempted'}
+                </div>
+            </div>
+        </div>
+    </div>
+    '''
+    st.markdown(challenge_info_html, unsafe_allow_html=True)
     
     # Challenge controls
     if st.session_state.active_time_challenge != challenge['title']:
+        start_button_html = f'''
+        <div style="display: flex; justify-content: center; margin: 2rem 0;">
+            <button style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-purple) 100%); color: white; border: none; border-radius: 25px; padding: 1rem 2rem; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(106, 27, 154, 0.3);" 
+                    onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(106, 27, 154, 0.4)'" 
+                    onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(106, 27, 154, 0.3)'">
+                🚀 Start {challenge['title']}
+            </button>
+        </div>
+        '''
         if st.button(f"🚀 Start {challenge['title']}", type="primary"):
             start_time_challenge(challenge)
             st.rerun()
@@ -4528,12 +5072,22 @@ def time_challenges_section():
             
             # Timer display
             if remaining > 0:
-                timer_html = f'<div class="time-challenge-timer">⏱️ {remaining:.1f}s</div>'
-                st.markdown(timer_html, unsafe_allow_html=True)
-                progress = min(1.0, elapsed / challenge['time_limit'])
-                st.progress(progress)
+                timer_card_html = f'''
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                    <div style="font-size: 2rem; color: var(--primary-blue); font-weight: bold; margin-bottom: 1rem;">⏱️ {remaining:.1f}s</div>
+                    <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; height: 8px; overflow: hidden;">
+                        <div style="background: linear-gradient(135deg, var(--primary-blue), var(--primary-purple)); height: 100%; width: {min(100, (elapsed / challenge['time_limit']) * 100)}%; transition: width 0.3s ease;"></div>
+                    </div>
+                </div>
+                '''
+                st.markdown(timer_card_html, unsafe_allow_html=True)
             else:
-                st.markdown('<div style="background: #F44336; color: white; border-radius: 15px; padding: 1rem; text-align: center; font-weight: bold;">⏰ Time\'s Up!</div>', unsafe_allow_html=True)
+                time_up_html = '''
+                <div style="background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(239, 83, 80, 0.1) 100%); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(244, 67, 54, 0.3); text-align: center;">
+                    <h3 style="color: var(--error-red); margin: 0;">⏰ Time's Up!</h3>
+                </div>
+                '''
+                st.markdown(time_up_html, unsafe_allow_html=True)
                 end_time_challenge(challenge)
                 st.rerun()
             
@@ -4542,8 +5096,13 @@ def time_challenges_section():
                 q_idx = st.session_state.time_challenge_questions[st.session_state.time_challenge_current]
                 q = QUIZ_QUESTIONS[q_idx]
                 
-                st.subheader(f"Question {st.session_state.time_challenge_current + 1}")
-                st.write(q["question"])
+                question_card_html = f'''
+                <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <h3 style="color: var(--text-primary); margin: 0 0 1rem 0;">Question {st.session_state.time_challenge_current + 1}</h3>
+                    <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">{q["question"]}</p>
+                </div>
+                '''
+                st.markdown(question_card_html, unsafe_allow_html=True)
                 
                 user_answer = st.radio("Quick! Choose your answer:", q["options"], 
                                       key=f"time_q_{st.session_state.time_challenge_current}")
@@ -4560,6 +5119,15 @@ def time_challenges_section():
                     st.rerun()
             
             # Emergency stop
+            stop_button_html = '''
+            <div style="display: flex; justify-content: center; margin: 2rem 0;">
+                <button style="background: rgba(244, 67, 54, 0.2); color: var(--error-red); border: 1px solid rgba(244, 67, 54, 0.3); border-radius: 25px; padding: 0.8rem 1.5rem; font-size: 1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease;" 
+                        onmouseover="this.style.background='rgba(244, 67, 54, 0.3)'" 
+                        onmouseout="this.style.background='rgba(244, 67, 54, 0.2)'">
+                    🛑 Stop Challenge
+                </button>
+            </div>
+            '''
             if st.button("🛑 Stop Challenge"):
                 end_time_challenge(challenge)
                 st.rerun()
@@ -4593,9 +5161,23 @@ def end_time_challenge(challenge):
         
         st.session_state.user_score += int(total_score)
         
-        # Show results
-        st.success(f"⚡ Challenge Complete! Time: {completion_time:.1f}s")
-        st.metric("Total Score", f"{int(total_score)} points")
+        # Show results with modern UI
+        results_html = f'''
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <h3 style="color: var(--success-green); margin: 0 0 1rem 0;">⚡ Challenge Complete!</h3>
+            <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin: 1rem 0;">
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">Time</div>
+                    <div style="color: var(--primary-blue); font-size: 1.5rem; font-weight: bold;">{completion_time:.1f}s</div>
+                </div>
+                <div style="text-align: center;">
+                    <div style="color: var(--text-secondary); font-size: 0.9rem;">Total Score</div>
+                    <div style="color: var(--success-green); font-size: 1.5rem; font-weight: bold;">{int(total_score)} pts</div>
+                </div>
+            </div>
+        </div>
+        '''
+        st.markdown(results_html, unsafe_allow_html=True)
         
         # Update leaderboard
         update_leaderboard("Time Challenge", int(total_score), completion_time)
@@ -4608,10 +5190,23 @@ def end_time_challenge(challenge):
     st.session_state.time_challenge_score = 0
 
 def leaderboard_section():
-    st.header("🏆 Leaderboard")
+    st.markdown('''
+    <div class="section-card">
+        <h2 style="background: linear-gradient(135deg, var(--primary-gold), var(--primary-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; margin-bottom: 2rem;">
+            🏆 Leaderboard
+        </h2>
+    </div>
+    ''', unsafe_allow_html=True)
     
     if not st.session_state.leaderboard:
-        st.info("🎯 Complete challenges to appear on the leaderboard!")
+        empty_html = '''
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 2rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+            <h3 style="color: var(--text-primary); margin: 0 0 0.5rem 0;">No Scores Yet</h3>
+            <p style="color: var(--text-secondary); margin: 0;">Complete challenges to appear on the leaderboard!</p>
+        </div>
+        '''
+        st.markdown(empty_html, unsafe_allow_html=True)
         return
     
     # Sort leaderboard by score
@@ -4619,23 +5214,40 @@ def leaderboard_section():
                                key=lambda x: x['score'], reverse=True)
     
     # Display top performers
-    st.subheader("🥇 Top Performers")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0; text-align: center;">🥇 Top Performers</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    rank_colors = ["#FFD700", "#C0C0C0", "#CD7F32", "#4CAF50", "#2196F3", "#9C27B0", "#FF9800", "#795548", "#607D8B", "#F44336"]
+    rank_emoji = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
     
     for i, entry in enumerate(sorted_leaderboard[:10]):
-        rank_emoji = ["🥇", "🥈", "🥉"] + ["🏅"] * 7
+        medal_color = rank_colors[i] if i < len(rank_colors) else "#666"
         
         leaderboard_html = f"""
-        <div class="leaderboard-entry">
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; margin: 0.5rem 0; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <div><strong>{rank_emoji[i]} #{i+1} {entry['username']}</strong></div>
-                <div>Score: {entry['score']} | Time: {entry['time']:.1f}s</div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: {medal_color}; font-size: 1.2rem;">{rank_emoji[i]}</span>
+                    <strong style="color: var(--text-primary);">#{i+1} {entry['username']}</strong>
+                </div>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <span style="color: var(--success-green); font-weight: bold;">{entry['score']} pts</span>
+                    <span style="color: var(--text-secondary); font-size: 0.9rem;">{entry['time']:.1f}s</span>
+                </div>
             </div>
         </div>
         """
         st.markdown(leaderboard_html, unsafe_allow_html=True)
     
     # Personal stats
-    st.subheader("📊 Your Statistics")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0; text-align: center;">📊 Your Statistics</h3>
+    </div>
+    ''', unsafe_allow_html=True)
     
     user_entries = [entry for entry in st.session_state.leaderboard 
                    if entry['username'] == st.session_state.username]
@@ -4645,23 +5257,47 @@ def leaderboard_section():
         best_time = min(entry['time'] for entry in user_entries)
         total_attempts = len(user_entries)
         
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Best Score", best_score)
-        with col2:
-            st.metric("Best Time", f"{best_time:.1f}s")
-        with col3:
-            st.metric("Total Attempts", total_attempts)
+        stats_html = f'''
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1rem 0;">
+            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Best Score</div>
+                <div style="color: var(--primary-blue); font-size: 1.5rem; font-weight: bold;">{best_score}</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Best Time</div>
+                <div style="color: var(--success-green); font-size: 1.5rem; font-weight: bold;">{best_time:.1f}s</div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+                <div style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem;">Total Attempts</div>
+                <div style="color: var(--primary-purple); font-size: 1.5rem; font-weight: bold;">{total_attempts}</div>
+            </div>
+        </div>
+        '''
+        st.markdown(stats_html, unsafe_allow_html=True)
     
     # Achievements display
-    st.subheader("🏅 Your Achievements")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0; text-align: center;">🏅 Your Achievements</h3>
+    </div>
+    ''', unsafe_allow_html=True)
+    
     if st.session_state.achievements:
-        achievement_html = ""
+        achievements_html = '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0;">'
         for achievement in st.session_state.achievements:
-            achievement_html += f'<span class="achievement-badge">{achievement}</span>'
-        st.markdown(achievement_html, unsafe_allow_html=True)
+            achievements_html += f'''
+            <span style="background: linear-gradient(135deg, var(--primary-gold) 0%, var(--primary-orange) 100%); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem; font-weight: bold; box-shadow: 0 2px 8px rgba(255, 152, 0, 0.3);">{achievement}</span>
+            '''
+        achievements_html += '</div>'
+        st.markdown(achievements_html, unsafe_allow_html=True)
     else:
-        st.info("🎯 Complete challenges to earn achievements!")
+        no_achievements_html = '''
+        <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎯</div>
+            <p style="color: var(--text-secondary); margin: 0;">Complete challenges to earn achievements!</p>
+        </div>
+        '''
+        st.markdown(no_achievements_html, unsafe_allow_html=True)
 
 def update_leaderboard(challenge_type, score, time):
     entry = {
@@ -5670,13 +6306,28 @@ def merge_k_lists(lists):
     st.success("🚀 You're ready to ace your linked list interviews! Good luck!")
 
 def testing_and_debugging():
-    st.title("🧪 Testing & Debugging")
+    st.markdown('''
+    <div class="section-card">
+        <h2 style="background: linear-gradient(135deg, var(--error-red), var(--warning-orange)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; text-align: center; margin-bottom: 2rem;">
+            🧪 Testing & Debugging
+        </h2>
+    </div>
+    ''', unsafe_allow_html=True)
     save_progress("Testing")
     
-    st.header("1. Unit Testing Strategies")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0;">1. Unit Testing Strategies</h3>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    st.code("""
-# Using pytest for linked list testing
+    test_code_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--primary-blue);">📝</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Pytest Implementation</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># Using pytest for linked list testing
 import pytest
 from linked_list import LinkedList, Node
 
@@ -5695,13 +6346,24 @@ class TestLinkedList:
     
     def test_edge_cases(self):
         assert self.ll.delete_from_beginning() is None
-        assert self.ll.search(10) == -1
-    """, language="python")
+        assert self.ll.search(10) == -1</code></pre>
+    </div>
+    '''
+    st.markdown(test_code_html, unsafe_allow_html=True)
     
-    st.header("2. Memory Debugging Tools")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0;">2. Memory Debugging Tools</h3>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    st.code("""
-# Python memory profiling
+    memory_code_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--warning-orange);">🧠</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Memory Profiling</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># Python memory profiling
 from memory_profiler import profile
 
 @profile
@@ -5713,13 +6375,24 @@ def test_memory_usage():
         ll.delete_from_beginning()
     return ll
 
-# Run with: python -m memory_profiler test_memory.py
-    """, language="python")
+# Run with: python -m memory_profiler test_memory.py</code></pre>
+    </div>
+    '''
+    st.markdown(memory_code_html, unsafe_allow_html=True)
     
-    st.header("3. Performance Profiling")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h3 style="color: var(--text-primary); margin: 0 0 1rem 0;">3. Performance Profiling</h3>
+    </div>
+    ''', unsafe_allow_html=True)
     
-    st.code("""
-# Profile linked list operations
+    perf_code_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--success-green);">⚡</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Performance Analysis</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># Profile linked list operations
 import cProfile
 import pstats
 
@@ -5734,19 +6407,36 @@ if __name__ == "__main__":
     cProfile.run('profile_operations()', 'results.prof')
     stats = pstats.Stats('results.prof')
     stats.sort_stats('cumulative')
-    stats.print_stats(10)
-    """, language="python")
+    stats.print_stats(10)</code></pre>
+    </div>
+    '''
+    st.markdown(perf_code_html, unsafe_allow_html=True)
     
     if st.button("🐛 Run Debug Session"):
         st.success("🎉 Debug session completed successfully!")
 
 def integration_topics():
-    st.title("🔗 Integration Topics")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 2.5rem;">🔗 Integration Topics</h1>
+        <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0.5rem 0 0 0;">Real-world applications of linked lists</p>
+    </div>
+    ''', unsafe_allow_html=True)
     save_progress("Integration")
     
-    st.header("1. Linked Lists in Databases")
-    st.code("""
-# Database Buffer Pool with LRU
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">1. Linked Lists in Databases</h2>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    db_buffer_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--info-blue);">💾</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Database Buffer Pool with LRU</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># Database Buffer Pool with LRU
 class BufferPool:
     def __init__(self, size):
         self.size = size
@@ -5773,12 +6463,24 @@ class BufferPool:
         self._add_to_front(new_node)
         self.pages[page_id] = new_node
         
-        return page_data
-    """, language="python")
+        return page_data</code></pre>
+    </div>
+    '''
+    st.markdown(db_buffer_html, unsafe_allow_html=True)
     
-    st.header("2. File System Implementations")
-    st.code("""
-# File Allocation Table
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">2. File System Implementations</h2>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    file_system_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--success-green);">📁</span>
+            <h4 style="color: var(--text-primary); margin: 0;">File Allocation Table</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># File Allocation Table
 class FileAllocationTable:
     def __init__(self, total_clusters):
         self.total_clusters = total_clusters
@@ -5799,12 +6501,24 @@ class FileAllocationTable:
             else:
                 self.fat[cluster] = self.free_clusters[0]
         
-        return allocated[0]
-    """, language="python")
+        return allocated[0]</code></pre>
+    </div>
+    '''
+    st.markdown(file_system_html, unsafe_allow_html=True)
     
-    st.header("3. Network Packet Handling")
-    st.code("""
-# Network Packet Queue with Priority
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">3. Network Packet Handling</h2>
+    </div>
+    ''', unsafe_allow_html=True)
+    
+    network_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--warning-orange);">🌐</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Network Packet Queue with Priority</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code># Network Packet Queue with Priority
 class PacketQueue:
     def __init__(self):
         self.high_priority = None
@@ -5840,14 +6554,25 @@ class PacketQueue:
             self.low_priority = self.low_priority.next
             return packet
         
-        return None
-    """, language="python")
+        return None</code></pre>
+    </div>
+    '''
+    st.markdown(network_html, unsafe_allow_html=True)
 
 def data_structure_comparison():
-    st.title("Data Structure Comparison")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 2.5rem;">📊 Data Structure Comparison</h1>
+        <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0.5rem 0 0 0;">Linked Lists vs Arrays - Choose wisely!</p>
+    </div>
+    ''', unsafe_allow_html=True)
     save_progress("Comparison")
 
-    st.header("Linked Lists vs Arrays")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Linked Lists vs Arrays</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     comparison_data = {
         'Aspect': [
@@ -5870,7 +6595,11 @@ def data_structure_comparison():
     st.markdown("*Note: * Amortized O(1) for dynamic arrays")
 
     # Interactive comparison chart
-    st.header("Performance Comparison Chart")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Performance Comparison Chart</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     aspects = ['Random Access', 'Insert Beginning', 'Insert End', 'Delete Beginning', 'Delete End']
     linked_list_scores = [10, 1, 10, 1, 10]  # Lower is better
@@ -5901,31 +6630,47 @@ def data_structure_comparison():
 
     st.plotly_chart(fig, use_container_width=True)
 
-    st.header("When to Use Which?")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">When to Use Which?</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     col1, col2 = st.columns(2)
 
     with col1:
-        st.subheader("Choose Linked List when:")
-        st.markdown("""
-        - ✅ Frequent insertions/deletions at beginning
-        - ✅ Dynamic size requirements
-        - ✅ Memory allocation/deallocation is expensive
-        - ✅ Implementing stacks, queues, or graphs
-        - ✅ Sequential access patterns
-        """)
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(76, 175, 80, 0.05)); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(76, 175, 80, 0.3);">
+            <h3 style="color: var(--success-green); margin: 0 0 1rem 0;">Choose Linked List when:</h3>
+            <ul style="color: var(--text-primary); margin: 0; padding-left: 1.5rem;">
+                <li>✅ Frequent insertions/deletions at beginning</li>
+                <li>✅ Dynamic size requirements</li>
+                <li>✅ Memory allocation/deallocation is expensive</li>
+                <li>✅ Implementing stacks, queues, or graphs</li>
+                <li>✅ Sequential access patterns</li>
+            </ul>
+        </div>
+        ''', unsafe_allow_html=True)
 
     with col2:
-        st.subheader("Choose Array when:")
-        st.markdown("""
-        - ✅ Need fast random access
-        - ✅ Memory efficiency is critical
-        - ✅ Most operations are at the end
-        - ✅ Simple implementation needed
-        - ✅ Cache performance matters
-        """)
+        st.markdown('''
+        <div style="background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05)); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(33, 150, 243, 0.3);">
+            <h3 style="color: var(--info-blue); margin: 0 0 1rem 0;">Choose Array when:</h3>
+            <ul style="color: var(--text-primary); margin: 0; padding-left: 1.5rem;">
+                <li>✅ Need fast random access</li>
+                <li>✅ Memory efficiency is critical</li>
+                <li>✅ Most operations are at the end</li>
+                <li>✅ Simple implementation needed</li>
+                <li>✅ Cache performance matters</li>
+            </ul>
+        </div>
+        ''', unsafe_allow_html=True)
 
-    st.header("Linked Lists vs Other Data Structures")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Linked Lists vs Other Data Structures</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     structures = ['Linked List', 'Array', 'Stack', 'Queue', 'Tree', 'Graph']
     use_cases = [
@@ -5946,21 +6691,35 @@ def data_structure_comparison():
 
 # Advanced Algorithms section
 def advanced_algorithms():
-    st.title("Advanced Algorithms")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 2.5rem;">🚀 Advanced Algorithms</h1>
+        <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0.5rem 0 0 0;">Master complex linked list operations</p>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.header("Merge Sort on Linked Lists")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Merge Sort on Linked Lists</h2>
+        <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05)); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; margin: 1rem 0; border: 1px solid rgba(255, 193, 7, 0.3);">
+            <h4 style="color: var(--warning-orange); margin: 0 0 0.5rem 0;">Why Merge Sort for Linked Lists?</h4>
+            <ul style="color: var(--text-primary); margin: 0; padding-left: 1.5rem;">
+                <li>Linked lists don't support random access</li>
+                <li>Merge sort is efficient for linked structures</li>
+                <li>No extra space needed for merging</li>
+                <li>Stable sorting algorithm</li>
+            </ul>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.markdown("""
-    **Why Merge Sort for Linked Lists?**
-    - Linked lists don't support random access
-    - Merge sort is efficient for linked structures
-    - No extra space needed for merging
-    - Stable sorting algorithm
-    """)
-
-    with st.expander("Merge Sort Implementation"):
-        st.code("""
-def merge_sort(head):
+    merge_sort_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--success-green);">⚡</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Merge Sort Implementation</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code>def merge_sort(head):
     if not head or not head.next:
         return head
 
@@ -5999,14 +6758,24 @@ def merge(left, right):
     return result
 
 # Time Complexity: O(n log n)
-# Space Complexity: O(log n) for recursion stack
-        """, language="python")
+# Space Complexity: O(log n) for recursion stack</code></pre>
+    </div>
+    '''
+    st.markdown(merge_sort_html, unsafe_allow_html=True)
 
-    st.header("Quick Sort on Linked Lists")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Quick Sort on Linked Lists</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    with st.expander("Quick Sort Implementation"):
-        st.code("""
-def quick_sort(head):
+    quick_sort_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--warning-orange);">🔥</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Quick Sort Implementation</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code>def quick_sort(head):
     if not head or not head.next:
         return head
 
@@ -6057,16 +6826,24 @@ def quick_sort(head):
     return smaller_head if smaller_head else pivot
 
 # Time Complexity: O(n²) worst case, O(n log n) average
-# Space Complexity: O(log n) for recursion stack
-        """, language="python")
+# Space Complexity: O(log n) for recursion stack</code></pre>
+    </div>
+    '''
+    st.markdown(quick_sort_html, unsafe_allow_html=True)
 
-    st.header("Cycle Detection Algorithms")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Cycle Detection Algorithms</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.subheader("Floyd's Cycle Detection Algorithm")
-
-    with st.expander("Implementation"):
-        st.code("""
-def detect_cycle_floyd(head):
+    floyd_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--info-blue);">🐢🐇</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Floyd's Cycle Detection Algorithm</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code>def detect_cycle_floyd(head):
     if not head or not head.next:
         return False
 
@@ -6082,14 +6859,18 @@ def detect_cycle_floyd(head):
     return False
 
 # Time Complexity: O(n)
-# Space Complexity: O(1)
-        """, language="python")
+# Space Complexity: O(1)</code></pre>
+    </div>
+    '''
+    st.markdown(floyd_html, unsafe_allow_html=True)
 
-    st.subheader("Brent's Cycle Detection Algorithm")
-
-    with st.expander("Implementation"):
-        st.code("""
-def detect_cycle_brent(head):
+    brent_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--warning-orange);">🔍</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Brent's Cycle Detection Algorithm</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code>def detect_cycle_brent(head):
     if not head:
         return False
 
@@ -6112,16 +6893,24 @@ def detect_cycle_brent(head):
 
 # Time Complexity: O(n)
 # Space Complexity: O(1)
-# Often faster than Floyd's algorithm in practice
-        """, language="python")
+# Often faster than Floyd's algorithm in practice</code></pre>
+    </div>
+    '''
+    st.markdown(brent_html, unsafe_allow_html=True)
 
-    st.header("Advanced Operations")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Advanced Operations</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.subheader("Reverse in Groups")
-
-    with st.expander("Reverse k nodes at a time"):
-        st.code("""
-def reverse_k_groups(head, k):
+    reverse_groups_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+            <span style="color: var(--success-green);">🔄</span>
+            <h4 style="color: var(--text-primary); margin: 0;">Reverse k nodes at a time</h4>
+        </div>
+        <pre style="color: var(--text-primary); overflow-x: auto;"><code>def reverse_k_groups(head, k):
     if not head or k == 1:
         return head
 
@@ -6153,22 +6942,45 @@ def reverse_k_groups(head, k):
 
     return dummy.next
 
+# Example: reverse_k_groups([1,2,3,4,5], 2) -> [2,1,4,3,5]</code></pre>
+    </div>
+    '''
+    st.markdown(reverse_groups_html, unsafe_allow_html=True)
+
 # Example: reverse_k_groups([1,2,3,4,5], 2) -> [2,1,4,3,5]
-        """, language="python")
 
 # Memory Layout Visualizations section
 def memory_layout_visualizations():
-    st.title("Memory Layout Visualizations")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 2.5rem;">💾 Memory Layout Visualizations</h1>
+        <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0.5rem 0 0 0;">Understanding memory allocation and fragmentation in linked lists</p>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.header("How Linked Lists are Stored in Memory")
-
-    st.markdown("""
-    **Key Concept:** Unlike arrays that store elements in contiguous memory locations,
-    linked list nodes are scattered throughout memory and connected via pointers.
-    """)
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">How Linked Lists are Stored in Memory</h2>
+        <div style="background: linear-gradient(135deg, rgba(14, 165, 233, 0.1), rgba(14, 165, 233, 0.05)); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; margin: 1rem 0; border: 1px solid rgba(14, 165, 233, 0.3);">
+            <h4 style="color: var(--info-blue); margin: 0 0 0.5rem 0;">Key Concept</h4>
+            <p style="color: var(--text-primary); margin: 0; line-height: 1.7;">Unlike arrays that store elements in contiguous memory locations, linked list nodes are scattered throughout memory and connected via pointers.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
 
     # Interactive memory layout demo
-    st.subheader("Interactive Memory Layout")
+    st.markdown("""
+    <div style="
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+        <h3 style="color: var(--primary-700); margin-bottom: 1.5rem;">Interactive Memory Layout</h3>
+    """, unsafe_allow_html=True)
 
     if 'demo_list' not in st.session_state:
         st.session_state.demo_list = [10, 20, 30, 40]
@@ -6181,18 +6993,30 @@ def memory_layout_visualizations():
 
     with col2:
         st.markdown("### Controls")
-        if st.button("Add Node"):
+        
+        # Modern button styling
+        st.markdown("""
+        <div style="
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        ">
+        """, unsafe_allow_html=True)
+        
+        if st.button("➕ Add Node", help="Add a new node to the linked list"):
             st.session_state.demo_list.append(len(st.session_state.demo_list) * 10 + 10)
             st.rerun()
 
-        if st.button("Remove Node") and st.session_state.demo_list:
+        if st.button("➖ Remove Node", help="Remove the last node from the linked list") and st.session_state.demo_list:
             st.session_state.demo_list.pop()
             st.rerun()
 
-        if st.button("Shuffle Memory"):
+        if st.button("🔀 Shuffle Memory", help="Randomize the memory layout"):
             import random
             random.shuffle(st.session_state.demo_list)
             st.rerun()
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
     # Display memory layout
     with memory_placeholder.container():
@@ -6203,25 +7027,50 @@ def memory_layout_visualizations():
                 if i < 6:  # Show max 6 blocks
                     with cols[i]:
                         st.markdown(f"""
-                        <div style="border: 2px solid #1e3c72; border-radius: 10px; padding: 15px; margin: 5px; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
-                            <div style="font-weight: bold; color: #1e3c72; text-align: center;">Block {i}</div>
-                            <div style="text-align: center; font-size: 1.2em; margin: 10px 0;">{val}</div>
-                            <div style="font-size: 0.8em; color: #666; text-align: center;">Addr: 0x{i*100:03X}</div>
-                            {'<div style="text-align: center; margin-top: 10px;">→</div>' if i < len(st.session_state.demo_list) - 1 else '<div style="text-align: center; margin-top: 10px; color: #f44336;">NULL</div>'}
+                        <div style="
+                            background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+                            border-radius: var(--radius-lg);
+                            padding: 1.5rem;
+                            margin: 0.5rem;
+                            text-align: center;
+                            box-shadow: var(--shadow-md);
+                            transition: all var(--transition-normal);
+                            border: 1px solid rgba(14, 165, 233, 0.2);
+                        " onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='var(--shadow-xl)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-md)'">
+                            <div style="font-weight: 600; color: var(--primary-700); margin-bottom: 0.5rem;">Block {i}</div>
+                            <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary-800); margin: 1rem 0;">{val}</div>
+                            <div style="font-size: 0.9rem; color: var(--primary-600); margin-bottom: 1rem;">Addr: 0x{i*100:03X}</div>
+                            {'<div style="font-size: 1.5rem; color: var(--primary-600);">→</div>' if i < len(st.session_state.demo_list) - 1 else '<div style="font-size: 1.5rem; color: var(--error-500);">NULL</div>'}
                         </div>
                         """, unsafe_allow_html=True)
         else:
             st.info("Add some nodes to see the memory layout!")
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.header("Memory Fragmentation")
-
-    st.markdown("""
-    **Memory Fragmentation** occurs when free memory is divided into small, non-contiguous blocks.
-    This can happen with frequent insertions and deletions in linked lists.
-    """)
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Memory Fragmentation</h2>
+        <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05)); backdrop-filter: blur(10px); border-radius: 12px; padding: 1rem; margin: 1rem 0; border: 1px solid rgba(255, 193, 7, 0.3);">
+            <h4 style="color: var(--warning-orange); margin: 0 0 0.5rem 0;">Memory Fragmentation</h4>
+            <p style="color: var(--text-primary); margin: 0; line-height: 1.7;">Memory fragmentation occurs when free memory is divided into small, non-contiguous blocks. This can happen with frequent insertions and deletions in linked lists.</p>
+        </div>
+    </div>
+    ''', unsafe_allow_html=True)
 
     # Fragmentation visualization
-    st.subheader("Fragmentation Demo")
+    st.markdown("""
+    <div style="
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+        <h3 style="color: var(--primary-700); margin-bottom: 1.5rem;">Fragmentation Demo</h3>
+    """, unsafe_allow_html=True)
 
     fragmentation_data = [
         {"address": "0x100", "size": 32, "status": "used", "data": "Node A"},
@@ -6232,55 +7081,154 @@ def memory_layout_visualizations():
     ]
 
     for block in fragmentation_data:
-        color = "#4CAF50" if block["status"] == "used" else "#f44336"
+        bg_color = "rgba(34, 197, 94, 0.1)" if block["status"] == "used" else "rgba(239, 68, 68, 0.1)"
+        text_color = "var(--success-600)" if block["status"] == "used" else "var(--error-600)"
         st.markdown(f"""
-        <div style="display: flex; align-items: center; margin: 10px 0; padding: 10px; border-radius: 8px; background: {'#e8f5e8' if block['status'] == 'used' else '#ffebee'};">
-            <div style="width: 100px; font-weight: bold;">{block['address']}</div>
-            <div style="width: 60px;">{block['size']}B</div>
-            <div style="width: 80px; color: {color};">{block['status'].upper()}</div>
-            <div style="flex: 1;">{block['data']}</div>
+        <div style="
+            display: flex; 
+            align-items: center; 
+            margin: 0.75rem 0; 
+            padding: 1rem; 
+            border-radius: var(--radius-md); 
+            background: {bg_color};
+            border: 1px solid {'rgba(34, 197, 94, 0.2)' if block['status'] == 'used' else 'rgba(239, 68, 68, 0.2)'};
+            transition: all var(--transition-normal);
+        " onmouseover="this.style.transform='translateX(4px)'; this.style.boxShadow='var(--shadow-sm)'" onmouseout="this.style.transform='translateX(0)'; this.style.boxShadow='none'">
+            <div style="width: 120px; font-weight: 600; color: var(--primary-700);">{block['address']}</div>
+            <div style="width: 80px; color: var(--neutral-600);">{block['size']}B</div>
+            <div style="width: 100px; color: {text_color}; font-weight: 600;">{block['status'].upper()}</div>
+            <div style="flex: 1; color: var(--neutral-700);">{block['data']}</div>
         </div>
         """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("""
-    **Impact of Fragmentation:**
-    - **Memory Waste:** Small free blocks can't be used for larger allocations
-    - **Performance:** Increased time for memory allocation/deallocation
-    - **Cache Issues:** Scattered memory access patterns
-    """)
-
-    st.header("Cache Performance")
+    <div class="section-card">
+        <h3 style="color: var(--primary-700); margin-bottom: 1rem;">Impact of Fragmentation</h3>
+        <div style="display: grid; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: var(--error-500); font-size: 1.2rem;">⚠️</span>
+                <div>
+                    <strong style="color: var(--primary-700);">Memory Waste:</strong>
+                    <span style="color: var(--neutral-600);">Small free blocks can't be used for larger allocations</span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: var(--warning-500); font-size: 1.2rem;">⚡</span>
+                <div>
+                    <strong style="color: var(--primary-700);">Performance:</strong>
+                    <span style="color: var(--neutral-600);">Increased time for memory allocation/deallocation</span>
+                </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <span style="color: var(--secondary-500); font-size: 1.2rem;">🔄</span>
+                <div>
+                    <strong style="color: var(--primary-700);">Cache Issues:</strong>
+                    <span style="color: var(--neutral-600);">Scattered memory access patterns</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.markdown("""
-    **Cache Locality** refers to how closely related data elements are stored in memory.
-    Arrays have excellent cache locality, while linked lists have poor cache locality.
-    """)
+    <div class="section-card">
+        <h2 style="color: var(--primary-700); margin-bottom: 1rem;">Cache Performance</h2>
+        <p style="color: var(--neutral-600); line-height: 1.7;">
+            <strong>Cache Locality</strong> refers to how closely related data elements are stored in memory.
+            Arrays have excellent cache locality, while linked lists have poor cache locality.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Cache performance visualization
-    st.subheader("Cache Access Patterns")
+    st.markdown("""
+    <div style="
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border-radius: var(--radius-lg);
+        padding: 2rem;
+        margin: 1rem 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: var(--shadow-md);
+    ">
+        <h3 style="color: var(--primary-700); margin-bottom: 1.5rem;">Cache Access Patterns</h3>
+    """, unsafe_allow_html=True)
 
     cache_demo = st.selectbox("Select data structure:", ["Array", "Linked List"])
 
     if cache_demo == "Array":
         st.markdown("""
-        **Array Access Pattern:**
-        - Elements stored contiguously: [10][20][30][40][50]
-        - Memory addresses: 0x100, 0x104, 0x108, 0x10C, 0x110
-        - **Cache Performance:** Excellent - sequential access
+        <div style="
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1rem 0;
+        ">
+            <h4 style="color: var(--success-600); margin-bottom: 1rem;">Array Access Pattern</h4>
+            <div style="display: grid; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--success-500);">✓</span>
+                    <span style="color: var(--neutral-700);">Elements stored contiguously: [10][20][30][40][50]</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--success-500);">✓</span>
+                    <span style="color: var(--neutral-700);">Memory addresses: 0x100, 0x104, 0x108, 0x10C, 0x110</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--success-500);">⚡</span>
+                    <strong style="color: var(--success-600);">Cache Performance:</strong>
+                    <span style="color: var(--neutral-700);">Excellent - sequential access</span>
+                </div>
+            </div>
+        </div>
         """)
     else:
         st.markdown("""
-        **Linked List Access Pattern:**
-        - Elements scattered: 10(0x100) → 20(0x200) → 30(0x150) → 40(0x300)
-        - Memory addresses: 0x100, 0x200, 0x150, 0x300
-        - **Cache Performance:** Poor - random access, cache misses
+        <div style="
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 1rem 0;
+        ">
+            <h4 style="color: var(--error-600); margin-bottom: 1rem;">Linked List Access Pattern</h4>
+            <div style="display: grid; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--error-500);">⚠️</span>
+                    <span style="color: var(--neutral-700);">Elements scattered: 10(0x100) → 20(0x200) → 30(0x150) → 40(0x300)</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--error-500);">⚠️</span>
+                    <span style="color: var(--neutral-700);">Memory addresses: 0x100, 0x200, 0x150, 0x300</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="color: var(--error-500);">❌</span>
+                    <strong style="color: var(--error-600);">Cache Performance:</strong>
+                    <span style="color: var(--neutral-700);">Poor - random access, cache misses</span>
+                </div>
+            </div>
+        </div>
         """)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # Performance Benchmarks section
 def performance_benchmarks():
-    st.title("Performance Benchmarks")
+    st.markdown('''
+    <div style="background: linear-gradient(135deg, var(--primary-purple), var(--primary-blue)); padding: 2rem; border-radius: 20px; margin-bottom: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h1 style="color: white; text-align: center; margin: 0; font-size: 2.5rem;">📊 Performance Benchmarks</h1>
+        <p style="color: rgba(255,255,255,0.8); text-align: center; margin: 0.5rem 0 0 0;">Compare linked lists vs arrays in real-time</p>
+    </div>
+    ''', unsafe_allow_html=True)
 
-    st.header("Actual Timing Comparisons")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Actual Timing Comparisons</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     if st.button("Run Benchmarks"):
         import time
@@ -6391,18 +7339,46 @@ def performance_benchmarks():
 
         st.plotly_chart(fig, use_container_width=True)
 
-    st.header("Memory Usage Analysis")
+    st.markdown('''
+    <div style="background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border-radius: 15px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h2 style="color: var(--text-primary); margin: 0 0 1rem 0;">Memory Usage Analysis</h2>
+    </div>
+    ''', unsafe_allow_html=True)
 
     st.markdown("""
-    **Memory Overhead Comparison:**
-
-    | Data Structure | Element Size | Overhead | Total per Element |
-    |----------------|--------------|----------|-------------------|
-    | Linked List (Python) | 28 bytes | 8 bytes (pointer) | ~36 bytes |
-    | Dynamic Array (Python) | 28 bytes | ~4 bytes (amortized) | ~32 bytes |
-
-    **Note:** Actual memory usage depends on the programming language and implementation.
-    """)
+    memory_comparison_html = '''
+    <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
+        <h4 style="color: var(--text-primary); margin: 0 0 1rem 0;">Memory Overhead Comparison</h4>
+        <table style="width: 100%; border-collapse: collapse; color: var(--text-primary);">
+            <thead>
+                <tr style="background: rgba(255, 255, 255, 0.1);">
+                    <th style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2); text-align: left;">Data Structure</th>
+                    <th style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2); text-align: left;">Element Size</th>
+                    <th style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2); text-align: left;">Overhead</th>
+                    <th style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2); text-align: left;">Total per Element</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">Linked List (Python)</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">28 bytes</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">8 bytes (pointer)</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">~36 bytes</td>
+                </tr>
+                <tr style="background: rgba(255, 255, 255, 0.05);">
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">Dynamic Array (Python)</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">28 bytes</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">~4 bytes (amortized)</td>
+                    <td style="padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2);">~32 bytes</td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.05)); backdrop-filter: blur(10px); border-radius: 8px; padding: 0.75rem; margin-top: 1rem; border: 1px solid rgba(255, 193, 7, 0.3);">
+            <p style="color: var(--warning-orange); margin: 0; font-size: 0.9rem;">Note: Actual memory usage depends on the programming language and implementation.</p>
+        </div>
+    </div>
+    '''
+    st.markdown(memory_comparison_html, unsafe_allow_html=True)
 
 # Progress Tracking Feature
 def save_progress(section_name, data=None):
@@ -6513,7 +7489,7 @@ def get_study_time():
 # Mobile Responsive CSS
 def mobile_responsive_css():
     """Add mobile responsive styles"""
-    st.markdown("""
+    css_content = r"""
     <style>
     @media (max-width: 768px) {
         .main-header { font-size: 2rem !important; }
@@ -6523,7 +7499,8 @@ def mobile_responsive_css():
         .quiz-container { padding: 1rem !important; }
     }
     </style>
-    """, unsafe_allow_html=True)
+    """
+    st.markdown(css_content, unsafe_allow_html=True)
 
 # Theme Toggle Feature
 def theme_toggle():
@@ -6537,7 +7514,7 @@ def theme_toggle():
     
     # Dynamic theme CSS
     if st.session_state.dark_mode:
-        st.markdown("""
+        dark_css = """
         <style>
             .stApp {
                 background: #1a1a1a !important;
@@ -6601,15 +7578,17 @@ def theme_toggle():
                 background: #2d2d2d !important;
             }
         </style>
-        """, unsafe_allow_html=True)
+        """
+        st.markdown(dark_css, unsafe_allow_html=True)
     else:
-        st.markdown("""
+        light_css = """
         <style>
             .stApp {
                 background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%) !important;
             }
         </style>
-        """, unsafe_allow_html=True)
+        """
+        st.markdown(light_css, unsafe_allow_html=True)
 
 # Main app function
 def main():
@@ -6829,8 +7808,5 @@ def main():
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Run the main application
-if __name__ == "__main__":
-    main()
-else:
-    # For Streamlit Cloud deployment
+if __name__ == "__main__"
     main()
