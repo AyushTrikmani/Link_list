@@ -1,7 +1,6 @@
 streamlit
 matplotlib
 plotly
-numpy
 networkx
 pillow
 pandas
