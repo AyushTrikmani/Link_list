@@ -17,7 +17,8 @@ import math
 try:
     from quiz_config import QUIZ_QUESTIONS
 except ImportError:
-    from quiz_config import QUIZ_QUESTIONS
+    # Fallback quiz data if import fails
+    QUIZ_QUESTIONS = []
 
 # Fallback data for coding challenges and time challenges
 CODING_CHALLENGES = [
@@ -750,7 +751,7 @@ st.markdown(r"""
             padding: 1rem;
             margin: 0.5rem;
         }
-    }: #ef4444;
+        --error-color: #ef4444;
         --warning-color: #f97316;
         --info-color: #3b82f6;
         --success-color: #22c55e;
@@ -4473,12 +4474,10 @@ def advanced_visualizations():
                 box-shadow: var(--shadow-md);
                 border: 1px solid rgba(255, 255, 255, 0.2);
             ">
-                padding: 15px;
-                margin: 5px;
-                background: linear-gradient(135deg, #95A5A6 0%, #7F8C8D 100%);
-                text-align: center;
-                color: white;
-            ">
+                    <div style="font-weight: bold;">NULL</div>
+                <div style="font-size: 1.3em; margin: 8px 0;">∅</div>
+                <div style="font-size: 0.7em;">End</div>
+            </div>
                 <div style="font-weight: bold;">NULL</div>
                 <div style="font-size: 1.3em; margin: 8px 0;">∅</div>
                 <div style="font-size: 0.7em;">End</div>
@@ -7327,7 +7326,7 @@ def performance_benchmarks():
     </div>
     ''', unsafe_allow_html=True)
 
-    st.markdown("""
+    st.markdown("")
     memory_comparison_html = '''
     <div style="background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); border-radius: 12px; padding: 1.5rem; margin: 1rem 0; border: 1px solid rgba(255, 255, 255, 0.1);">
         <h4 style="color: var(--text-primary); margin: 0 0 1rem 0;">Memory Overhead Comparison</h4>
@@ -7790,5 +7789,5 @@ def main():
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Run the main application
-if __name__ == "__main__"
+if __name__ == "__main__":
     main()
